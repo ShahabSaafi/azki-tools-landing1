@@ -1,0 +1,2072 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>گزارش خسارت آسیا — ازکی</title>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+<style>
+  body { font-family: Tahoma, Arial, sans-serif; background: #0c1116; margin: 0; padding: 40px 20px; direction: rtl; }
+  .wrap { max-width: 760px; margin: 0 auto; background: #161b22; border-radius: 14px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); padding: 32px 36px; }
+  h1 { color: #f2f5f8; font-size: 22px; margin: 0 0 6px; }
+  p.sub { color: #8a94a3; font-size: 13px; margin: 0 0 24px; }
+  .step { border: 1px solid #2a323d; border-radius: 10px; padding: 18px 20px; margin-bottom: 16px; }
+  .step h2 { font-size: 15px; color: #f2f5f8; margin: 0 0 10px; }
+  input[type=file] { font-size: 13px; }
+  textarea { width: 100%; box-sizing: border-box; font-family: monospace; font-size: 12px; padding: 8px; border-radius: 6px; border: 1px solid #3a4553; direction: ltr; text-align: left; background:#161b22; color:#f2f5f8; }
+  button { background: #00B4FF; color: #fff; border: none; padding: 10px 22px; border-radius: 8px; font-size: 14px; cursor: pointer; font-family: inherit; }
+  button:disabled { background: #3a4553; cursor: not-allowed; }
+  button.secondary { background: #232a35; }
+  #log { background: #0a0e13; color: #7fe8ff; font-family: monospace; font-size: 12px; padding: 14px; border-radius: 8px; height: 220px; overflow-y: auto; white-space: pre-wrap; direction: ltr; text-align: left; }
+  .downloads { display: none; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  .downloads a { display: inline-block; background: #1aa361; color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 8px; font-size: 13px; margin-left: 8px; }
+  .holidaylist { max-height: 140px; overflow-y: auto; font-size: 12px; background: #0c1116; border-radius: 6px; padding: 8px; }
+  .warn { color: #ff5c5c; font-size: 12px; margin-top: 6px; }
+  .ok { color: #3ddc84; }
+  label { font-size: 13px; color: #f2f5f8; display: block; margin-bottom: 6px; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 2px solid #2a323d; }
+  .tabbtn { background: none; color: #8a94a3; border: none; border-bottom: 3px solid transparent; border-radius: 0; padding: 10px 4px; margin-bottom: -2px; font-size: 14px; cursor: pointer; }
+  .tabbtn.active { color: #f2f5f8; border-bottom-color: #00B4FF; font-weight: bold; }
+  .tabpanel[hidden] { display: none; }
+  .companyRow { display: flex; align-items: flex-end; gap: 10px; border: 1px solid #2a323d; border-radius: 8px; padding: 12px; margin-bottom: 10px; flex-wrap: wrap; background: #1c222b; }
+  .companyRow .f { flex: 1 1 180px; min-width: 150px; }
+  .companyRow label { margin-bottom: 4px; }
+  .companyRow input[type=text] { width: 100%; box-sizing: border-box; font-family: inherit; font-size: 13px; padding: 8px 10px; border-radius: 6px; border: 1px solid #3a4553; background:#161b22; color:#f2f5f8; }
+  .companyRow input[type=file] { font-size: 12px; color: #8a94a3; }
+  .companyRow .rm { background: #E63946; padding: 8px 12px; font-size: 12px; flex: 0 0 auto; }
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:900px;margin:0 auto;padding:14px 20px 0;}
+  .topbar .back{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#8a94a3;text-decoration:none;background:#161b22;border:1px solid #2a323d;padding:8px 14px;border-radius:10px;transition:.15s;}
+  .topbar .back:hover{border-color:#00B4FF;color:#00B4FF;}
+  .topbar .back:active{transform:scale(.97);}
+  .topbar .tool-tag{font-size:11.5px;font-weight:700;color:#00B4FF;background:rgba(0,180,255,.10);padding:4px 10px;border-radius:999px;}
+  .step h2{display:flex;align-items:center;gap:8px;}
+  .step-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#00B4FF;color:#fff;font-size:12px;flex:none;}
+  .dropzone{border:2px dashed #3a4553;border-radius:12px;padding:16px 14px;text-align:center;cursor:pointer;transition:.15s;background:#1c222b;}
+  .dropzone:hover,.dropzone.drag{border-color:#00B4FF;background:rgba(0,180,255,.12);}
+  .dropzone.filled{border-style:solid;border-color:#3ddc84;background:rgba(61,220,132,.12);}
+  .dropzone .dz-title{font-weight:700;font-size:13.5px;}
+  .dropzone .dz-hint{color:#8a94a3;font-size:12px;margin-top:4px;}
+  .dropzone input[type=file]{display:none;}
+</style>
+</head>
+<body>
+<div class="topbar"><a class="back" href="../index.html">→ جعبه‌ابزار عملیات</a><span class="tool-tag">خسارت آسیا</span></div>
+<div class="wrap">
+  <h1>گزارش خسارت آسیا</h1>
+  <p class="sub">فایل‌های اکسل خام را بده، پاورپوینت + اکسل خروجی را بگیر (تک‌شرکتی یا Overview چند بیمه‌گذار) — کاملاً آفلاین.</p>
+
+  <div class="tabs">
+    <button class="tabbtn active" id="tabBtnSingle" type="button">گزارش تک‌شرکتی</button>
+    <button class="tabbtn" id="tabBtnOverview" type="button">Overview چند بیمه‌گذار</button>
+  </div>
+
+  <div id="tabSingle" class="tabpanel">
+    <div class="step">
+      <h2><span class="step-num">۱</span> فایل‌های اکسل خام را انتخاب کن</h2>
+      <label class="dropzone" id="dzSinad"><div class="dz-title">سیناد.xlsx</div><div class="dz-hint">فایل را اینجا رها کن یا کلیک کن</div><div class="dz-hint" id="dzNameSinad"></div><input type="file" id="fileSinad" accept=".xlsx"></label>
+      <div style="height:10px"></div>
+      <label class="dropzone" id="dzDp"><div class="dz-title">دستور پرداخت.xlsx</div><div class="dz-hint">فایل را اینجا رها کن یا کلیک کن</div><div class="dz-hint" id="dzNameDp"></div><input type="file" id="fileDp" accept=".xlsx"></label>
+      <div style="height:10px"></div>
+      <label class="dropzone" id="dzNidBank"><div class="dz-title">کد ملی و بانک.xlsx (اختیاری)</div><div class="dz-hint">دیگر لازم نیست؛ سیناد خودش «کد رایانه خانواده» را دارد — فقط اگر آن ستون ناقص بود</div><div class="dz-hint" id="dzNameNidBank"></div><input type="file" id="fileNidBank" accept=".xlsx"></label>
+    </div>
+
+    <div class="step">
+      <h2><span class="step-num">۲</span> نام بیمه‌گذار</h2>
+      <label>روی جلد هر سه پاورپوینت خروجی نوشته می‌شود</label>
+      <input type="text" id="insuredName" placeholder="مثلاً آسیا" style="width:100%; box-sizing:border-box; font-family:inherit; font-size:14px; padding:9px 12px; border-radius:6px; border:1px solid #3a4553; background:#161b22; color:#f2f5f8;">
+    </div>
+
+    <div class="step">
+      <h2><span class="step-num">۳</span> اجرا</h2>
+      <button id="runBtn" disabled>ساخت گزارش‌ها</button>
+      <div class="downloads" id="downloads">
+        <a id="dlPptxMgmt" download>دانلود پاورپوینت مدیریتی</a>
+        <a id="dlPptxInsured" download>دانلود پاورپوینت بیمه‌گذار</a>
+        <a id="dlPptxOps" download>دانلود پاورپوینت واحد عملیات</a>
+        <a id="dlXlsx" download>دانلود اکسل مغایرت‌گیری</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="tabOverview" class="tabpanel" hidden>
+    <div class="step">
+      <h2><span class="step-num">۱</span> نام بیمه‌گر</h2>
+      <label>مثلاً «آسیا» — روی جلد پاورپوینت Overview نوشته می‌شود</label>
+      <input type="text" id="insurerName" placeholder="مثلاً آسیا" style="width:100%; box-sizing:border-box; font-family:inherit; font-size:14px; padding:9px 12px; border-radius:6px; border:1px solid #3a4553; background:#161b22; color:#f2f5f8;">
+    </div>
+
+    <div class="step">
+      <h2><span class="step-num">۲</span> بیمه‌گذارها (هر کدام سیناد + دستور پرداخت خودشان — بدون کد ملی و بانک)</h2>
+      <div id="companyRows"></div>
+      <button type="button" id="addCompanyBtn" class="secondary">+ افزودن بیمه‌گذار</button>
+    </div>
+
+    <div class="step">
+      <h2><span class="step-num">۳</span> اجرا</h2>
+      <button id="runOverviewBtn" disabled>ساخت گزارش Overview</button>
+      <div class="downloads" id="downloadsOverview">
+        <a id="dlOverviewPptx" download>دانلود پاورپوینت Overview</a>
+        <a id="dlOverviewXlsx" download>دانلود اکسل Overview</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <h2>تعطیلات رسمی (غیر از جمعه‌ها)</h2>
+    <label>این لیست از پیش برای سال‌های ۱۴۰۵ تا ۱۴۰۷ آماده شده و در محاسبه‌ی SLA روز کاری هر دو گزارش (تک‌شرکتی و Overview) استفاده می‌شود. اگر لازم بود، تاریخ کم/زیاد کن (هر خط یک تاریخ شمسی به‌فرم ۱۴۰۵/۰۵/۱۳):</label>
+    <textarea id="holidayBox" rows="6"></textarea>
+    <div class="warn" id="holidayWarn"></div>
+  </div>
+
+  <div class="step">
+    <h2>گزارش پیشرفت</h2>
+    <div id="log">آماده.</div>
+  </div>
+</div>
+
+<script>
+function switchTab(which) {
+  document.getElementById('tabSingle').hidden = which !== 'single';
+  document.getElementById('tabOverview').hidden = which !== 'overview';
+  document.getElementById('tabBtnSingle').classList.toggle('active', which === 'single');
+  document.getElementById('tabBtnOverview').classList.toggle('active', which === 'overview');
+}
+document.getElementById('tabBtnSingle').addEventListener('click', () => switchTab('single'));
+document.getElementById('tabBtnOverview').addEventListener('click', () => switchTab('overview'));
+</script>
+<script>
+function log(msg) {
+  const el = document.getElementById('log');
+  el.textContent += '\n' + msg;
+  el.scrollTop = el.scrollHeight;
+  console.log(msg);
+}
+
+// ============================================================
+// تبدیل تاریخ جلالی <-> میلادی
+// ============================================================
+function jalaliToGregorian(jy, jm, jd) {
+  jy += 1595;
+  let days = -355668 + (365 * jy) + Math.floor(jy / 33) * 8 + Math.floor(((jy % 33) + 3) / 4) + jd;
+  days += (jm < 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186;
+  let gy = 400 * Math.floor(days / 146097);
+  days %= 146097;
+  if (days > 36524) {
+    gy += 100 * Math.floor((days - 1) / 36524);
+    days = (days - 1) % 36524;
+    if (days >= 365) days += 1;
+  }
+  gy += 4 * Math.floor(days / 1461);
+  days %= 1461;
+  if (days > 365) {
+    gy += Math.floor((days - 1) / 365);
+    days = (days - 1) % 365;
+  }
+  let gd = days + 1;
+  const leap = (gy % 4 === 0 && gy % 100 !== 0) || gy % 400 === 0;
+  const salA = [0, 31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  let gm = 1;
+  while (gm <= 12 && gd > salA[gm]) { gd -= salA[gm]; gm++; }
+  return new Date(Date.UTC(gy, gm - 1, gd));
+}
+
+function gregorianToJalali(gy, gm, gd) {
+  const gDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  const isLeapG = (gy % 4 === 0 && gy % 100 !== 0) || gy % 400 === 0;
+  let gy2 = gy - 1600, gm2 = gm - 1, gd2 = gd - 1;
+  let gDayNo = 365 * gy2 + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400);
+  for (let i = 0; i < gm2; i++) gDayNo += gDaysInMonth[i];
+  if (gm2 > 1 && isLeapG) gDayNo++;
+  gDayNo += gd2;
+  let jDayNo = gDayNo - 79;
+  const jNp = Math.floor(jDayNo / 12053);
+  jDayNo %= 12053;
+  let jy = 979 + 33 * jNp + 4 * Math.floor(jDayNo / 1461);
+  jDayNo %= 1461;
+  if (jDayNo >= 366) {
+    jy += Math.floor((jDayNo - 1) / 365);
+    jDayNo = (jDayNo - 1) % 365;
+  }
+  const jDaysInMonth = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29];
+  let jm, jd = jDayNo;
+  for (jm = 0; jm < 11 && jd >= jDaysInMonth[jm]; jm++) jd -= jDaysInMonth[jm];
+  return [jy, jm + 1, jd + 1];
+}
+
+function jtextFromYmd(jy, jm, jd) {
+  const p2 = (n) => String(n).padStart(2, '0');
+  return `${jy}/${p2(jm)}/${p2(jd)}`;
+}
+
+function parseJalaliText(s) {
+  if (!s) return null;
+  const parts = String(s).trim().split(' ')[0].split('/');
+  if (parts.length !== 3) return null;
+  const jy = parseInt(parts[0], 10), jm = parseInt(parts[1], 10), jd = parseInt(parts[2], 10);
+  if (!jy || !jm || !jd) return null;
+  return jalaliToGregorian(jy, jm, jd);
+}
+
+function parseAnyDate(raw) {
+  if (raw === null || raw === undefined || raw === '') return null;
+  if (raw instanceof Date) {
+    // openpyxl-equivalent: Excel date cells for this workbook actually store a JALALI y/m/d
+    // (established convention from prior analysis of this exact template)
+    return jalaliToGregorian(raw.getUTCFullYear(), raw.getUTCMonth() + 1, raw.getUTCDate());
+  }
+  return parseJalaliText(raw);
+}
+
+function jlabel(d) {
+  const [jy, jm, jd] = gregorianToJalali(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+  return jtextFromYmd(jy, jm, jd);
+}
+
+function daysDiff(d1, d2) {
+  return Math.round((d2.getTime() - d1.getTime()) / 86400000);
+}
+
+// ============================================================
+// تعطیلات رسمی ایران — جدول از پیش‌آماده (۱۴۰۵-۱۴۰۷) + قابل ویرایش در UI
+// منبع: ترکیب داده رسمی + اصلاح دستی برای مرداد ۱۴۰۵ (اربعین/رحلت/شهادت امام رضا)
+// ============================================================
+const BUNDLED_HOLIDAYS_JALALI = [
+  // 1405
+  "1405/01/01","1405/01/02","1405/01/03","1405/01/04","1405/01/12","1405/01/13",
+  "1405/01/25","1405/03/07","1405/03/14","1405/03/15","1405/04/04","1405/04/05",
+  "1405/05/13","1405/05/21","1405/05/22","1405/05/30", // اصلاح دستی: اربعین/رحلت/شهادت امام رضا/شهادت امام حسن عسکری
+  "1405/06/09","1405/08/23","1405/10/02","1405/10/16","1405/11/04","1405/11/22",
+  "1405/12/10","1405/12/19","1405/12/20","1405/12/29",
+  // 1406
+  "1406/01/01","1406/01/02","1406/01/03","1406/01/04","1406/01/12","1406/01/13","1406/01/14",
+  "1406/02/27","1406/03/04","1406/03/14","1406/03/15","1406/03/25","1406/03/26",
+  "1406/05/13","1406/05/21","1406/05/22","1406/05/30", // برآورد؛ لطفاً با time.ir چک شود
+  "1406/08/12","1406/09/21","1406/10/05","1406/10/23","1406/11/22","1406/11/29",
+  "1406/12/08","1406/12/09","1406/12/29",
+  // 1407
+  "1407/01/01","1407/01/02","1407/01/03","1407/01/04","1407/01/12","1407/01/13",
+  "1407/02/17","1407/02/25","1407/03/14","1407/03/15","1407/04/24",
+  "1407/08/01","1407/09/11","1407/09/25","1407/10/12","1407/11/18","1407/11/22",
+  "1407/11/27","1407/11/28","1407/12/21","1407/12/29",
+];
+
+document.getElementById('holidayBox').value = BUNDLED_HOLIDAYS_JALALI.join('\n');
+
+function getHolidaySetFromUI() {
+  const lines = document.getElementById('holidayBox').value.split('\n').map(s => s.trim()).filter(Boolean);
+  const set = new Set();
+  let badLines = 0;
+  lines.forEach((l) => {
+    const d = parseJalaliText(l);
+    if (d) set.add(d.toISOString().slice(0, 10));
+    else badLines++;
+  });
+  const warnEl = document.getElementById('holidayWarn');
+  warnEl.textContent = badLines ? `${badLines} خط قابل‌فهم نبود و نادیده گرفته شد.` : '';
+  return set;
+}
+
+function isHoliday(d, holidaySet) {
+  if (d.getUTCDay() === 5) return true; // Friday
+  return holidaySet.has(d.toISOString().slice(0, 10));
+}
+
+function businessDaysBetween(d1, d2, holidaySet) {
+  if (d2 <= d1) return 0;
+  let n = 0;
+  let cur = new Date(d1.getTime());
+  cur.setUTCDate(cur.getUTCDate() + 1);
+  while (cur <= d2) {
+    if (!isHoliday(cur, holidaySet)) n++;
+    cur.setUTCDate(cur.getUTCDate() + 1);
+  }
+  return n;
+}
+
+// ============================================================
+// نگاشت ستون‌ها — روی فایل‌های خام (مستقیم از سامانه، بدون دستکاری)
+// طبق «متدولوژی» تأییدشده: در سیناد فقط ستون‌های بعد از AO یک حرف
+// به عقب می‌روند. کلید گروه‌بندی خانوار (AP سابق) از دور دهم به بعد
+// ترجیحاً از ستون خودِ سیناد «کد رایانه خانواده» (AR) خوانده می‌شود —
+// دیگر نیازی به شیت «کد ملی و بانک» نیست؛ آن شیت فقط به‌عنوان
+// پشتیبان/سازگاری با فایل‌های قدیمی نگه داشته شده (اختیاری).
+// ============================================================
+const COL_SINAD_RAW = {
+  code: 3, K_amount: 11, S_returned: 19, T_returnDate: 20, U_reason: 22,
+  AC_evalDate: 30, AI_payable: 36, AK_submitDate: 38,
+  personalId: 43,   // ستون AQ — «کد ملی بیمه شده»
+  familyCode: 44,   // ستون AR — «کد رایانه خانواده» (کلید اصلی گروه‌بندی خانوار، دور دهم)
+  AW_paid: 49,      // ستون AW — «پرداخت شده»
+  AX_payDate: 50,   // ستون AX — «تاریخ پرداخت»
+  CO_name: 93,      // ستون CO — «نام و نام خانوادگی بیمه شده»
+  CR_org: 96,       // ستون CR — «نام سازمان»
+};
+// شیت «کد ملی و بانک» خام: ستون‌های بعد از I یک حرف به عقب می‌روند
+const COL_NIDBANK_RAW = { personalId: 10, relation: 24 }; // خام J=کد ملی شخصی, X=نسبت
+const DPCOL = { nid: 15, amount: 20, payDate: 26, org: 22 }; // دستور پرداخت: بدون جابه‌جایی ستون؛ org = «بیمه گذار الحاقیه آخر»
+
+// نرمال‌سازی کد ملی برای join مقاوم در برابر تفاوت فرمت (متن/عدد/صفر ابتدایی)
+// معادل زنجیره XLOOKUP سه‌مرحله‌ای فایل اصلی (تطابق مستقیم → متن ۱۰رقمی صفرِ ابتدایی → عدد خالص)
+function canonNid(v) {
+  if (v === null || v === undefined) return '';
+  const s = String(v).trim();
+  const digits = s.replace(/\D/g, '');
+  if (!digits) return s;
+  return digits.length < 10 ? digits.padStart(10, '0') : digits;
+}
+
+function cellText(cell) {
+  const v = cell.value;
+  if (v === null || v === undefined) return null;
+  if (typeof v === 'object' && v.text !== undefined) return v.text;
+  if (typeof v === 'object' && v.result !== undefined) return v.result;
+  return v;
+}
+function cellNum(cell) {
+  const v = cellText(cell);
+  if (v === null || v === '') return 0;
+  const n = parseFloat(v);
+  return isNaN(n) ? 0 : n;
+}
+function cellBool(cell) {
+  const v = cellText(cell);
+  return v === true || v === 'TRUE' || v === 'true' || v === 1;
+}
+function cellDate(cell) {
+  return parseAnyDate(cellText(cell));
+}
+
+async function readWorkbook(file) {
+  const buf = await file.arrayBuffer();
+  const wb = new ExcelJS.Workbook();
+  await wb.xlsx.load(buf);
+  return wb;
+}
+
+function jtext(cell) {
+  const v = cellText(cell);
+  if (v === null || v === undefined) return '';
+  return String(v).trim().split(' ')[0];
+}
+
+// شیت «کد ملی و بانک» خام (اختیاری، فقط پشتیبان/سازگاری با فایل‌های قدیمی):
+// fill-down برای بازسازی کد ملی بیمه‌شده اصلی (AP) — فرمول اصلی:
+// =IF(نسبت="سرپرست", کدملی_خودش, AP ردیف قبل) — باید دقیقاً به ترتیب
+// ردیف‌های فایل پردازش شود چون هر خانواده با سرپرست شروع می‌شود.
+// از دور دهم به بعد فقط وقتی به کار می‌رود که ستون «کد رایانه خانواده»
+// (AR) در سیناد برای آن ردیف خالی باشد، یا اصلاً فایل نیامده باشد.
+function loadNidBankMap(ws) {
+  if (!ws) return {};
+  const map = {};
+  let lastAP = null;
+  const lastRow = ws.actualRowCount || ws.rowCount;
+  for (let r = 2; r <= lastRow; r++) {
+    const row = ws.getRow(r);
+    const personalIdRaw = cellText(row.getCell(COL_NIDBANK_RAW.personalId));
+    if (personalIdRaw === null || personalIdRaw === undefined || String(personalIdRaw).trim() === '') continue;
+    const relation = cellText(row.getCell(COL_NIDBANK_RAW.relation));
+    const ap = (relation && String(relation).trim() === 'سرپرست') ? String(personalIdRaw).trim() : lastAP;
+    lastAP = ap;
+    if (ap) map[canonNid(personalIdRaw)] = ap;
+  }
+  return map;
+}
+
+// شیت «سیناد» خام: کلید گروه‌بندی خانوار (AP) هر ردیف را، به ترتیب اولویت،
+// از ستون خودِ سیناد «کد رایانه خانواده» (AR) می‌گیرد؛ فقط اگر آن ستون برای
+// همین ردیف خالی بود، به شیت «کد ملی و بانک» (در صورت وجود) برمی‌گردد.
+function loadSinadRowsRaw(ws, nidBankMap) {
+  nidBankMap = nidBankMap || {};
+  const rows = [];
+  const lastRow = ws.actualRowCount || ws.rowCount;
+  for (let r = 2; r <= lastRow; r++) {
+    const row = ws.getRow(r);
+    const code = cellText(row.getCell(COL_SINAD_RAW.code));
+    if (!code) continue;
+    const personalIdRaw = cellText(row.getCell(COL_SINAD_RAW.personalId));
+    const hasPersonalId = personalIdRaw !== null && personalIdRaw !== undefined && String(personalIdRaw).trim() !== '';
+    const familyCodeRaw = cellText(row.getCell(COL_SINAD_RAW.familyCode));
+    const hasFamilyCode = familyCodeRaw !== null && familyCodeRaw !== undefined && String(familyCodeRaw).trim() !== '';
+    const ap = hasFamilyCode ? String(familyCodeRaw).trim() : (hasPersonalId ? (nidBankMap[canonNid(personalIdRaw)] || null) : null);
+    const rec = {
+      code,
+      K_amount: cellNum(row.getCell(COL_SINAD_RAW.K_amount)),
+      S_returned: cellBool(row.getCell(COL_SINAD_RAW.S_returned)),
+      T_returnDate: cellDate(row.getCell(COL_SINAD_RAW.T_returnDate)),
+      U_reason: cellText(row.getCell(COL_SINAD_RAW.U_reason)),
+      AC_date: cellDate(row.getCell(COL_SINAD_RAW.AC_evalDate)),
+      AI: cellNum(row.getCell(COL_SINAD_RAW.AI_payable)),
+      AK_date: cellDate(row.getCell(COL_SINAD_RAW.AK_submitDate)),
+      AK_text: jtext(row.getCell(COL_SINAD_RAW.AK_submitDate)),
+      AC_text: jtext(row.getCell(COL_SINAD_RAW.AC_evalDate)),
+      AW_paid: cellBool(row.getCell(COL_SINAD_RAW.AW_paid)),
+      AX_date: cellDate(row.getCell(COL_SINAD_RAW.AX_payDate)),
+      nid: ap,
+      personalId: hasPersonalId ? canonNid(personalIdRaw) : null, // کد ملی شخصی خودِ همین ردیف (مستقل از فایل «کد ملی و بانک») — رزرو برای مقایسه‌های احتمالی بعدی
+      name: cellText(row.getCell(COL_SINAD_RAW.CO_name)),
+      org: cleanOrgName(cellText(row.getCell(COL_SINAD_RAW.CR_org))), // نام سازمان — برای فیلتر دفاعی دستور پرداخت
+    };
+    rows.push(rec);
+  }
+  return rows;
+}
+
+// دستور پرداخت، ستون «بیمه گذار الحاقیه آخر» معمولاً به‌شکل «نام سازمان  کد 1234567» است؛
+// این تابع پسوند «کد ...» را حذف می‌کند تا با ستون «نام سازمان» خام سیناد قابل تطبیق شود.
+function cleanOrgName(v) {
+  if (v === null || v === undefined) return null;
+  return String(v).trim().replace(/\s*کد\s*\d+\s*$/, '').trim() || null;
+}
+
+function loadDpRows(ws) {
+  const rows = [];
+  const lastRow = ws.actualRowCount || ws.rowCount;
+  for (let r = 2; r <= lastRow; r++) {
+    const row = ws.getRow(r);
+    const nidRaw = cellText(row.getCell(DPCOL.nid));
+    if (!nidRaw) continue;
+    rows.push({
+      nid: String(nidRaw).trim(),
+      amount: cellNum(row.getCell(DPCOL.amount)),
+      payDateText: jtext(row.getCell(DPCOL.payDate)),
+      org: cleanOrgName(cellText(row.getCell(DPCOL.org))),
+    });
+  }
+  return rows;
+}
+
+function avg(lst) {
+  if (!lst.length) return null;
+  return Math.round((lst.reduce((a, b) => a + b, 0) / lst.length) * 100) / 100;
+}
+function median(lst) {
+  if (!lst.length) return null;
+  const s = [...lst].sort((a, b) => a - b);
+  return s[Math.floor(s.length / 2)];
+}
+// P90 (تعریف کاربر — نه صدک آماری معمول): مقادیر SLA را صعودی (از کمترین/سریع‌ترین
+// به بیشترین/کندترین) مرتب کن، کندترین ۱۰٪ را به‌عنوان دورافتاده کنار بگذار، و
+// میانگین SLA همان ۹۰٪ باقی‌مانده (سریع‌ترین‌ها) را برگردان. مثال: با ۱۰ پرونده،
+// کندترین ۱ مورد کنار می‌رود و میانگین ۹ موردِ سریع‌تر گزارش می‌شود.
+function p90TrimmedAvg(lst) {
+  if (!lst.length) return null;
+  const s = [...lst].sort((a, b) => a - b);
+  const keepCount = Math.max(1, Math.ceil(s.length * 0.9));
+  return avg(s.slice(0, keepCount));
+}
+
+const BUCKET_DEFS = [
+  ['کمتر از ۵ روز', 0, 5], ['۵ تا ۷ روز', 5, 7], ['۷ تا ۱۰ روز', 7, 10],
+  ['۱۰ تا ۱۲ روز', 10, 12], ['۱۲ تا ۱۵ روز', 12, 15], ['۱۵ تا ۳۰ روز', 15, 30],
+  ['بیشتر از ۳۰ روز', 30, 99999],
+];
+function bucketOf(days) {
+  for (const [label, lo, hi] of BUCKET_DEFS) if (days >= lo && days < hi) return label;
+  return BUCKET_DEFS[BUCKET_DEFS.length - 1][0];
+}
+
+function classifyReason(v) {
+  if (!v || !String(v).trim()) return 'نامشخص / بدون توضیح';
+  const t = String(v);
+  if (t.includes('تکرار')) return 'هزینه تکراری';
+  if (t.includes('سقف')) return 'تکمیل سقف تعهدات';
+  if (t.includes('انصراف')) return 'انصراف بیمه‌شده';
+  const outOfCoverageKeys = ['خارج از تعهد', 'عدم تعهد', 'تحت پوشش نمي', 'تحت پوشش نمی', 'فاقد پوشش',
+    'قابل پرداخت نيست', 'قابل پرداخت نمي', 'قرار داد نميست', 'در قرارداد نيست', 'قرارداد مي باشد'];
+  if (outOfCoverageKeys.some((k) => t.includes(k))) return 'خارج از تعهد بیمه‌ای';
+  return 'مدارک ناقص / نیازمند اصلاح';
+}
+
+const SLA_GRACE_DAYS = 5;
+const DAILY_WINDOW_DAYS = 60; // نمودارهای روزانه SLA حداکثر تا این تعداد روز اخیر را نشان می‌دهند
+const WEEKLY_SLA_WINDOW = 12; // اسلایدهای روند SLA در گزارش مدیریتی: حداکثر این تعداد هفته اخیر (تا با گذشت زمان شلوغ نشود)
+const MONTHLY_SLA_WINDOW = 12; // همان، برای نمودار ماهانه SLA
+const DAILY_SLA_CHART_WINDOW = 30; // همان، برای نمودار روزانه SLA (زیرمجموعه‌ی همان ۶۰ روزِ M.daily)
+const MONTH_NAMES = ['', 'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+
+// تاریخ ثابتِ برش دوره، فقط برای بیمه‌گذار «شاتل» (اسلاید ۶، به درخواست صریح کاربر)
+const SHUTTLE_CUTOFF_JALALI = '1405/05/24';
+function isShuttleClient(name) { return /شاتل/.test(String(name || '')); }
+function niceJalaliLabel(input) {
+  let jy, jm, jd;
+  if (input instanceof Date) {
+    [jy, jm, jd] = gregorianToJalali(input.getUTCFullYear(), input.getUTCMonth() + 1, input.getUTCDate());
+  } else {
+    [jy, jm, jd] = String(input).split('/').map(Number);
+  }
+  return `${jd} ${MONTH_NAMES[jm]} ${jy}`;
+}
+
+function computeAnalysis(rows, dpRows, holidaySet) {
+  const totalCount = rows.length;
+  const totalCost = rows.reduce((s, r) => s + r.K_amount, 0);
+  const returnedRows = rows.filter((r) => r.S_returned);
+  const returnedCount = returnedRows.length;
+  const returnedCost = returnedRows.reduce((s, r) => s + r.K_amount, 0);
+  const validRows = rows.filter((r) => !r.S_returned);
+  const validCount = validRows.length;
+  const validCost = validRows.reduce((s, r) => s + r.K_amount, 0);
+
+  // فیلتر دفاعی: فایل «دستور پرداخت» گاهی اسکوپ درستی ندارد و شامل پرداخت‌های
+  // بیمه‌گذاران/اشخاص کاملاً نامرتبط هم می‌شود (مثلاً وقتی از سامانه به‌جای خروجیِ
+  // مخصوصِ همین بیمه‌گذار، خروجی کلی/چندبیمه‌گذاره گرفته شده باشد). چون این ردیف‌های
+  // اضافه هیچ ربطی به این گزارش ندارند، برای «مجموع مبلغ واریزشده» فقط ردیف‌هایی از
+  // دستور پرداخت را می‌شماریم که «نام سازمان»شان بین سازمان‌های همین دسته سیناد هم
+  // دیده شده باشد. تطبیق بر مبنای نام سازمان (نه کد ملی شخص) عمداً انتخاب شده چون
+  // دستور پرداخت ممکن است شامل پرداخت‌های قدیمی‌تری از همان سازمان باشد که پرونده‌شان
+  // در این برش خاص از سیناد نیست — تطبیق با کد ملی این پرداخت‌های واقعاً مرتبط را هم
+  // به‌اشتباه کنار می‌گذاشت، در حالی که تطبیق با نام سازمان فقط سازمان‌های واقعاً
+  // نامرتبط (مثل بیمه‌گذار یا شخص دیگری که به‌اشتباه در فایل دستور پرداخت آمده) را حذف می‌کند.
+  const sinadOrgSet = new Set(rows.map((r) => r.org).filter(Boolean));
+  const dpRowsScoped = sinadOrgSet.size ? dpRows.filter((r) => sinadOrgSet.has(r.org)) : dpRows;
+  const dpUnscopedExtraAmount = dpRows.reduce((s, r) => s + r.amount, 0) - dpRowsScoped.reduce((s, r) => s + r.amount, 0);
+  const dpUnscopedExtraCount = dpRows.length - dpRowsScoped.length;
+  const dpTotal = dpRowsScoped.reduce((s, r) => s + r.amount, 0);
+
+  // pid2fam (دور دهم): کد ملی شخصیِ هر ردیفِ سیناد → کلید خانوار همان ردیف (r.nid) —
+  // که یا «کد رایانه خانواده»ی خودِ سیناد است یا (در نبود آن) بازسازی‌شده از «کد ملی و
+  // بانک». چون فیلد «کد ملی» دستور پرداخت معمولاً کد ملی سرپرست/بیمه‌گذار اصلی است،
+  // برای مقایسه با AP باید همین‌طور از این نگاشت رد شود — اگر پیدا نشد (مثلاً چون آن
+  // شخص در همین برش سیناد اصلاً پرونده‌ای ندارد)، به مقدار خام قبلی برمی‌گردیم تا با
+  // فایل‌های قدیمی که AP مستقیماً همان کد ملی سرپرست بود سازگار بماند.
+  const pid2fam = {};
+  rows.forEach((r) => { if (r.personalId && r.nid) pid2fam[r.personalId] = r.nid; });
+  const dpByNid = {};
+  dpRows.forEach((r) => {
+    const famKey = pid2fam[canonNid(r.nid)] || r.nid;
+    dpByNid[famKey] = (dpByNid[famKey] || 0) + r.amount;
+  });
+  const datedPay = dpRowsScoped.map((r) => r.payDateText).filter(Boolean).sort();
+  const latestPayJalali = datedPay.length ? datedPay[datedPay.length - 1] : null;
+
+  const aiTotal = rows.reduce((s, r) => s + r.AI, 0);
+  const gapAmount = aiTotal - dpTotal;
+
+  function slaCalendar(rowsIn, d1k, d2k) {
+    const diffs = []; let excl = 0;
+    rowsIn.forEach((r) => { if (r[d1k] && r[d2k]) diffs.push(daysDiff(r[d1k], r[d2k])); else excl++; });
+    return [avg(diffs), diffs.length, excl];
+  }
+  function slaBusiness(rowsIn, d1k, d2k) {
+    const diffs = [];
+    rowsIn.forEach((r) => { if (r[d1k] && r[d2k]) diffs.push(businessDaysBetween(r[d1k], r[d2k], holidaySet)); });
+    return avg(diffs);
+  }
+  // P90 کل چرخه (بارگذاری تا پرداخت) — طبق تعریف کاربر، میانگین سریع‌ترین ۹۰٪ پرونده‌ها
+  // (نه صدک آماری). فقط برای «کل چرخه» محاسبه می‌شود، همان شاخصی که کاربر درخواست کرد.
+  function slaCalendarP90(rowsIn, d1k, d2k) {
+    const diffs = [];
+    rowsIn.forEach((r) => { if (r[d1k] && r[d2k]) diffs.push(daysDiff(r[d1k], r[d2k])); });
+    return p90TrimmedAvg(diffs);
+  }
+  const [slaA, slaAN, slaAExcl] = slaCalendar(rows, 'AK_date', 'AC_date');
+  const [slaB, slaBN, slaBExcl] = slaCalendar(rows, 'AC_date', 'AX_date');
+  const [slaC, slaCN, slaCExcl] = slaCalendar(rows, 'AK_date', 'AX_date');
+  const slaCP90 = slaCalendarP90(rows, 'AK_date', 'AX_date');
+  const slaABiz = slaBusiness(rows, 'AK_date', 'AC_date');
+  const slaBBiz = slaBusiness(rows, 'AC_date', 'AX_date');
+  const slaCBiz = slaBusiness(rows, 'AK_date', 'AX_date');
+
+  const evaluatedRows = validRows.filter((r) => r.AC_date);
+  const notEvaluatedRows = validRows.filter((r) => !r.AC_date);
+  const evalPct = (evaluatedRows.length / validCount) * 100;
+  const notEvalSubmits = notEvaluatedRows.map((r) => r.AK_date).filter(Boolean).sort((a, b) => a - b);
+  const notEvalOldest = notEvalSubmits.length ? jlabel(notEvalSubmits[0]) : null;
+
+  const reasonCounts = {};
+  returnedRows.forEach((r) => { const c = classifyReason(r.U_reason); reasonCounts[c] = (reasonCounts[c] || 0) + 1; });
+  const returnReasons = Object.entries(reasonCounts).map(([label, n]) => ({ label, n, pct: Math.round((n / returnedCount) * 1000) / 10 }))
+    .sort((a, b) => b.n - a.n);
+
+  const returnedValid = returnedRows.filter((r) => r.T_returnDate && r.AK_date);
+  const retDiffs = returnedValid.map((r) => daysDiff(r.AK_date, r.T_returnDate)).filter((d) => d >= 0);
+
+  const overview = {
+    total_count: totalCount, total_cost: totalCost, returned_count: returnedCount, returned_cost: returnedCost,
+    valid_count: validCount, valid_cost: validCost,
+    return_rate_count: Math.round((returnedCount / totalCount) * 10000) / 100,
+    return_rate_amount: Math.round((returnedCost / totalCost) * 10000) / 100,
+    dp_total: dpTotal, dp_row_count: dpRowsScoped.length, latest_pay_jalali: latestPayJalali,
+    dp_unscoped_extra_amount: dpUnscopedExtraAmount, dp_unscoped_extra_count: dpUnscopedExtraCount,
+    ai_total: aiTotal, gap_amount: gapAmount,
+    sla_a: slaA, sla_a_n: slaAN, sla_a_excl: slaAExcl,
+    sla_b: slaB, sla_b_n: slaBN, sla_b_excl: slaBExcl,
+    sla_c: slaC, sla_c_n: slaCN, sla_c_excl: slaCExcl, sla_c_p90: slaCP90,
+    sla_a_biz: slaABiz, sla_b_biz: slaBBiz, sla_c_biz: slaCBiz,
+    eval_count: evaluatedRows.length, not_eval_count: notEvaluatedRows.length, eval_pct: Math.round(evalPct * 100) / 100,
+    eval_base: validCount, not_eval_oldest: notEvalOldest,
+    return_reasons: returnReasons,
+    return_avg: avg(retDiffs), return_median: median(retDiffs),
+    return_min: retDiffs.length ? Math.min(...retDiffs) : null, return_max: retDiffs.length ? Math.max(...retDiffs) : null,
+    return_n: retDiffs.length,
+  };
+
+  // ---------------- بازه‌های SLA بارگذاری تا پرداخت ----------------
+  const paidRows = rows.filter((r) => r.AX_date && r.AK_date);
+  const totalPaidN = paidRows.length;
+  const totalPaidAmount = paidRows.reduce((s, r) => s + r.AI, 0);
+  const bucketsOut = BUCKET_DEFS.map(([label, lo, hi]) => {
+    const subset = paidRows.filter((r) => { const d = daysDiff(r.AK_date, r.AX_date); return d >= lo && d < hi; });
+    return { label, n: subset.length, amount: subset.reduce((s, r) => s + r.AI, 0) };
+  });
+
+  // ---------------- روند هفتگی/ماهانه/روزانه ----------------
+  const akDates = rows.map((r) => r.AK_date).filter(Boolean);
+  const baseDate = new Date(Math.min(...akDates.map((d) => d.getTime())));
+
+  function periodKeyWeekly(d) { return Math.floor(daysDiff(baseDate, d) / 7); }
+  function periodKeyMonthly(d) { const [jy, jm] = gregorianToJalali(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()); return jy * 100 + jm; }
+  function periodKeyDaily(d) { return d.toISOString().slice(0, 10); }
+
+  function buildTrend(periodFunc, sortFn) {
+    const groups = {};
+    rows.forEach((r) => {
+      if (!r.AK_date) return;
+      const k = periodFunc(r.AK_date);
+      if (!groups[k]) groups[k] = [];
+      groups[k].push(r);
+    });
+    const keys = Object.keys(groups).sort(sortFn);
+    return keys.map((k) => {
+      const grpRows = groups[k];
+      const count = grpRows.length;
+      const returned = grpRows.filter((r) => r.S_returned);
+      const returnCount = returned.length;
+      const returnRate = count ? Math.round((returnCount / count) * 10000) / 100 : 0;
+      const aList = grpRows.filter((r) => r.AC_date).map((r) => daysDiff(r.AK_date, r.AC_date));
+      const bList = grpRows.filter((r) => r.AC_date && r.AX_date).map((r) => daysDiff(r.AC_date, r.AX_date));
+      const cList = grpRows.filter((r) => r.AX_date).map((r) => daysDiff(r.AK_date, r.AX_date));
+      const aBiz = grpRows.filter((r) => r.AC_date).map((r) => businessDaysBetween(r.AK_date, r.AC_date, holidaySet));
+      const bBiz = grpRows.filter((r) => r.AC_date && r.AX_date).map((r) => businessDaysBetween(r.AC_date, r.AX_date, holidaySet));
+      const cBiz = grpRows.filter((r) => r.AX_date).map((r) => businessDaysBetween(r.AK_date, r.AX_date, holidaySet));
+      const retDiffsGrp = returned.filter((r) => r.T_returnDate && r.AK_date).map((r) => daysDiff(r.AK_date, r.T_returnDate)).filter((d) => d >= 0);
+      const grpPaid = grpRows.filter((r) => r.AX_date);
+      const bucketCounts = {};
+      grpPaid.forEach((r) => { const b = bucketOf(daysDiff(r.AK_date, r.AX_date)); bucketCounts[b] = (bucketCounts[b] || 0) + 1; });
+      const buckets = {};
+      BUCKET_DEFS.forEach(([label]) => { buckets[label] = bucketCounts[label] || 0; });
+      return {
+        key: k, count, return_count: returnCount, return_rate: returnRate,
+        avg_se: avg(aList), avg_ep: avg(bList), avg_sp: avg(cList),
+        avg_se_biz: avg(aBiz), avg_ep_biz: avg(bBiz), avg_sp_biz: avg(cBiz),
+        return_sla_avg: avg(retDiffsGrp), return_sla_n: retDiffsGrp.length,
+        paid_n: grpPaid.length, buckets,
+      };
+    });
+  }
+
+  const weekly = buildTrend(periodKeyWeekly, (a, b) => a - b);
+  const weekMonthCounters = {};
+  weekly.forEach((w, i) => {
+    w.week_num = Number(w.key) + 1;
+    const startG = new Date(baseDate.getTime()); startG.setUTCDate(startG.getUTCDate() + w.key * 7);
+    const endG = new Date(startG.getTime()); endG.setUTCDate(endG.getUTCDate() + 6);
+    w.start_j = jlabel(startG); w.end_j = jlabel(endG);
+    const [jyStart, jmStart] = w.start_j.split('/').map(Number);
+    const mkey = jyStart * 100 + jmStart;
+    weekMonthCounters[mkey] = (weekMonthCounters[mkey] || 0) + 1;
+    w.week_label = `هفته ${weekMonthCounters[mkey]} ${MONTH_NAMES[jmStart]}`;
+  });
+
+  const monthly = buildTrend(periodKeyMonthly, (a, b) => a - b);
+  monthly.forEach((m) => {
+    const jy = Math.floor(m.key / 100), jm = m.key % 100;
+    m.label = MONTH_NAMES[jm] + ' ' + jy;
+  });
+
+  const dailyFull = buildTrend(periodKeyDaily, (a, b) => (a < b ? -1 : 1));
+  dailyFull.forEach((d) => {
+    const dt = new Date(d.key + 'T00:00:00Z');
+    d.date_j = jlabel(dt);
+  });
+  const daily = dailyFull.length
+    ? dailyFull.filter((d) => daysDiff(new Date(d.key + 'T00:00:00Z'), new Date(dailyFull[dailyFull.length - 1].key + 'T00:00:00Z')) <= DAILY_WINDOW_DAYS)
+    : dailyFull;
+
+  // ---------------- تاریخ مرجع گزارش (آخرین تاریخ موجود در داده) ----------------
+  const allDates = [];
+  rows.forEach((r) => { ['AK_date', 'AC_date', 'AX_date', 'T_returnDate'].forEach((k) => { if (r[k]) allDates.push(r[k]); }); });
+  const asOf = new Date(Math.max(...allDates.map((d) => d.getTime())));
+
+  // ---------------- تفکیک دو دوره‌ی ثابت/متغیر، مخصوص شاتل (اسلاید ۶) ----------------
+  // فقط برای بیمه‌گذار «شاتل»: دوره اول از شروع قرارداد تا ۲۴ مرداد ۱۴۰۵ ثابت می‌ماند
+  // (چون فقط شامل پرونده‌های بارگذاری‌شده تا آن تاریخ است)، دوره دوم از ۲۴ مرداد به بعد
+  // با هر بار دریافت داده جدید، متغیر است.
+  const shuttleCutoffDate = parseJalaliText(SHUTTLE_CUTOFF_JALALI);
+  const shuttlePeriod1Rows = rows.filter((r) => r.AK_date && shuttleCutoffDate && r.AK_date <= shuttleCutoffDate);
+  const shuttlePeriod2Rows = rows.filter((r) => r.AK_date && shuttleCutoffDate && r.AK_date > shuttleCutoffDate);
+  const [sh1A] = slaCalendar(shuttlePeriod1Rows, 'AK_date', 'AC_date');
+  const [sh1B] = slaCalendar(shuttlePeriod1Rows, 'AC_date', 'AX_date');
+  const [sh1C] = slaCalendar(shuttlePeriod1Rows, 'AK_date', 'AX_date');
+  const sh1C90 = slaCalendarP90(shuttlePeriod1Rows, 'AK_date', 'AX_date');
+  const [sh2A] = slaCalendar(shuttlePeriod2Rows, 'AK_date', 'AC_date');
+  const [sh2B] = slaCalendar(shuttlePeriod2Rows, 'AC_date', 'AX_date');
+  const [sh2C] = slaCalendar(shuttlePeriod2Rows, 'AK_date', 'AX_date');
+  const sh2C90 = slaCalendarP90(shuttlePeriod2Rows, 'AK_date', 'AX_date');
+  const shuttlePeriod1 = { sla_a: sh1A, sla_b: sh1B, sla_c: sh1C, sla_c_p90: sh1C90, n: shuttlePeriod1Rows.length, label: `از شروع قرارداد تا ${niceJalaliLabel(SHUTTLE_CUTOFF_JALALI)}` };
+  const shuttlePeriod2 = { sla_a: sh2A, sla_b: sh2B, sla_c: sh2C, sla_c_p90: sh2C90, n: shuttlePeriod2Rows.length, label: `از ${niceJalaliLabel(SHUTTLE_CUTOFF_JALALI)} تا ${niceJalaliLabel(asOf)}` };
+
+  // ---------------- مغایرت‌گیری با قاعده فرصت SLA ----------------
+  rows.forEach((r) => {
+    r.bizAge = r.AK_date ? businessDaysBetween(r.AK_date, asOf, holidaySet) : null;
+    r.aged = r.bizAge !== null && r.bizAge > SLA_GRACE_DAYS;
+  });
+
+  const agg = {};
+  function getAgg(nid) {
+    if (!agg[nid]) agg[nid] = {
+      AI_paid: 0, AI_total_all: 0, AI_total_aged: 0, claims: 0, paid_claims: 0, name: '',
+      last_submit: null, last_submit_text: '', unflagged: [], unflagged_aged: [], all_claims: [],
+    };
+    return agg[nid];
+  }
+  rows.forEach((r) => {
+    if (!r.nid) return;
+    const g = getAgg(r.nid);
+    g.claims++;
+    g.AI_total_all += r.AI;
+    if (r.aged) g.AI_total_aged += r.AI;
+    g.name = r.name || g.name;
+    if (r.AW_paid) { g.AI_paid += r.AI; g.paid_claims++; } else { g.unflagged.push(r); if (r.aged) g.unflagged_aged.push(r); }
+    if (r.AK_date && (!g.last_submit || r.AK_date > g.last_submit)) { g.last_submit = r.AK_date; g.last_submit_text = r.AK_text; }
+    if (!r.S_returned) g.all_claims.push(r);
+  });
+
+  const nidsReviewed = Object.keys(agg).filter((n) => agg[n].AI_total_all > 0);
+  const discrepancies = [];
+  nidsReviewed.forEach((n) => {
+    const g = agg[n]; const dpT = dpByNid[n] || 0;
+    if (dpT < g.AI_total_aged - 1) discrepancies.push({ nid: n, diff: g.AI_total_aged - dpT });
+  });
+
+  const reviewNeeded = [];
+  nidsReviewed.forEach((n) => {
+    const g = agg[n]; const dpT = dpByNid[n] || 0; const gap = g.AI_paid - dpT;
+    if (gap > 1) reviewNeeded.push({ nid: n, name: g.name, AI_paid_sum: g.AI_paid, dp_total: dpT, paid_gap: gap, claims: g.claims, paid_claims: g.paid_claims, last_submit_text: g.last_submit_text });
+  });
+  reviewNeeded.sort((a, b) => b.paid_gap - a.paid_gap);
+
+  // تجمیع دوم، مخصوص طبقه‌بندی «پرداخت‌شده خالی» — مطابق analyze_master4.py، پرونده‌های عودتی از این تجمیع کاملاً حذف می‌شوند
+  const agg2 = {};
+  function getAgg2(nid) {
+    if (!agg2[nid]) agg2[nid] = {
+      AI_total_all: 0, AI_total_aged: 0, claims: 0, name: '',
+      unflagged: [], unflagged_aged: [], all_claims: [],
+    };
+    return agg2[nid];
+  }
+  rows.forEach((r) => {
+    if (!r.nid || r.S_returned) return;
+    const g = getAgg2(r.nid);
+    g.claims++;
+    g.AI_total_all += r.AI;
+    if (r.aged) g.AI_total_aged += r.AI;
+    g.name = r.name || g.name;
+    g.all_claims.push(r);
+    if (!r.AW_paid) { g.unflagged.push(r); if (r.aged) g.unflagged_aged.push(r); }
+  });
+
+  const fullyCoveredList = [], partiallyCoveredList = [], zeroCoveredList = [], tooRecentList = [];
+  Object.keys(agg2).forEach((n) => {
+    const g = agg2[n];
+    if (!g.unflagged.length || g.AI_total_all <= 0) return;
+    const dpT = dpByNid[n] || 0;
+    const unflaggedAmount = g.unflagged.reduce((s, u) => s + u.AI, 0);
+    const unflaggedAgedAmount = g.unflagged_aged.reduce((s, u) => s + u.AI, 0);
+    const submitTexts = g.unflagged.map((u) => u.AK_text).filter(Boolean).sort();
+    if (g.AI_total_aged <= 0) {
+      tooRecentList.push({ nid: n, name: g.name, amount: unflaggedAmount, count: g.unflagged.length, oldest_submit: submitTexts[0] || '', newest_submit: submitTexts[submitTexts.length - 1] || '' });
+      return;
+    }
+    if (dpT >= g.AI_total_aged - 1) {
+      fullyCoveredList.push({ nid: n, name: g.name, dp_total: dpT, unflagged_amount: unflaggedAmount, unflagged_aged_amount: unflaggedAgedAmount, unflagged_count: g.unflagged.length, newest_submit: submitTexts[submitTexts.length - 1] || '' });
+    } else {
+      const allSubmit = g.all_claims.map((c) => c.AK_text).filter(Boolean).sort();
+      const allEval = g.all_claims.map((c) => c.AC_text).filter(Boolean).sort();
+      const evaluatedClaims = g.all_claims.filter((c) => c.AC_text).length;
+      const rec = {
+        nid: n, name: g.name, AI_total_aged: g.AI_total_aged, dp_total: dpT, gap: g.AI_total_aged - dpT, claims: g.claims,
+        oldest_submit: allSubmit[0] || '', newest_submit: allSubmit[allSubmit.length - 1] || '',
+        oldest_eval: allEval[0] || '', newest_eval: allEval[allEval.length - 1] || '',
+        evaluated_claims: evaluatedClaims, not_evaluated_claims: g.claims - evaluatedClaims,
+      };
+      if (dpT > 0) partiallyCoveredList.push(rec); else zeroCoveredList.push(rec);
+    }
+  });
+  fullyCoveredList.sort((a, b) => b.unflagged_amount - a.unflagged_amount);
+  partiallyCoveredList.sort((a, b) => b.gap - a.gap);
+  zeroCoveredList.sort((a, b) => b.AI_total_aged - a.AI_total_aged);
+  tooRecentList.sort((a, b) => b.amount - a.amount);
+
+  const sortedOldest = (list) => list.map((r) => r.oldest_submit).filter(Boolean).sort();
+  const sortedNewest = (list) => list.map((r) => r.newest_submit).filter(Boolean).sort();
+
+  const M = {
+    overview,
+    weekly, monthly, daily,
+    shuttle_period1: shuttlePeriod1, shuttle_period2: shuttlePeriod2,
+    buckets_out: bucketsOut, total_paid_n: totalPaidN, total_paid_amount: totalPaidAmount,
+    discrepancies_count: discrepancies.length,
+    discrepancies_pct: nidsReviewed.length ? Math.round((discrepancies.length / nidsReviewed.length) * 1000) / 10 : 0,
+    discrepancies_amount: discrepancies.reduce((s, d) => s + d.diff, 0),
+    nids_reviewed: nidsReviewed.length,
+    no_family_key_count: rows.filter((r) => !r.nid).length,
+    review_needed: reviewNeeded,
+    n_aged: rows.filter((r) => r.aged).length, n_recent: rows.filter((r) => r.AK_date && !r.aged).length,
+    fully_covered_count: fullyCoveredList.length, partially_covered_count: partiallyCoveredList.length,
+    zero_covered_count: zeroCoveredList.length,
+    fully_covered_amount: fullyCoveredList.reduce((s, r) => s + r.unflagged_aged_amount, 0),
+    fully_covered_claims: fullyCoveredList.reduce((s, r) => s + r.unflagged_count, 0),
+    partially_covered_total: partiallyCoveredList.reduce((s, r) => s + r.AI_total_aged, 0),
+    partially_covered_paid: partiallyCoveredList.reduce((s, r) => s + r.dp_total, 0),
+    partially_covered_gap: partiallyCoveredList.reduce((s, r) => s + r.gap, 0),
+    partially_covered_oldest: sortedOldest(partiallyCoveredList)[0] || null,
+    partially_covered_newest: sortedNewest(partiallyCoveredList).slice(-1)[0] || null,
+    zero_covered_total: zeroCoveredList.reduce((s, r) => s + r.AI_total_aged, 0),
+    zero_covered_fully_eval: zeroCoveredList.filter((r) => r.evaluated_claims === r.claims).length,
+    zero_covered_partial_eval: zeroCoveredList.filter((r) => r.evaluated_claims > 0 && r.evaluated_claims < r.claims).length,
+    zero_covered_oldest: sortedOldest(zeroCoveredList)[0] || null,
+    zero_covered_newest: sortedNewest(zeroCoveredList).slice(-1)[0] || null,
+    partially_covered_list: partiallyCoveredList, zero_covered_list: zeroCoveredList,
+    fully_covered_list: fullyCoveredList, too_recent_list: tooRecentList,
+    too_recent_count: tooRecentList.length,
+    too_recent_amount: tooRecentList.reduce((s, r) => s + r.amount, 0),
+    too_recent_claims: tooRecentList.reduce((s, r) => s + r.count, 0),
+    unflagged_people: fullyCoveredList.length + partiallyCoveredList.length + zeroCoveredList.length + tooRecentList.length,
+    as_of_jalali: jlabel(asOf),
+  };
+  return M;
+}
+
+// ============================================================
+// ساخت پاورپوینت (پورت‌شده از build_deck2.js)
+// ============================================================
+const FONT = "IRANSansX";
+const C = {
+  primary: "00B4FF", primaryDark: "0092FF", accent: "FFCC00", dark: "2C2C2C",
+  gray: "757575", lightGray: "F2F2F2", cardBg: "FFFFFF", success: "00A651",
+  danger: "E63946", navy: "16324F",
+};
+function faText(txt, opts) {
+  return [{ text: txt, options: Object.assign({ fontFace: FONT, rtlMode: true, align: "right" }, opts) }];
+}
+function fmt(n) { return Math.round(n).toLocaleString("en-US"); }
+function fmtB(n) { return (n / 1e9).toFixed(2) + " میلیارد ریال"; }
+function pctf(n) { return n.toFixed(1) + "٪"; }
+
+const AUDIENCE_FOOTER_SUFFIX = {
+  mgmt: "  ·  نسخه گزارش مدیریتی",
+  insured: "  ·  نسخه گزارش به بیمه‌گذار",
+  ops: "",
+};
+
+async function generatePptx(M, insuredName, slideSet, audience) {
+  const O = M.overview;
+  const S = slideSet; // Set of original slide numbers (1..25) to include in this deck
+  const pres = new PptxGenJS();
+  pres.layout = "LAYOUT_WIDE";
+  const PW = 13.33, PH = 7.5;
+
+  function addHeader(slide, title, subtitle) {
+    slide.background = { color: "FFFFFF" };
+    slide.addText(title, { x: 0.6, y: 0.35, w: PW - 1.2, h: 0.7, fontFace: FONT, rtlMode: true, align: "right", fontSize: 28, bold: true, color: C.navy });
+    if (subtitle) slide.addText(subtitle, { x: 0.6, y: 0.95, w: PW - 1.2, h: 0.4, fontFace: FONT, rtlMode: true, align: "right", fontSize: 13, color: C.gray });
+  }
+  // هشدار قابل‌مشاهده روی خودِ اسلاید (دور دهم) — نه فقط در پنل لاگ ابزار که کاربر
+  // خروجی نهایی معمولاً آن را نمی‌بیند. true برمی‌گرداند اگر چیزی برای نشان دادن بود.
+  function addFamilyKeyWarning(slide) {
+    if (!(M.nids_reviewed === 0 || M.overview.dp_unscoped_extra_amount > 0 || M.no_family_key_count > 0)) return false;
+    const warnParts = [];
+    if (M.nids_reviewed === 0) warnParts.push('هیچ کد خانواده‌ای برای مغایرت‌گیری پیدا نشد — بخش «مغایرت‌گیری» این گزارش قابل‌اتکا نیست.');
+    if (M.no_family_key_count > 0) warnParts.push(`${fmt(M.no_family_key_count)} پرونده سیناد بدون کد خانواده ماندند و از مغایرت‌گیری کنار ماندند.`);
+    if (M.overview.dp_unscoped_extra_amount > 0) warnParts.push(`${fmt(M.overview.dp_unscoped_extra_count)} ردیف دستور پرداخت (${fmt(M.overview.dp_unscoped_extra_amount)} ریال) به سازمانی نامرتبط تعلق داشت و از «مجموع واریزشده» کنار گذاشته شد.`);
+    const warnH = 0.3 + 0.3 * warnParts.length;
+    slide.addShape("roundRect", { x: 0.5, y: PH - warnH - 0.3, w: PW - 1.0, h: warnH, rectRadius: 0.06, fill: { color: "FFF6E5" }, line: { color: C.accent, width: 1 } });
+    slide.addText(faText('⚠ هشدار داده‌ای: ' + warnParts.join('  ·  '), { fontSize: 10.5, color: "8A6100", lineSpacingMultiple: 1.1 }), { x: 0.7, y: PH - warnH - 0.2, w: PW - 1.4, h: warnH - 0.1, valign: "middle" });
+    return true;
+  }
+  function kpiCard(slide, x, y, w, h, value, label, color) {
+    slide.addShape("roundRect", { x, y, w, h, rectRadius: 0.1, fill: { color: "FFFFFF" }, line: { color: "E4E4E4", width: 1 }, shadow: { type: "outer", color: "000000", opacity: 0.12, blur: 8, offset: 3, angle: 90 } });
+    slide.addText(String(value), { x: x + 0.1, y: y + 0.12, w: w - 0.2, h: h * 0.55, fontFace: FONT, align: "center", fontSize: 22, bold: true, color: color, valign: "bottom" });
+    slide.addText(label, { x: x + 0.1, y: y + h * 0.6, w: w - 0.2, h: h * 0.35, fontFace: FONT, rtlMode: true, align: "center", fontSize: 11.5, color: C.gray, valign: "top" });
+  }
+
+  const BUCKET_COLORS = ["00A651", "3FBF6E", "9AD9A0", "FFCC00", "FF9F40", "FF6B4A", "E63946"];
+  const BUCKET_LABELS = M.buckets_out.map((b) => b.label);
+
+  // اسلاید ۱ - عنوان
+  if (S.has(1)) {
+    const s = pres.addSlide();
+    s.background = { color: C.navy };
+    s.addShape("rect", { x: 0, y: 0, w: PW, h: PH, fill: { color: C.navy } });
+    s.addShape("ellipse", { x: 9.8, y: -2.5, w: 7, h: 7, fill: { color: C.primary, transparency: 85 }, line: { type: "none" } });
+    s.addShape("ellipse", { x: -2, y: 4.5, w: 6, h: 6, fill: { color: C.accent, transparency: 90 }, line: { type: "none" } });
+    s.addText(`گزارش مدیریتی خسارت — ${insuredName}`, { x: 0.8, y: 2.5, w: PW - 1.6, h: 1.1, fontFace: FONT, rtlMode: true, align: "right", fontSize: 40, bold: true, color: "FFFFFF" });
+    s.addText("تحلیل هزینه، پرداخت، شاخص‌های SLA", { x: 0.8, y: 3.55, w: PW - 1.6, h: 0.55, fontFace: FONT, rtlMode: true, align: "right", fontSize: 18, color: C.primary });
+    s.addText(`بر اساس خروجی سامانه تا تاریخ ${M.as_of_jalali}  ·  ازکی${AUDIENCE_FOOTER_SUFFIX[audience] || ""}`, { x: 0.8, y: 6.5, w: PW - 1.6, h: 0.4, fontFace: FONT, rtlMode: true, align: "right", fontSize: 13, color: "CADCFC" });
+  }
+
+  // اسلاید ۲ - خلاصه مدیریتی
+  if (S.has(2)) {
+    const s = pres.addSlide();
+    addHeader(s, "خلاصه مدیریتی", "نگاه یک‌نگاهی به وضعیت خسارت‌های بارگذاری‌شده و پرداختی");
+    const bullets = [
+      `از مجموع ${fmt(O.total_count)} پرونده بارگذاری‌شده به ارزش ${fmt(O.total_cost)} ریال، ${fmt(O.returned_count)} پرونده (${pctf(O.return_rate_count)}) عودت مدارک داشته‌اند.`,
+      `${fmt(O.valid_count)} پرونده معتبر باقی مانده به ارزش ${fmt(O.valid_cost)} ریال؛ ${pctf(O.eval_pct)} از این پرونده‌ها ارزیابی شده‌اند.`,
+      `مجموع مبلغ واریزشده طبق «دستور پرداخت» تا آخرین تاریخ ثبت‌شده (${O.latest_pay_jalali}) برابر ${fmt(O.dp_total)} ریال بوده است.`,
+      `میانگین زمان بارگذاری تا ارزیابی ${O.sla_a.toFixed(1)} روز، ارزیابی تا پرداخت ${O.sla_b.toFixed(1)} روز و کل چرخه ${O.sla_c.toFixed(1)} روز است.`,
+      `از ${fmt(M.nids_reviewed)} کد خانواده بررسی‌شده، ${fmt(M.discrepancies_count)} مورد (${pctf(M.discrepancies_pct)}) با احتساب فرصت SLA (۵ روز کاری) هنوز مبلغ واریزی کمتر از قابل‌پرداخت دارند؛ از این میان تنها ${fmt(M.review_needed.length)} مورد (به ارزش ${fmtB(M.review_needed.reduce((s,r)=>s+r.paid_gap,0))}) واقعاً نیازمند بررسی است — چون خودِ سیناد این خسارت‌ها را «پرداخت‌شده» ثبت کرده ولی رد پایی در دستور پرداخت ندارند.`,
+    ];
+    let y = 1.55;
+    bullets.forEach((b) => {
+      s.addShape("ellipse", { x: PW - 0.95, y: y + 0.08, w: 0.1, h: 0.1, fill: { color: C.primary }, line: { type: "none" } });
+      s.addText(faText(b, { fontSize: 13.5, color: C.dark, lineSpacingMultiple: 1.12 }), { x: 0.6, y: y, w: PW - 1.7, h: 1.05 });
+      y += 1.1;
+    });
+    // هشدار قابل‌مشاهده (دور دهم): وقتی هیچ کد خانواده‌ای برای مقایسه پیدا نشد یا
+    // بخشی از «دستور پرداخت» به‌عنوان بی‌ربط کنار گذاشته شد، همین‌جا روی اسلاید نشان
+    // داده می‌شود تا فقط در پنل لاگ ابزار (که کاربر خروجی نهایی معمولاً آن را نمی‌بیند) نماند.
+    addFamilyKeyWarning(s);
+  }
+
+  // اسلاید ۳ - KPIهای هزینه و اعتبار پرونده‌ها
+  if (S.has(3)) {
+    const s = pres.addSlide();
+    addHeader(s, "شاخص‌های کلیدی — هزینه‌های بارگذاری‌شده", null);
+    const cards = [
+      [fmt(O.total_count), "تعداد کل پرونده بارگذاری‌شده", C.navy],
+      [fmt(O.total_cost) + " ریال", "مجموع مبلغ هزینه", C.navy],
+      [fmt(O.valid_count), "پرونده معتبر (پس از حذف عودتی)", C.success],
+      [fmt(O.valid_cost) + " ریال", "مبلغ هزینه معتبر", C.success],
+      [pctf(O.return_rate_count), "نرخ عودتی — از نظر تعداد", C.danger],
+      [pctf(O.return_rate_amount), "نرخ عودتی — از نظر مبلغ", C.danger],
+    ];
+    const cw = (PW - 1.2 - 2 * 0.3) / 3, ch = 1.7;
+    let cx = 0.6, cy = 1.85;
+    cards.forEach((c, i) => { kpiCard(s, cx, cy, cw, ch, c[0], c[1], c[2]); cx += cw + 0.3; if ((i + 1) % 3 === 0) { cx = 0.6; cy += ch + 0.3; } });
+    s.addText(faText(`${fmt(O.returned_count)} پرونده عودتی به ارزش ${fmt(O.returned_cost)} ریال از محاسبات اصلی حذف شده‌اند.`, { fontSize: 12, italic: true, color: C.gray }), { x: 0.6, y: cy + 0.15, w: PW - 1.2, h: 0.4 });
+    // این اولین اسلاید مشترک بین هر سه خروجی (مدیریتی/بیمه‌گذار/عملیات) است، پس هشدار
+    // کد خانواده/اسکوپ دستور پرداخت (دور دهم) اینجا هم تکرار می‌شود تا در نسخه مدیریتی
+    // و بیمه‌گذار هم دیده شود (اسلاید ۲ فقط در گزارش کامل واحد عملیات ظاهر می‌شود).
+    addFamilyKeyWarning(s);
+  }
+
+  // اسلاید ۴ - وضعیت پرونده‌های عودتی
+  if (S.has(4)) {
+    const s = pres.addSlide();
+    addHeader(s, "وضعیت پرونده‌های عودتی", "سهم عودتی‌ها از کل، به تفکیک تعداد و مبلغ");
+    s.addChart("doughnut", [{ name: "تعداد پرونده", labels: ["معتبر", "عودتی"], values: [O.valid_count, O.returned_count] }], {
+      x: 0.7, y: 1.8, w: 5.4, h: 4.6, chartColors: [C.success, C.danger],
+      showLegend: true, legendPos: "b", legendFontFace: FONT, legendFontSize: 11,
+      showValue: false, showPercent: true, dataLabelFontSize: 13, dataLabelColor: "FFFFFF", dataLabelFontFace: FONT,
+      showTitle: true, title: "تفکیک تعداد پرونده", titleFontFace: FONT, titleFontSize: 14, titleColor: C.dark,
+    });
+    s.addChart("doughnut", [{ name: "مبلغ هزینه", labels: ["معتبر", "عودتی"], values: [O.valid_cost, O.returned_cost] }], {
+      x: 6.8, y: 1.8, w: 5.4, h: 4.6, chartColors: [C.primary, C.accent],
+      showLegend: true, legendPos: "b", legendFontFace: FONT, legendFontSize: 11,
+      showValue: false, showPercent: true, dataLabelFontSize: 13, dataLabelColor: "2C2C2C", dataLabelFontFace: FONT,
+      showTitle: true, title: "تفکیک مبلغ هزینه", titleFontFace: FONT, titleFontSize: 14, titleColor: C.dark,
+    });
+  }
+
+  // اسلاید ۵ - مبالغ واریزشده (دستور پرداخت)
+  if (S.has(5)) {
+    const s = pres.addSlide();
+    addHeader(s, "مبالغ واریزشده", null);
+    const cards = [
+      [fmt(O.dp_total) + " ریال", "مجموع مبلغ واریزشده", C.navy],
+      [fmt(O.ai_total) + " ریال", "مجموع مبلغ تأیید شده", C.primary],
+      [O.latest_pay_jalali, "آخرین تاریخ واریز ثبت‌شده", C.primaryDark],
+      [fmt(O.gap_amount) + " ریال", "مجموع مبلغ تأیید شده‌ی واریز نشده", C.danger],
+    ];
+    const cw = (PW - 1.2 - 3 * 0.25) / 4, ch = 2.0;
+    let cx = 0.6, cy = 2.2;
+    cards.forEach((c) => { kpiCard(s, cx, cy, cw, ch, c[0], c[1], c[2]); cx += cw + 0.25; });
+  }
+
+  // اسلاید ۶ - شاخص‌های SLA
+  if (S.has(6)) {
+    const s = pres.addSlide();
+    if (isShuttleClient(insuredName)) {
+      addHeader(s, "شاخص‌های SLA و زمان چرخه پرداخت", `میانگین روز تقویمی — به تفکیک پیش و پس از ${niceJalaliLabel(SHUTTLE_CUTOFF_JALALI)}  ·  P90: میانگین SLA سریع‌ترین ۹۰٪ پرونده‌ها (کندترین ۱۰٪ دورافتاده کنار گذاشته شده)`);
+      const cw6 = (PW - 1.2 - 2 * 0.3) / 3, ch6 = 1.7;
+      function renderShuttlePeriodRow(periodData, periodLabel, y) {
+        s.addText(faText(periodLabel, { fontSize: 13, bold: true, color: C.navy, align: "center" }), { x: 0.6, y: y - 0.42, w: PW - 1.2, h: 0.35 });
+        const slas6 = [
+          [periodData.sla_a !== null ? periodData.sla_a.toFixed(1) + " روز" : "—", "بارگذاری تا ارزیابی"],
+          [periodData.sla_b !== null ? periodData.sla_b.toFixed(1) + " روز" : "—", "ارزیابی تا پرداخت"],
+          [periodData.sla_c !== null ? periodData.sla_c.toFixed(1) + " روز" : "—", "کل چرخه (بارگذاری تا پرداخت)"],
+        ];
+        let cx6 = 0.6;
+        slas6.forEach((c) => {
+          s.addShape("roundRect", { x: cx6, y, w: cw6, h: ch6, rectRadius: 0.12, fill: { color: C.navy }, shadow: { type: "outer", color: "000000", opacity: 0.15, blur: 8, offset: 3, angle: 90 } });
+          s.addText(c[0], { x: cx6, y: y + 0.2, w: cw6, h: 0.75, fontFace: FONT, align: "center", fontSize: 28, bold: true, color: C.accent });
+          s.addText(faText(c[1], { fontSize: 12.5, bold: true, color: "FFFFFF", align: "center" }), { x: cx6 + 0.15, y: y + 1.0, w: cw6 - 0.3, h: 0.6 });
+          cx6 += cw6 + 0.3;
+        });
+      }
+      renderShuttlePeriodRow(M.shuttle_period1, `${M.shuttle_period1.label}  ·  ثابت  ·  ${fmt(M.shuttle_period1.n)} پرونده`, 2.2);
+      renderShuttlePeriodRow(M.shuttle_period2, `${M.shuttle_period2.label}  ·  متغیر  ·  ${fmt(M.shuttle_period2.n)} پرونده`, 4.65);
+      // P90 کل چرخه — به‌همان سبک کارت‌های KPI گزارش Overview (اسلاید ۵/۶ آن: مقدار
+      // P90 هم‌وزن با میانگین، نه یک پانویس کوچک خاکستری) — یک کارت به‌ازای هر دوره.
+      {
+        const cwP90 = (PW - 1.2 - 0.3) / 2;
+        kpiCard(s, 0.6, 6.45, cwP90, 1.0,
+          M.shuttle_period1.sla_c_p90 !== null ? M.shuttle_period1.sla_c_p90.toFixed(1) + " روز" : "—",
+          "P90 کل چرخه — دوره ثابت", C.primary);
+        kpiCard(s, 0.6 + cwP90 + 0.3, 6.45, cwP90, 1.0,
+          M.shuttle_period2.sla_c_p90 !== null ? M.shuttle_period2.sla_c_p90.toFixed(1) + " روز" : "—",
+          "P90 کل چرخه — دوره متغیر", C.primary);
+      }
+    } else {
+      addHeader(s, "شاخص‌های SLA و زمان چرخه پرداخت", "میانگین روز، بر اساس روز تقویمی  ·  P90: میانگین SLA سریع‌ترین ۹۰٪ پرونده‌ها (کندترین ۱۰٪ دورافتاده کنار گذاشته شده)");
+      const slas = [
+        [O.sla_a.toFixed(1) + " روز", "بارگذاری تا ارزیابی"],
+        [O.sla_b.toFixed(1) + " روز", "ارزیابی تا پرداخت"],
+        [O.sla_c.toFixed(1) + " روز", "کل چرخه (بارگذاری تا پرداخت)"],
+      ];
+      const cw = (PW - 1.2 - 2 * 0.35) / 3, ch = 3.0;
+      let cx = 0.6, cy = 1.9;
+      slas.forEach((c) => {
+        s.addShape("roundRect", { x: cx, y: cy, w: cw, h: ch, rectRadius: 0.12, fill: { color: C.navy }, shadow: { type: "outer", color: "000000", opacity: 0.15, blur: 8, offset: 3, angle: 90 } });
+        s.addText(c[0], { x: cx, y: cy + 0.5, w: cw, h: 1.1, fontFace: FONT, align: "center", fontSize: 40, bold: true, color: C.accent });
+        s.addText(faText(c[1], { fontSize: 16, bold: true, color: "FFFFFF", align: "center" }), { x: cx + 0.2, y: cy + 1.65, w: cw - 0.4, h: 0.5 });
+        cx += cw + 0.35;
+      });
+      // P90 کل چرخه — به‌همان سبک کارت‌های KPI گزارش Overview (اسلاید ۵/۶ آن: مقدار P90
+      // هم‌وزن با میانگین، نه یک پانویس کوچک خاکستری)، هم‌مرکز زیر سه کارت بالا.
+      {
+        const cwP90 = cw;
+        kpiCard(s, (PW - cwP90) / 2, cy + ch + 0.25, cwP90, 1.3,
+          O.sla_c_p90 !== null ? O.sla_c_p90.toFixed(1) + " روز" : "—",
+          "P90 کل چرخه", C.primary);
+      }
+    }
+  }
+
+  // اسلاید ۷ - روند هفتگی حجم پرونده و نرخ عودت
+  if (S.has(7)) {
+    const s = pres.addSlide();
+    addHeader(s, "روند هفتگی حجم پرونده و نرخ عودت", "بر اساس تاریخ ثبت هزینه — هفته‌های ۷روزه، از " + M.weekly[0].start_j + " تا " + M.weekly[M.weekly.length - 1].end_j);
+    const weekLabels = M.weekly.map((w) => w.week_label);
+    s.addChart("bar", [{ name: "تعداد پرونده ثبت‌شده", labels: weekLabels, values: M.weekly.map((w) => w.count) }], {
+      x: 0.6, y: 1.8, w: (PW - 1.4) / 2, h: 4.5, barDir: "col", chartColors: [C.primary],
+      showTitle: true, title: "تعداد پرونده ثبت‌شده در هفته", titleFontFace: FONT, titleFontSize: 13, titleColor: C.dark, showLegend: false,
+      showValue: true, dataLabelPosition: "outEnd", dataLabelFontSize: 11, dataLabelFontFace: FONT, dataLabelColor: C.dark,
+      catAxisLabelFontFace: FONT, catAxisLabelFontSize: 10.5, catAxisLabelColor: C.dark,
+      valAxisLabelFontFace: FONT, valAxisLabelFontSize: 10, valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+    });
+    s.addChart("line", [{ name: "نرخ عودت (٪)", labels: weekLabels, values: M.weekly.map((w) => w.return_rate) }], {
+      x: 0.8 + (PW - 1.4) / 2, y: 1.8, w: (PW - 1.4) / 2, h: 4.5, chartColors: [C.danger],
+      showTitle: true, title: "نرخ عودت هفتگی (٪)", titleFontFace: FONT, titleFontSize: 13, titleColor: C.dark, showLegend: false,
+      showValue: true, dataLabelFontSize: 10.5, dataLabelFontFace: FONT, dataLabelColor: C.danger, dataLabelPosition: "t",
+      lineDataSymbol: "circle", lineDataSymbolSize: 7, lineSize: 2.5,
+      catAxisLabelFontFace: FONT, catAxisLabelFontSize: 10.5, catAxisLabelColor: C.dark,
+      valAxisLabelFontFace: FONT, valAxisLabelFontSize: 10, valAxisMinVal: 0,
+      valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+    });
+  }
+
+  // اسلاید ۷.۱ - تعداد عودت هفتگی و SLA عودت مدارک
+  if (S.has(8)) {
+    const s = pres.addSlide();
+    addHeader(s, "تعداد عودت هفتگی و SLA عودت مدارک", "تعداد پرونده‌های عودتی به تفکیک هفته، و میانگین زمان بارگذاری تا عودت مدارک");
+    const weekLabels = M.weekly.map((w) => w.week_label);
+    s.addChart("bar", [{ name: "تعداد عودت", labels: weekLabels, values: M.weekly.map((w) => w.return_count) }], {
+      x: 0.6, y: 1.8, w: (PW - 1.4) / 2, h: 4.5, barDir: "col", chartColors: [C.danger],
+      showTitle: true, title: "تعداد پرونده عودتی در هفته", titleFontFace: FONT, titleFontSize: 13, titleColor: C.dark, showLegend: false,
+      showValue: true, dataLabelPosition: "outEnd", dataLabelFontSize: 11, dataLabelFontFace: FONT, dataLabelColor: C.dark,
+      catAxisLabelFontFace: FONT, catAxisLabelFontSize: 10.5, catAxisLabelColor: C.dark,
+      valAxisLabelFontFace: FONT, valAxisLabelFontSize: 10, valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+    });
+    s.addChart("line", [{ name: "میانگین روز بارگذاری تا عودت", labels: weekLabels, values: M.weekly.map((w) => w.return_sla_avg) }], {
+      x: 0.8 + (PW - 1.4) / 2, y: 1.8, w: (PW - 1.4) / 2, h: 4.5, chartColors: [C.accent],
+      showTitle: true, title: "SLA عودت مدارک (میانگین روز)", titleFontFace: FONT, titleFontSize: 13, titleColor: C.dark, showLegend: false,
+      showValue: true, dataLabelFontSize: 10.5, dataLabelFontFace: FONT, dataLabelColor: C.dark, dataLabelPosition: "t", dataLabelFormatCode: "#,##0.00",
+      lineDataSymbol: "circle", lineDataSymbolSize: 7, lineSize: 2.5,
+      catAxisLabelFontFace: FONT, catAxisLabelFontSize: 10.5, catAxisLabelColor: C.dark,
+      valAxisLabelFontFace: FONT, valAxisLabelFontSize: 10, valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+    });
+  }
+
+  // اسلاید ۸.۱ - روند ماهانه حجم پرونده و نرخ عودت (به درخواست کاربر، بلافاصله بعد از اسلاید ۸ می‌آید)
+  if (S.has(11)) {
+    const s = pres.addSlide();
+    addHeader(s, "روند ماهانه حجم پرونده و نرخ عودت", "بر اساس تاریخ ثبت هزینه — ماه‌های شمسی");
+    const monthLabels = M.monthly.map((m) => m.label);
+    s.addChart("bar", [{ name: "تعداد پرونده", labels: monthLabels, values: M.monthly.map((m) => m.count) }], {
+      x: 0.6, y: 1.8, w: (PW - 1.4) / 3, h: 4.5, barDir: "col", chartColors: [C.primary],
+      showTitle: true, title: "تعداد پرونده", titleFontFace: FONT, titleFontSize: 12, titleColor: C.dark, showLegend: false,
+      showValue: true, dataLabelPosition: "outEnd", dataLabelFontSize: 11, dataLabelFontFace: FONT, dataLabelColor: C.dark,
+      catAxisLabelFontFace: FONT, catAxisLabelFontSize: 11, catAxisLabelColor: C.dark,
+      valAxisLabelFontFace: FONT, valAxisLabelFontSize: 10, valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+    });
+    s.addChart("bar", [{ name: "تعداد عودت", labels: monthLabels, values: M.monthly.map((m) => m.return_count) }], {
+      x: 0.7 + (PW - 1.4) / 3, y: 1.8, w: (PW - 1.4) / 3, h: 4.5, barDir: "col", chartColors: [C.danger],
+      showTitle: true, title: "تعداد عودت", titleFontFace: FONT, titleFontSize: 12, titleColor: C.dark, showLegend: false,
+      showValue: true, dataLabelPosition: "outEnd", dataLabelFontSize: 11, dataLabelFontFace: FONT, dataLabelColor: C.dark,
+      catAxisLabelFontFace: FONT, catAxisLabelFontSize: 11, catAxisLabelColor: C.dark,
+      valAxisLabelFontFace: FONT, valAxisLabelFontSize: 10, valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+    });
+    s.addChart("line", [{ name: "نرخ عودت (٪)", labels: monthLabels, values: M.monthly.map((m) => m.return_rate) }], {
+      x: 0.8 + 2*(PW - 1.4) / 3, y: 1.8, w: (PW - 1.4) / 3, h: 4.5, chartColors: [C.accent],
+      showTitle: true, title: "نرخ عودت (٪)", titleFontFace: FONT, titleFontSize: 12, titleColor: C.dark, showLegend: false,
+      showValue: true, dataLabelFontSize: 11, dataLabelFontFace: FONT, dataLabelColor: C.dark, dataLabelPosition: "t",
+      lineDataSymbol: "circle", lineDataSymbolSize: 7, lineSize: 2.5,
+      catAxisLabelFontFace: FONT, catAxisLabelFontSize: 11, catAxisLabelColor: C.dark,
+      valAxisLabelFontFace: FONT, valAxisLabelFontSize: 10, valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+    });
+    s.addText(faText(`داده‌های گزارش ${M.monthly.length} ماه شمسی (${monthLabels[0]} تا ${monthLabels[monthLabels.length-1]}) را پوشش می‌دهند؛ ماه‌های ابتدایی یا انتهایی ممکن است ناقص باشند، پس مقایسه باید با احتیاط خوانده شود.`, { fontSize: 11.5, italic: true, color: C.gray }), { x: 0.6, y: 6.5, w: PW - 1.2, h: 0.6 });
+  }
+
+  // اسلاید ۷.۲ - طبقه‌بندی دلایل عودت مدارک
+  if (S.has(9)) {
+    const s = pres.addSlide();
+    addHeader(s, "طبقه‌بندی دلایل عودت مدارک", `تحلیل ${fmt(O.returned_count)} پرونده عودتی`);
+    s.addChart("bar", [{ name: "تعداد", labels: O.return_reasons.map((r) => r.label), values: O.return_reasons.map((r) => r.n) }], {
+      x: 0.6, y: 1.6, w: PW - 1.2, h: 2.4, barDir: "bar", chartColors: [C.primary],
+      showTitle: false, showLegend: false,
+      showValue: true, dataLabelPosition: "outEnd", dataLabelFontSize: 12, dataLabelFontFace: FONT, dataLabelColor: C.dark,
+      catAxisLabelFontFace: FONT, catAxisLabelFontSize: 12, catAxisLabelColor: C.dark,
+      valAxisLabelFontFace: FONT, valAxisLabelFontSize: 10, valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+    });
+    const headerRow = ["دسته‌بندی", "تعداد", "درصد"].map((t) => ({ text: t, options: { fontFace: FONT, rtlMode: true, align: "center", bold: true, color: "FFFFFF", fill: { color: C.navy }, fontSize: 11.5 } }));
+    const rows = [headerRow];
+    O.return_reasons.forEach((r, i) => {
+      const bg = i % 2 === 0 ? "FFFFFF" : "F5F8FC";
+      rows.push([
+        { text: r.label, options: { fontFace: FONT, rtlMode: true, align: "center", fill: { color: bg }, fontSize: 11.5 } },
+        { text: fmt(r.n), options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 11.5 } },
+        { text: pctf(r.pct), options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 11.5 } },
+      ]);
+    });
+    const tblY = 4.2, rowH = 0.34;
+    s.addTable(rows, { x: 2.7, y: tblY, w: PW - 5.4, h: rowH * rows.length, colW: [4.0, 1.7, 1.7], border: { type: "solid", color: "E4E4E4", pt: 0.5 }, autoPage: false });
+    s.addText(faText("بیشترین علت عودت، «مدارک ناقص / نیازمند اصلاح» است — یعنی بیشتر عودت‌ها ناشی از کیفیت مدارک ارسالی است، نه رد درخواست.", { fontSize: 11, italic: true, color: C.gray }), { x: 0.6, y: tblY + rowH * rows.length + 0.2, w: PW - 1.2, h: 0.5 });
+  }
+
+  // اسلاید ۸ - روند هفتگی شاخص‌های SLA (برای گزارش مدیریتی، روز تقویمی و روز کاری روی یک نمودار ادغام می‌شوند)
+  if (S.has(10)) {
+    const s = pres.addSlide();
+    const weekLabels2 = M.weekly.map((w) => w.week_label);
+    if (audience === 'mgmt') {
+      const weeklyWin = M.weekly.slice(-WEEKLY_SLA_WINDOW);
+      const weekLabelsWin = weeklyWin.map((w) => w.week_label);
+      addHeader(s, "روند هفتگی شاخص‌های SLA — روز تقویمی و روز کاری", `میانگین روز، بر اساس هفته ثبت هزینه — ${weeklyWin.length} هفته اخیر — هر چه پایین‌تر، بهتر`);
+      const slaMetricsW = [
+        { label: "ثبت تا ارزیابی", cal: "avg_se", biz: "avg_se_biz" },
+        { label: "ارزیابی تا پرداخت", cal: "avg_ep", biz: "avg_ep_biz" },
+        { label: "کل چرخه", cal: "avg_sp", biz: "avg_sp_biz" },
+      ];
+      const chWW = (PW - 1.6) / 3;
+      slaMetricsW.forEach((m, i) => {
+        s.addChart("bar", [
+          { name: "روز تقویمی", labels: weekLabelsWin, values: weeklyWin.map((w) => w[m.cal]) },
+          { name: "روز کاری", labels: weekLabelsWin, values: weeklyWin.map((w) => w[m.biz]) },
+        ], {
+          x: 0.5 + i * (chWW + 0.3), y: 1.75, w: chWW, h: 4.4, barDir: "col", barGapWidthPct: 25, chartColors: [C.gray, C.primary],
+          showTitle: true, title: m.label, titleFontFace: FONT, titleFontSize: 11.5, titleColor: C.dark,
+          showLegend: true, legendPos: "b", legendFontFace: FONT, legendFontSize: 9,
+          showValue: false,
+          catAxisLabelFontFace: FONT, catAxisLabelFontSize: 7.5, catAxisLabelColor: C.dark, catAxisLabelRotate: 45,
+          valAxisLabelFontFace: FONT, valAxisLabelFontSize: 9,
+          valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+        });
+      });
+      s.addText(faText(`نمودار فقط ${weeklyWin.length} هفته‌ی اخیر را نشان می‌دهد تا با گذشت زمان شلوغ نشود. ستون تیره = روز تقویمی، ستون آبی = روز کاری (بدون جمعه و تعطیلات رسمی).`, { fontSize: 10.5, italic: true, color: C.gray }), { x: 0.6, y: 6.35, w: PW - 1.2, h: 0.5 });
+    } else {
+      addHeader(s, "روند هفتگی شاخص‌های SLA", "میانگین روز، بر اساس هفته ثبت هزینه — هر چه پایین‌تر، بهتر");
+      s.addChart("line", [
+        { name: "ثبت تا ارزیابی", labels: weekLabels2, values: M.weekly.map((w) => w.avg_se) },
+        { name: "ارزیابی تا پرداخت", labels: weekLabels2, values: M.weekly.map((w) => w.avg_ep) },
+        { name: "کل چرخه (ثبت تا پرداخت)", labels: weekLabels2, values: M.weekly.map((w) => w.avg_sp) },
+      ], {
+        x: 0.6, y: 1.8, w: PW - 1.2, h: 4.3, chartColors: [C.primary, C.accent, C.navy],
+        showTitle: false, showLegend: true, legendPos: "b", legendFontFace: FONT, legendFontSize: 11,
+        showValue: true, dataLabelFontSize: 10, dataLabelFontFace: FONT, dataLabelPosition: "t", dataLabelFormatCode: "#,##0.00",
+        lineDataSymbol: "circle", lineDataSymbolSize: 6, lineSize: 2.5,
+        catAxisLabelFontFace: FONT, catAxisLabelFontSize: 11, catAxisLabelColor: C.dark,
+        valAxisLabelFontFace: FONT, valAxisLabelFontSize: 10,
+        showValAxisTitle: true, valAxisTitle: "میانگین روز", valAxisTitleFontFace: FONT, valAxisTitleFontSize: 10,
+        valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+      });
+      s.addText(faText("روند تغییرات میانگین روز در طول هفته‌های گزارش. هفته‌های اخیر ممکن است داده پرداخت ناقص داشته باشند چون هنوز فرصت پرداخت پیدا نکرده‌اند — نبود داده را نباید بدتر شدن تفسیر کرد.", { fontSize: 11, color: C.dark }), { x: 0.6, y: 6.35, w: PW - 1.2, h: 0.85 });
+    }
+  }
+
+  // اسلاید ۸.۲ - روند ماهانه شاخص‌های SLA (برای گزارش مدیریتی، روز تقویمی و روز کاری روی یک نمودار ادغام می‌شوند)
+  if (S.has(12)) {
+    const s = pres.addSlide();
+    const monthLabels = M.monthly.map((m) => m.label);
+    if (audience === 'mgmt') {
+      const monthlyWin = M.monthly.slice(-MONTHLY_SLA_WINDOW);
+      const monthLabelsWin = monthlyWin.map((m) => m.label);
+      addHeader(s, "روند ماهانه شاخص‌های SLA — روز تقویمی و روز کاری", `میانگین روز، بر اساس ماه ثبت هزینه (شمسی) — ${monthlyWin.length} ماه اخیر`);
+      const slaMetricsM = [
+        { label: "ثبت تا ارزیابی", cal: "avg_se", biz: "avg_se_biz" },
+        { label: "ارزیابی تا پرداخت", cal: "avg_ep", biz: "avg_ep_biz" },
+        { label: "کل چرخه", cal: "avg_sp", biz: "avg_sp_biz" },
+      ];
+      const chWM = (PW - 1.6) / 3;
+      slaMetricsM.forEach((m, i) => {
+        s.addChart("bar", [
+          { name: "روز تقویمی", labels: monthLabelsWin, values: monthlyWin.map((mm) => mm[m.cal]) },
+          { name: "روز کاری", labels: monthLabelsWin, values: monthlyWin.map((mm) => mm[m.biz]) },
+        ], {
+          x: 0.5 + i * (chWM + 0.3), y: 1.75, w: chWM, h: 4.4, barDir: "col", barGapWidthPct: 25, chartColors: [C.gray, C.primary],
+          showTitle: true, title: m.label, titleFontFace: FONT, titleFontSize: 11.5, titleColor: C.dark,
+          showLegend: true, legendPos: "b", legendFontFace: FONT, legendFontSize: 9,
+          showValue: false,
+          catAxisLabelFontFace: FONT, catAxisLabelFontSize: 8.5, catAxisLabelColor: C.dark,
+          valAxisLabelFontFace: FONT, valAxisLabelFontSize: 9,
+          valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+        });
+      });
+      s.addText(faText(`نمودار فقط ${monthlyWin.length} ماه‌ اخیر را نشان می‌دهد تا با گذشت زمان شلوغ نشود. ستون تیره = روز تقویمی، ستون آبی = روز کاری (بدون جمعه و تعطیلات رسمی).`, { fontSize: 10.5, italic: true, color: C.gray }), { x: 0.6, y: 6.4, w: PW - 1.2, h: 0.5 });
+    } else {
+      addHeader(s, "روند ماهانه شاخص‌های SLA", "میانگین روز، بر اساس ماه ثبت هزینه (شمسی)");
+      s.addChart("line", [
+        { name: "ثبت تا ارزیابی", labels: monthLabels, values: M.monthly.map((m) => m.avg_se) },
+        { name: "ارزیابی تا پرداخت", labels: monthLabels, values: M.monthly.map((m) => m.avg_ep) },
+        { name: "کل چرخه (ثبت تا پرداخت)", labels: monthLabels, values: M.monthly.map((m) => m.avg_sp) },
+      ], {
+        x: 0.6, y: 1.8, w: PW - 1.2, h: 4.3, chartColors: [C.primary, C.accent, C.navy],
+        showTitle: false, showLegend: true, legendPos: "b", legendFontFace: FONT, legendFontSize: 11,
+        showValue: true, dataLabelFontSize: 11, dataLabelFontFace: FONT, dataLabelPosition: "t", dataLabelFormatCode: "#,##0.00",
+        lineDataSymbol: "circle", lineDataSymbolSize: 8, lineSize: 2.5,
+        catAxisLabelFontFace: FONT, catAxisLabelFontSize: 12, catAxisLabelColor: C.dark,
+        valAxisLabelFontFace: FONT, valAxisLabelFontSize: 10,
+        showValAxisTitle: true, valAxisTitle: "میانگین روز", valAxisTitleFontFace: FONT, valAxisTitleFontSize: 10,
+        valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+      });
+      s.addText(faText("روند تغییرات میانگین سه شاخص چرخه پرداخت به تفکیک ماه شمسی.", { fontSize: 12, color: C.gray }), { x: 0.6, y: 6.5, w: PW - 1.2, h: 0.6 });
+    }
+  }
+
+  // اسلاید ۹ - روند روزانه شاخص‌های SLA (برای گزارش مدیریتی، روز تقویمی و روز کاری روی یک نمودار ادغام می‌شوند؛ حداکثر ۶۰ روز اخیر)
+  if (S.has(13)) {
+    const s = pres.addSlide();
+    const dayLabels = M.daily.map((d) => d.date_j.slice(5));
+    if (audience === 'mgmt') {
+      const dailyWin = M.daily.slice(-DAILY_SLA_CHART_WINDOW);
+      const dayLabelsWin = dailyWin.map((d) => d.date_j.slice(5));
+      addHeader(s, "روند روزانه شاخص‌های SLA — روز تقویمی و روز کاری", `میانگین روز، به تفکیک تاریخ ثبت هزینه (شمسی) — ${dailyWin.length} روز اخیر`);
+      const slaMetricsD = [
+        { label: "ثبت تا ارزیابی", cal: "avg_se", biz: "avg_se_biz" },
+        { label: "ارزیابی تا پرداخت", cal: "avg_ep", biz: "avg_ep_biz" },
+        { label: "کل چرخه", cal: "avg_sp", biz: "avg_sp_biz" },
+      ];
+      const chWD = (PW - 1.6) / 3;
+      slaMetricsD.forEach((m, i) => {
+        s.addChart("bar", [
+          { name: "روز تقویمی", labels: dayLabelsWin, values: dailyWin.map((d) => d[m.cal]) },
+          { name: "روز کاری", labels: dayLabelsWin, values: dailyWin.map((d) => d[m.biz]) },
+        ], {
+          x: 0.5 + i * (chWD + 0.3), y: 1.75, w: chWD, h: 4.5, barDir: "col", barGapWidthPct: 20, chartColors: [C.gray, C.primary],
+          showTitle: true, title: m.label, titleFontFace: FONT, titleFontSize: 11.5, titleColor: C.dark,
+          showLegend: true, legendPos: "b", legendFontFace: FONT, legendFontSize: 9, showValue: false,
+          catAxisLabelFontFace: FONT, catAxisLabelFontSize: 6.5, catAxisLabelColor: C.dark, catAxisLabelRotate: 60,
+          valAxisLabelFontFace: FONT, valAxisLabelFontSize: 9,
+          valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+        });
+      });
+      s.addText(faText(`برچسب افقی به‌صورت ماه/روز شمسی است. نمودار فقط ${dailyWin.length} روز اخیر را نشان می‌دهد. ستون تیره = روز تقویمی، ستون آبی = روز کاری.`, { fontSize: 10.5, italic: true, color: C.gray }), { x: 0.6, y: 6.5, w: PW - 1.2, h: 0.5 });
+    } else {
+      addHeader(s, "روند روزانه شاخص‌های SLA", `میانگین روز به تفکیک تاریخ ثبت هزینه (شمسی) — ${DAILY_WINDOW_DAYS} روز اخیر — هر چه پایین‌تر، بهتر`);
+      s.addChart("line", [
+        { name: "ثبت تا ارزیابی", labels: dayLabels, values: M.daily.map((d) => d.avg_se) },
+        { name: "ارزیابی تا پرداخت", labels: dayLabels, values: M.daily.map((d) => d.avg_ep) },
+        { name: "کل چرخه (ثبت تا پرداخت)", labels: dayLabels, values: M.daily.map((d) => d.avg_sp) },
+      ], {
+        x: 0.5, y: 1.75, w: PW - 1.0, h: 4.6, chartColors: [C.primary, C.accent, C.navy],
+        showTitle: false, showLegend: true, legendPos: "b", legendFontFace: FONT, legendFontSize: 11, showValue: false,
+        lineDataSymbol: "circle", lineDataSymbolSize: 3, lineSize: 1.75,
+        catAxisLabelFontFace: FONT, catAxisLabelFontSize: 8, catAxisLabelColor: C.dark, catAxisLabelRotate: 60,
+        valAxisLabelFontFace: FONT, valAxisLabelFontSize: 10,
+        showValAxisTitle: true, valAxisTitle: "میانگین روز", valAxisTitleFontFace: FONT, valAxisTitleFontSize: 10,
+        valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+      });
+      s.addText(faText("برچسب افقی به‌صورت ماه/روز شمسی است. چند روز آخر ممکن است خط پرداخت نداشته باشند چون آن پرونده‌ها هنوز فرصت پرداخت پیدا نکرده‌اند، نه اینکه وضعیت بدتر شده.", { fontSize: 11, italic: true, color: C.gray }), { x: 0.6, y: 6.5, w: PW - 1.2, h: 0.5 });
+    }
+  }
+
+  // اسلاید ۱۰ - بازه‌های SLA بارگذاری تا پرداخت
+  if (S.has(14)) {
+    const s = pres.addSlide();
+    addHeader(s, "بازه‌های SLA — بارگذاری تا پرداخت", `از ${fmt(M.total_paid_n)} پرونده پرداخت‌شده (${fmtB(M.total_paid_amount)}) در چه بازه زمانی‌ای پرداخت انجام شده`);
+    s.addChart("bar", [{ name: "تعداد پرونده", labels: BUCKET_LABELS, values: M.buckets_out.map((b) => b.n) }], {
+      x: 0.6, y: 1.55, w: PW - 1.2, h: 2.55, barDir: "col", chartColors: [C.primary],
+      showTitle: false, showLegend: false,
+      showValue: true, dataLabelPosition: "outEnd", dataLabelFontSize: 11, dataLabelFontFace: FONT, dataLabelColor: C.dark,
+      catAxisLabelFontFace: FONT, catAxisLabelFontSize: 10.5, catAxisLabelColor: C.dark,
+      valAxisLabelFontFace: FONT, valAxisLabelFontSize: 10, valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+    });
+    const headerRow = ["بازه", "تعداد پرونده", "درصد از تعداد", "مبلغ (ریال)", "درصد از مبلغ"].map((t) => ({ text: t, options: { fontFace: FONT, rtlMode: true, align: "center", bold: true, color: "FFFFFF", fill: { color: C.navy }, fontSize: 10.5 } }));
+    const rows = [headerRow];
+    M.buckets_out.forEach((b, i) => {
+      const pctN = M.total_paid_n ? (b.n / M.total_paid_n * 100) : 0;
+      const pctAmt = M.total_paid_amount ? (b.amount / M.total_paid_amount * 100) : 0;
+      const desirable = i <= 1;
+      const bg = desirable ? "EAFBF2" : (i % 2 === 0 ? "FFFFFF" : "F5F8FC");
+      rows.push([
+        { text: b.label, options: { fontFace: FONT, rtlMode: true, align: "center", fill: { color: bg }, fontSize: 10.5, bold: desirable, color: desirable ? C.success : C.dark } },
+        { text: fmt(b.n), options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 10.5 } },
+        { text: pctf(pctN), options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 10.5 } },
+        { text: fmt(b.amount), options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 10.5 } },
+        { text: pctf(pctAmt), options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 10.5 } },
+      ]);
+    });
+    s.addTable(rows, { x: 1.2, y: 4.35, w: PW - 2.4, h: 0.365 * rows.length, colW: [2.6, 1.8, 1.8, 2.6, 1.8], border: { type: "solid", color: "E4E4E4", pt: 0.5 }, autoPage: false });
+  }
+
+  // اسلاید ۱۰.۱ - روند هفتگی بازه‌های SLA
+  if (S.has(15)) {
+    const s = pres.addSlide();
+    addHeader(s, "روند هفتگی بازه‌های SLA", "ترکیب درصدی بازه‌های پرداخت به تفکیک هفته بارگذاری مدارک");
+    const weekLabels = M.weekly.map((w) => w.week_label);
+    const series = BUCKET_LABELS.map((label) => ({ name: label, labels: weekLabels, values: M.weekly.map((w) => w.paid_n ? +(w.buckets[label] / w.paid_n * 100).toFixed(1) : 0) }));
+    s.addChart("bar", series, {
+      x: 0.6, y: 1.7, w: PW - 1.2, h: 4.7, barDir: "col", barGrouping: "percentStacked", chartColors: BUCKET_COLORS,
+      showTitle: false, showLegend: true, legendPos: "b", legendFontFace: FONT, legendFontSize: 10,
+      catAxisLabelFontFace: FONT, catAxisLabelFontSize: 11, catAxisLabelColor: C.dark,
+      valAxisLabelFontFace: FONT, valAxisLabelFontSize: 10, valAxisLabelFormatCode: "0%",
+      showValAxisTitle: true, valAxisTitle: "درصد از پرونده‌های پرداخت‌شده", valAxisTitleFontFace: FONT, valAxisTitleFontSize: 9,
+      valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+    });
+    s.addText(faText("هر ستون، ترکیب درصدی بازه‌های زمانی پرداخت را برای پرونده‌های همان هفته بارگذاری نشان می‌دهد؛ سبز = سریع، قرمز = کند.", { fontSize: 11, italic: true, color: C.gray }), { x: 0.6, y: 6.55, w: PW - 1.2, h: 0.5 });
+  }
+
+  // اسلاید ۱۰.۲ - روند ماهانه بازه‌های SLA
+  if (S.has(16)) {
+    const s = pres.addSlide();
+    addHeader(s, "روند ماهانه بازه‌های SLA", "تعداد و درصد پرونده در هر بازه، به تفکیک ماه بارگذاری مدارک (شمسی)");
+    const headerRow = ["بازه", ...M.monthly.map((m) => m.label)].map((t) => ({ text: t, options: { fontFace: FONT, rtlMode: true, align: "center", bold: true, color: "FFFFFF", fill: { color: C.navy }, fontSize: 12 } }));
+    const rows = [headerRow];
+    BUCKET_LABELS.forEach((label, i) => {
+      const bg = i % 2 === 0 ? "FFFFFF" : "F5F8FC";
+      const cells = [{ text: label, options: { fontFace: FONT, rtlMode: true, align: "center", fill: { color: bg }, fontSize: 12 } }];
+      M.monthly.forEach((m) => {
+        const n = m.buckets[label] || 0;
+        const p = m.paid_n ? (n / m.paid_n * 100) : 0;
+        cells.push({ text: `${fmt(n)}  (${pctf(p)})`, options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 12 } });
+      });
+      rows.push(cells);
+    });
+    s.addTable(rows, { x: 2.0, y: 2.0, w: PW - 4.0, h: 0.55 * rows.length, colW: [3.5, ...M.monthly.map(() => 2.5)], border: { type: "solid", color: "E4E4E4", pt: 0.5 }, autoPage: false });
+    s.addText(faText("درصدها از کل پرونده‌های پرداخت‌شده‌ی همان ماه محاسبه شده‌اند.", { fontSize: 11.5, italic: true, color: C.gray }), { x: 0.6, y: 2.0 + 0.55*rows.length + 0.3, w: PW - 1.2, h: 0.5 });
+  }
+
+  // اسلاید ۱۱ - شاخص‌های SLA بر مبنای روز کاری
+  if (S.has(17)) {
+    const s = pres.addSlide();
+    addHeader(s, "شاخص‌های SLA بر مبنای روز کاری", "همان ۳ شاخص، این‌بار با حذف جمعه‌ها و تعطیلات رسمی از شمارش روزها");
+    const cats = ["بارگذاری تا ارزیابی", "ارزیابی تا پرداخت", "کل چرخه (بارگذاری تا پرداخت)"];
+    const calVals = [O.sla_a, O.sla_b, O.sla_c];
+    const bizVals = [O.sla_a_biz, O.sla_b_biz, O.sla_c_biz];
+    s.addChart("bar", [{ name: "روز تقویمی", labels: cats, values: calVals }, { name: "روز کاری", labels: cats, values: bizVals }], {
+      x: 0.7, y: 1.65, w: PW - 1.4, h: 3.5, barDir: "col", barGapWidthPct: 40, chartColors: [C.gray, C.primary],
+      showTitle: false, showLegend: true, legendPos: "b", legendFontFace: FONT, legendFontSize: 11,
+      showValue: true, dataLabelPosition: "outEnd", dataLabelFontSize: 11, dataLabelFontFace: FONT, dataLabelColor: C.dark, dataLabelFormatCode: "#,##0.00",
+      catAxisLabelFontFace: FONT, catAxisLabelFontSize: 12, catAxisLabelColor: C.dark,
+      valAxisLabelFontFace: FONT, valAxisLabelFontSize: 10,
+      showValAxisTitle: true, valAxisTitle: "میانگین روز", valAxisTitleFontFace: FONT, valAxisTitleFontSize: 10,
+      valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+    });
+    const headerRow2 = ["شاخص", "روز تقویمی", "روز کاری", "کاهش"].map((t) => ({ text: t, options: { fontFace: FONT, rtlMode: true, align: "center", bold: true, color: "FFFFFF", fill: { color: C.navy }, fontSize: 11 } }));
+    const rows2 = [headerRow2];
+    cats.forEach((cat, i) => {
+      const pctDrop = calVals[i] ? ((calVals[i] - bizVals[i]) / calVals[i] * 100) : 0;
+      const bg = i % 2 === 0 ? "FFFFFF" : "F5F8FC";
+      rows2.push([
+        { text: cat, options: { fontFace: FONT, rtlMode: true, align: "center", fill: { color: bg }, fontSize: 11 } },
+        { text: calVals[i].toFixed(2) + " روز", options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 11 } },
+        { text: bizVals[i].toFixed(2) + " روز", options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 11, bold: true, color: C.primary } },
+        { text: "٪" + pctDrop.toFixed(1) + "-", options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 11, color: C.success } },
+      ]);
+    });
+    const tbl17ColW = [4.2, 2.2, 2.2, 2.0];
+    const tbl17W = tbl17ColW.reduce((a, b) => a + b, 0);
+    const tbl17X = (PW - tbl17W) / 2;
+    s.addTable(rows2, { x: tbl17X, y: 5.15, w: tbl17W, h: 0.4 * rows2.length, colW: tbl17ColW, border: { type: "solid", color: "E4E4E4", pt: 0.5 }, autoPage: false });
+    s.addText(faText("«روز کاری» یعنی جمعه‌ها (تعطیل هفتگی) و تعطیلات رسمی وارد شده در بخش ۲ ابزار، از شمارش حذف شده‌اند.", { fontSize: 10.5, italic: true, color: C.gray }), { x: 0.7, y: 6.75, w: PW - 1.4, h: 0.6 });
+  }
+
+  // اسلاید ۱۱.۱ - روند هفتگی SLA روز کاری (برای گزارش مدیریتی، این محتوا در اسلاید ۸ ادغام شده — اینجا حذف می‌شود)
+  if (S.has(18) && audience !== 'mgmt') {
+    const s = pres.addSlide();
+    addHeader(s, "روند هفتگی SLA — روز کاری", "میانگین روز کاری، بر اساس هفته ثبت هزینه — هر چه پایین‌تر، بهتر");
+    const weekLabels = M.weekly.map((w) => w.week_label);
+    s.addChart("line", [
+      { name: "ثبت تا ارزیابی", labels: weekLabels, values: M.weekly.map((w) => w.avg_se_biz) },
+      { name: "ارزیابی تا پرداخت", labels: weekLabels, values: M.weekly.map((w) => w.avg_ep_biz) },
+      { name: "کل چرخه (ثبت تا پرداخت)", labels: weekLabels, values: M.weekly.map((w) => w.avg_sp_biz) },
+    ], {
+      x: 0.6, y: 1.8, w: PW - 1.2, h: 4.6, chartColors: [C.primary, C.accent, C.navy],
+      showTitle: false, showLegend: true, legendPos: "b", legendFontFace: FONT, legendFontSize: 11,
+      showValue: true, dataLabelFontSize: 10, dataLabelFontFace: FONT, dataLabelPosition: "t", dataLabelFormatCode: "#,##0.00",
+      lineDataSymbol: "circle", lineDataSymbolSize: 6, lineSize: 2.5,
+      catAxisLabelFontFace: FONT, catAxisLabelFontSize: 11, catAxisLabelColor: C.dark,
+      valAxisLabelFontFace: FONT, valAxisLabelFontSize: 10,
+      showValAxisTitle: true, valAxisTitle: "میانگین روز کاری", valAxisTitleFontFace: FONT, valAxisTitleFontSize: 10,
+      valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+    });
+    s.addText(faText("همان سه شاخص چرخه پرداخت، این‌بار بر مبنای روز کاری (بدون جمعه‌ها و تعطیلات رسمی) به تفکیک هفته.", { fontSize: 11, italic: true, color: C.gray }), { x: 0.6, y: 6.55, w: PW - 1.2, h: 0.5 });
+  }
+
+  // اسلاید ۱۱.۲ - روند ماهانه SLA روز کاری (برای گزارش مدیریتی، این محتوا در اسلاید ۸.۲ ادغام شده — اینجا حذف می‌شود)
+  if (S.has(19) && audience !== 'mgmt') {
+    const s = pres.addSlide();
+    addHeader(s, "روند ماهانه SLA — روز کاری", "میانگین روز کاری، بر اساس ماه ثبت هزینه (شمسی)");
+    const monthLabels = M.monthly.map((m) => m.label);
+    s.addChart("line", [
+      { name: "ثبت تا ارزیابی", labels: monthLabels, values: M.monthly.map((m) => m.avg_se_biz) },
+      { name: "ارزیابی تا پرداخت", labels: monthLabels, values: M.monthly.map((m) => m.avg_ep_biz) },
+      { name: "کل چرخه (ثبت تا پرداخت)", labels: monthLabels, values: M.monthly.map((m) => m.avg_sp_biz) },
+    ], {
+      x: 0.6, y: 1.8, w: PW - 1.2, h: 4.6, chartColors: [C.primary, C.accent, C.navy],
+      showTitle: false, showLegend: true, legendPos: "b", legendFontFace: FONT, legendFontSize: 11,
+      showValue: true, dataLabelFontSize: 11, dataLabelFontFace: FONT, dataLabelPosition: "t", dataLabelFormatCode: "#,##0.00",
+      lineDataSymbol: "circle", lineDataSymbolSize: 8, lineSize: 2.5,
+      catAxisLabelFontFace: FONT, catAxisLabelFontSize: 12, catAxisLabelColor: C.dark,
+      valAxisLabelFontFace: FONT, valAxisLabelFontSize: 10,
+      showValAxisTitle: true, valAxisTitle: "میانگین روز کاری", valAxisTitleFontFace: FONT, valAxisTitleFontSize: 10,
+      valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+    });
+    s.addText(faText("همان سه شاخص چرخه پرداخت، این‌بار بر مبنای روز کاری، به تفکیک ماه شمسی.", { fontSize: 11, italic: true, color: C.gray }), { x: 0.6, y: 6.55, w: PW - 1.2, h: 0.5 });
+  }
+
+  // اسلاید ۱۱.۳ - روند روزانه SLA روز کاری (برای گزارش مدیریتی، این محتوا در اسلاید ۹ ادغام شده — اینجا حذف می‌شود)
+  if (S.has(20) && audience !== 'mgmt') {
+    const s = pres.addSlide();
+    addHeader(s, "روند روزانه SLA — روز کاری", `میانگین روز کاری به تفکیک تاریخ ثبت هزینه (شمسی) — ${DAILY_WINDOW_DAYS} روز اخیر`);
+    const dayLabels = M.daily.map((d) => d.date_j.slice(5));
+    s.addChart("line", [
+      { name: "ثبت تا ارزیابی", labels: dayLabels, values: M.daily.map((d) => d.avg_se_biz) },
+      { name: "ارزیابی تا پرداخت", labels: dayLabels, values: M.daily.map((d) => d.avg_ep_biz) },
+      { name: "کل چرخه (ثبت تا پرداخت)", labels: dayLabels, values: M.daily.map((d) => d.avg_sp_biz) },
+    ], {
+      x: 0.5, y: 1.75, w: PW - 1.0, h: 4.6, chartColors: [C.primary, C.accent, C.navy],
+      showTitle: false, showLegend: true, legendPos: "b", legendFontFace: FONT, legendFontSize: 11, showValue: false,
+      lineDataSymbol: "circle", lineDataSymbolSize: 3, lineSize: 1.75,
+      catAxisLabelFontFace: FONT, catAxisLabelFontSize: 8, catAxisLabelColor: C.dark, catAxisLabelRotate: 60,
+      valAxisLabelFontFace: FONT, valAxisLabelFontSize: 10,
+      showValAxisTitle: true, valAxisTitle: "میانگین روز کاری", valAxisTitleFontFace: FONT, valAxisTitleFontSize: 10,
+      valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+    });
+    s.addText(faText("برچسب افقی به‌صورت ماه/روز شمسی است. مقادیر بر مبنای روز کاری (بدون جمعه و تعطیلات رسمی) محاسبه شده‌اند.", { fontSize: 11, italic: true, color: C.gray }), { x: 0.6, y: 6.5, w: PW - 1.2, h: 0.5 });
+  }
+
+  // اسلاید ۱۲ - وضعیت ارزیابی پرونده‌ها — حذف شد (به درخواست کاربر)
+
+  // اسلاید ۱۳ - مقایسه مبلغ قابل‌پرداخت و مبلغ واریزشده
+  if (S.has(22)) {
+    const s = pres.addSlide();
+    addHeader(s, "مقایسه مبلغ قابل‌پرداخت (سیناد) و مبلغ واریزشده (دستور پرداخت)", null);
+    s.addChart("bar", [{ name: "مبلغ (میلیارد ریال)", labels: ["مبلغ قابل پرداخت — سیناد", "مبلغ واریزشده — دستور پرداخت"], values: [+(O.ai_total / 1e9).toFixed(2), +(O.dp_total / 1e9).toFixed(2)] }], {
+      x: 1.2, y: 1.9, w: PW - 2.4, h: 4.3, barDir: "bar", chartColors: [C.primary, C.accent],
+      showTitle: false, showLegend: false,
+      showValue: true, dataLabelPosition: "outEnd", dataLabelFontSize: 14, dataLabelFontFace: FONT, dataLabelColor: C.dark, dataLabelFormatCode: "#,##0.00",
+      catAxisLabelFontFace: FONT, catAxisLabelFontSize: 13, catAxisLabelColor: C.dark,
+      valAxisLabelFontFace: FONT, valAxisLabelFontSize: 11,
+      showValAxisTitle: true, valAxisTitle: "میلیارد ریال", valAxisTitleFontFace: FONT, valAxisTitleFontSize: 11, valAxisTitleColor: C.gray,
+      valGridLine: { color: "E4E4E4", size: 1 }, catGridLine: { style: "none" },
+    });
+    s.addText(faText(`فاصله میان مبلغ قابل‌پرداخت و مبلغ واقعاً واریزشده تا این تاریخ: ${fmtB(O.gap_amount)} — ترکیبی از خسارت‌های در انتظار پرداخت طبیعی (هنوز داخل فرصت SLA) و مغایرت‌های نیازمند بررسی (نگاه کنید به اسلاید بعد).`, { fontSize: 13, color: C.gray }), { x: 0.8, y: 6.5, w: PW - 1.6, h: 0.6 });
+  }
+
+  // اسلاید ۱۴ - مغایرت‌گیری مبالغ به تفکیک کد خانواده
+  if (S.has(23)) {
+    const s = pres.addSlide();
+    addHeader(s, "مغایرت‌گیری مبالغ به تفکیک کد خانواده", "مقایسه مجموع «مبلغ قابل‌پرداخت» در سیناد با مجموع «مبلغ واریزی» در دستور پرداخت — با احتساب فرصت SLA (۵ روز کاری)");
+    const reviewAmount = M.review_needed.reduce((s, r) => s + r.paid_gap, 0);
+    const cards = [
+      [fmt(M.nids_reviewed), "کد خانواده بررسی‌شده", C.navy],
+      [fmt(M.discrepancies_count) + `  (${pctf(M.discrepancies_pct)})`, "کد خانواده با مبلغ واریزی کمتر از قابل‌پرداخت (پس از حذف پرونده‌های تازه)", C.gray],
+      [fmt(M.review_needed.length), "نیازمند بررسی واقعی", C.danger],
+      [fmt(M.unflagged_people), "کد خانواده با خسارت AW خالی — بررسی جداگانه", C.primary],
+    ];
+    const cw = (PW - 1.2 - 3 * 0.25) / 4, ch = 1.75;
+    let cx = 0.6, cy = 1.75;
+    cards.forEach((c) => { kpiCard(s, cx, cy, cw, ch, c[0], c[1], c[2]); cx += cw + 0.25; });
+    cy += ch + 0.25;
+    s.addShape("roundRect", { x: 0.6, y: cy, w: PW - 1.2, h: 1.05, rectRadius: 0.08, fill: { color: "F5F8FC" }, line: { color: C.primary, width: 0.75 } });
+    s.addText(faText(`قاعده SLA: خسارتی که بارگذاری آن هنوز کمتر از ۵ روز کاری از تاریخ گزارش (${M.as_of_jalali}) فاصله دارد، «کسری» حساب نمی‌شود — چون هنوز داخل بازه طبیعی رسیدگی است (${fmt(M.n_recent)} خسارت از ${fmt(M.n_aged+M.n_recent)}).`, { fontSize: 12, color: C.dark }), { x: 0.85, y: cy + 0.12, w: PW - 1.7, h: 0.85 });
+    cy += 1.2;
+    s.addShape("roundRect", { x: 0.6, y: cy, w: PW - 1.2, h: 1.5, rectRadius: 0.1, fill: { color: "FBEAEA" }, line: { color: C.danger, width: 0.75 } });
+    s.addText(faText(`نیازمند بررسی واقعی: ${fmtB(reviewAmount)} — ${fmt(M.review_needed.length)} کد خانواده`, { fontSize: 15, bold: true, color: C.danger }), { x: 0.85, y: cy + 0.15, w: PW - 1.7, h: 0.45 });
+    s.addText(faText("سیناد این خسارت‌ها را «پرداخت‌شده» ثبت کرده (AW=بله)، اما رقم متناظر در دستور پرداخت وجود ندارد یا کمتر است — لیست کامل در اسلاید بعد.", { fontSize: 12, color: C.dark }), { x: 0.85, y: cy + 0.65, w: PW - 1.7, h: 0.75 });
+  }
+
+  // اسلاید ۱۴.۵ - بررسی دقیق خسارت‌های با AW خالی
+  if (S.has(24)) {
+    const s = pres.addSlide();
+    addHeader(s, "بررسی دقیق خسارت‌های با «پرداخت‌شده» خالی", "برای هر کد خانواده، جمع «مبلغ قابل‌پرداخت» خسارت‌های بالغ (بیش از ۵ روز کاری از بارگذاری) با جمع واریزی دستور پرداخت مقایسه شد");
+    const items = [
+      [C.success, "EAFBF2", "نیازمند به‌روزرسانی وضعیت پرداخت — اکنون پرداخت‌شده در نظر گرفته می‌شود",
+        `${fmt(M.fully_covered_count)} کد خانواده   —   مبلغ بالغ: ${fmtB(M.fully_covered_amount)} (کاملاً پوشش داده شده)`,
+        `${fmt(M.fully_covered_claims)} خسارت که وضعیت «پرداخت‌شده» آن‌ها باید به‌روزرسانی شود.`],
+      [C.accent, "FFF9E6", "کسری واقعی — بخشی پرداخت‌شده",
+        `${fmt(M.partially_covered_count)} کد خانواده   —   کل مبلغ بالغ: ${fmtB(M.partially_covered_total)}   |   پرداخت‌شده: ${fmtB(M.partially_covered_paid)}   |   کسری: ${fmtB(M.partially_covered_gap)}`,
+        `بازه تاریخ ثبت هزینه: از ${M.partially_covered_oldest || '—'} تا ${M.partially_covered_newest || '—'}`],
+      [C.danger, "FBEAEA", "واقعاً پرداخت‌نشده",
+        `${fmt(M.zero_covered_count)} کد خانواده   —   کل مبلغ بالغ: ${fmtB(M.zero_covered_total)}   |   پرداخت‌شده: ۰ ریال`,
+        `${fmt(M.zero_covered_fully_eval)} نفر کاملاً ارزیابی شده‌اند ولی هنوز واریزی ندارند؛ ${fmt(M.zero_covered_partial_eval)} نفر بخشی ارزیابی شده‌اند. بازه: از ${M.zero_covered_oldest || '—'} تا ${M.zero_covered_newest || '—'}`],
+      [C.gray, "F2F2F2", "هنوز داخل فرصت SLA — بررسی زودهنگام است",
+        `${fmt(M.too_recent_count)} کد خانواده   —   مبلغ: ${fmtB(M.too_recent_amount)}   |   ${fmt(M.too_recent_claims)} خسارت`,
+        "همه‌ی خسارت‌های بی‌علامتِ این افراد کمتر از ۵ روز کاری از بارگذاری فاصله دارند — طبیعی است و نیاز به پیگیری فعلی ندارد."],
+    ];
+    let y = 1.55;
+    items.forEach((it) => {
+      const h = 1.28;
+      s.addShape("roundRect", { x: 0.6, y, w: PW - 1.2, h, rectRadius: 0.1, fill: { color: it[1] }, line: { color: it[0], width: 0.75 } });
+      s.addText(faText(it[2], { fontSize: 13, bold: true, color: it[0] }), { x: 0.85, y: y + 0.1, w: PW - 1.7, h: 0.3 });
+      s.addText(faText(it[3], { fontSize: 11.5, bold: true, color: C.dark }), { x: 0.85, y: y + 0.44, w: PW - 1.7, h: 0.4 });
+      s.addText(faText(it[4], { fontSize: 10, color: C.dark }), { x: 0.85, y: y + 0.85, w: PW - 1.7, h: 0.4 });
+      y += h + 0.14;
+    });
+    s.addText(faText("فهرست کامل هر گروه (کد خانواده، نام، مبلغ، تاریخ‌ها) در فایل اکسل پیوست موجود است.", { fontSize: 11, italic: true, color: C.gray }), { x: 0.6, y: y + 0.02, w: PW - 1.2, h: 0.35 });
+  }
+
+  // اسلاید ۱۵ - جدول کد خانواده‌های دارای مغایرت واقعی
+  if (S.has(25)) {
+    const s = pres.addSlide();
+    addHeader(s, "فهرست کامل کد خانواده‌های دارای مغایرت واقعی", "پرونده‌هایی که سیناد پرداخت‌شده ثبت کرده اما در دستور پرداخت رد پایی ندارند یا رد پای ناقص دارند");
+    const headerRow = ["کد خانواده", "مبلغ پرداختی طبق سیناد (ریال)", "مبلغ واریزی طبق دستور پرداخت (ریال)", "کسری (ریال)", "تعداد خسارت", "آخرین تاریخ ثبت"].map((t) => ({ text: t, options: { fontFace: FONT, rtlMode: true, align: "center", bold: true, color: "FFFFFF", fill: { color: C.navy }, fontSize: 12 } }));
+    const rows = [headerRow];
+    M.review_needed.forEach((r, i) => {
+      const bg = i % 2 === 0 ? "FFFFFF" : "F5F8FC";
+      rows.push([
+        { text: r.nid, options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 11.5 } },
+        { text: fmt(r.AI_paid_sum), options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 11.5 } },
+        { text: fmt(r.dp_total), options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 11.5 } },
+        { text: fmt(r.paid_gap), options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 11.5, color: C.danger, bold: true } },
+        { text: String(r.claims), options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 11.5 } },
+        { text: r.last_submit_text, options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 11.5 } },
+      ]);
+    });
+    if (rows.length > 1) {
+      s.addTable(rows, { x: 0.5, y: 2.0, w: PW - 1.0, h: 0.55 * rows.length, colW: [2.0, 2.3, 2.3, 1.9, 1.1, 1.6], border: { type: "solid", color: "E4E4E4", pt: 0.5 }, autoPage: false });
+    } else {
+      s.addText(faText("موردی برای این فهرست شناسایی نشد.", { fontSize: 13, color: C.gray }), { x: 0.5, y: 2.0, w: PW - 1.0, h: 0.5 });
+    }
+    const reviewAmount = M.review_needed.reduce((s, r) => s + r.paid_gap, 0);
+    s.addText(faText(`این فهرست پس از احتساب کد خانواده (AP) و قاعده فرصت SLA، به همین ${fmt(M.review_needed.length)} مورد رسید — جمع مغایرت واقعی ${fmtB(reviewAmount)} است.`, { fontSize: 13, color: C.gray }), { x: 0.5, y: 2.0 + 0.55 * rows.length + 0.4, w: PW - 1.0, h: 0.8 });
+  }
+
+  // به‌جای writeFile (که دانلود خودکار مرورگر را برای هر ۳ فایل پشت‌سرهم فعال می‌کند
+  // و اغلب مرورگرها دانلودهای خودکار متوالی را مسدود می‌کنند)، خروجی را به‌صورت Blob
+  // برمی‌گردانیم تا در رابط کاربری با لینک صریح و قابل‌کلیک به کاربر داده شود.
+  return await pres.write({ outputType: "blob" });
+}
+
+// ============================================================
+// ساخت اکسل مغایرت‌گیری (پورت‌شده از build_excel_v6.py)
+// ============================================================
+function styleSheet(ws, headers, rows, titleColor, numericCols) {
+  numericCols = numericCols || [];
+  ws.views = [{ rightToLeft: true }];
+  ws.views[0].state = 'frozen';
+  ws.views[0].ySplit = 1;
+  const headerRow = ws.getRow(1);
+  headers.forEach((h, i) => {
+    const cell = headerRow.getCell(i + 1);
+    cell.value = h;
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF' + titleColor } };
+    cell.font = { name: 'IRANSansX', size: 11, bold: true, color: { argb: 'FFFFFFFF' } };
+    cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+  });
+  headerRow.height = 34;
+  rows.forEach((row, ri) => {
+    const r = ws.getRow(ri + 2);
+    row.forEach((val, ci) => {
+      const cell = r.getCell(ci + 1);
+      cell.value = val;
+      cell.font = { name: 'IRANSansX', size: 10.5 };
+      cell.alignment = { horizontal: 'center' };
+      if (numericCols.includes(ci + 1)) cell.numFmt = '#,##0';
+    });
+  });
+  for (let i = 1; i <= headers.length; i++) ws.getColumn(i).width = 17;
+}
+function boldTotalRow(ws, rowIdx, ncols, bg) {
+  for (let ci = 1; ci <= ncols; ci++) {
+    const c = ws.getRow(rowIdx).getCell(ci);
+    c.font = { name: 'IRANSansX', size: 11, bold: true };
+    c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF' + bg } };
+  }
+}
+
+async function generateExcel(M, fileName) {
+  const wb = new ExcelJS.Workbook();
+
+  const ws1 = wb.addWorksheet('نیازمند بررسی واقعی');
+  const headers1 = ["کد خانواده", "نام", "مبلغ پرداختی طبق سیناد (ریال)", "مبلغ واریزی طبق دستور پرداخت (ریال)", "کسری (ریال)", "تعداد خسارت", "تعداد خسارت پرداخت‌شده", "آخرین تاریخ ثبت هزینه (شمسی)"];
+  const rows1 = M.review_needed.map((r) => [r.nid, r.name, r.AI_paid_sum, r.dp_total, r.paid_gap, r.claims, r.paid_claims, r.last_submit_text]);
+  styleSheet(ws1, headers1, rows1, 'E63946', [3, 4, 5]);
+
+  const ws2 = wb.addWorksheet('AW نیازمند بروزرسانی');
+  const headers2 = ["کد خانواده", "نام", "مبلغ واریزی — دستور پرداخت (ریال)", "مبلغ خسارت‌های بی‌علامت AW (ریال)", "تعداد خسارت بی‌علامت (اکنون Paid)", "آخرین تاریخ ثبت (شمسی)", "وضعیت پیشنهادی"];
+  const rows2 = M.fully_covered_list.map((r) => [r.nid, r.name, r.dp_total, r.unflagged_amount, r.unflagged_count, r.newest_submit, "AW این ردیف‌ها باید TRUE شود"]);
+  styleSheet(ws2, headers2, rows2, '00A651', [3, 4]);
+
+  const ws3 = wb.addWorksheet('کسری واقعی - بخشی پرداخت‌شده');
+  const headers3 = ["کد خانواده", "نام", "مبلغ قابل‌پرداخت — خسارت‌های بالغ (ریال)", "مبلغ واقعاً پرداخت‌شده (ریال)", "کسری باقیمانده (ریال)", "تعداد خسارت کل", "قدیمی‌ترین تاریخ ثبت هزینه (شمسی)", "جدیدترین تاریخ ثبت هزینه (شمسی)"];
+  const rows3 = M.partially_covered_list.map((r) => [r.nid, r.name, r.AI_total_aged, r.dp_total, r.gap, r.claims, r.oldest_submit, r.newest_submit]);
+  const total3 = ['جمع کل', `${rows3.length} کد خانواده`, rows3.reduce((s, r) => s + r[2], 0), rows3.reduce((s, r) => s + r[3], 0), rows3.reduce((s, r) => s + r[4], 0), '', '', ''];
+  styleSheet(ws3, headers3, rows3.concat([total3]), 'FF8C00', [3, 4, 5]);
+  boldTotalRow(ws3, rows3.length + 2, 8, 'FFE9C7');
+
+  const ws4 = wb.addWorksheet('واقعا پرداخت‌نشده');
+  const headers4 = ["کد خانواده", "نام", "مبلغ قابل‌پرداخت — خسارت‌های بالغ (ریال)", "مبلغ واقعاً پرداخت‌شده (ریال)", "تعداد خسارت", "تعداد خسارت ارزیابی‌شده", "تعداد خسارت ارزیابی‌نشده", "قدیمی‌ترین تاریخ بارگذاری (شمسی)", "جدیدترین تاریخ بارگذاری (شمسی)", "قدیمی‌ترین تاریخ ارزیابی (شمسی)", "جدیدترین تاریخ ارزیابی (شمسی)"];
+  const rows4 = M.zero_covered_list.map((r) => [r.nid, r.name, r.AI_total_aged, 0, r.claims, r.evaluated_claims, r.not_evaluated_claims, r.oldest_submit, r.newest_submit, r.oldest_eval, r.newest_eval]);
+  const total4 = ['جمع کل', `${rows4.length} کد خانواده`, rows4.reduce((s, r) => s + r[2], 0), 0, '', '', '', '', '', '', ''];
+  styleSheet(ws4, headers4, rows4.concat([total4]), 'E63946', [3, 4]);
+  boldTotalRow(ws4, rows4.length + 2, 11, 'FBEAEA');
+
+  const ws5 = wb.addWorksheet('هنوز داخل فرصت SLA');
+  const headers5 = ["کد خانواده", "نام", "مبلغ خسارت‌های بی‌علامت (ریال)", "تعداد خسارت", "قدیمی‌ترین تاریخ ثبت (شمسی)", "جدیدترین تاریخ ثبت (شمسی)"];
+  const rows5 = M.too_recent_list.map((r) => [r.nid, r.name, r.amount, r.count, r.oldest_submit, r.newest_submit]);
+  styleSheet(ws5, headers5, rows5, '757575', [3]);
+
+  const buf = await wb.xlsx.writeBuffer();
+  const blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  return blob;
+}
+
+// ============================================================
+// گزارش Overview چند بیمه‌گذار — تجمیع سطح شرکت (بدون گروه‌بندی خانوار،
+// بدون نیاز به فایل «کد ملی و بانک»). هر بیمه‌گذار فقط سیناد + دستور
+// پرداخت خودش را لازم دارد.
+// ============================================================
+function computeCompanySummary(name, rows, dpRows, holidaySet) {
+  const totalCount = rows.length;
+  const totalCost = rows.reduce((s, r) => s + r.K_amount, 0);
+  const returnedRows = rows.filter((r) => r.S_returned);
+  const returnedCount = returnedRows.length;
+  const returnRate = totalCount ? Math.round((returnedCount / totalCount) * 10000) / 100 : 0;
+
+  // همان فیلتر «نام سازمان» گزارش تک‌شرکتی — تا پرداخت‌های بی‌ربط وارد مجموع نشوند.
+  const sinadOrgSet = new Set(rows.map((r) => r.org).filter(Boolean));
+  const dpScoped = sinadOrgSet.size ? dpRows.filter((r) => sinadOrgSet.has(r.org)) : dpRows;
+  const paidAmount = dpScoped.reduce((s, r) => s + r.amount, 0);
+  const paidCount = rows.filter((r) => r.AW_paid).length;
+
+  // شاخص SLA کل چرخه (بارگذاری تا پرداخت) — تقویمی و کاری — برای هر ردیفی که هر دو تاریخ را دارد.
+  const cycleRows = rows.filter((r) => r.AK_date && r.AX_date);
+  const calDiffs = cycleRows.map((r) => daysDiff(r.AK_date, r.AX_date));
+  const bizDiffs = cycleRows.map((r) => businessDaysBetween(r.AK_date, r.AX_date, holidaySet));
+
+  const allDates = [];
+  rows.forEach((r) => { ['AK_date', 'AC_date', 'AX_date', 'T_returnDate'].forEach((k) => { if (r[k]) allDates.push(r[k]); }); });
+  const asOf = allDates.length ? new Date(Math.max(...allDates.map((d) => d.getTime()))) : null;
+
+  return {
+    name, total_count: totalCount, total_cost: totalCost,
+    returned_count: returnedCount, return_rate: returnRate,
+    paid_count: paidCount, paid_amount: paidAmount,
+    n_cycle: cycleRows.length,
+    sla_cal_avg: avg(calDiffs), sla_cal_p90: p90TrimmedAvg(calDiffs),
+    sla_biz_avg: avg(bizDiffs), sla_biz_p90: p90TrimmedAvg(bizDiffs),
+    _calDiffs: calDiffs, _bizDiffs: bizDiffs, _asOf: asOf,
+  };
+}
+
+function aggregateOverview(companies) {
+  const totalCount = companies.reduce((s, c) => s + c.total_count, 0);
+  const totalCost = companies.reduce((s, c) => s + c.total_cost, 0);
+  const totalReturned = companies.reduce((s, c) => s + c.returned_count, 0);
+  const overallReturnRate = totalCount ? Math.round((totalReturned / totalCount) * 10000) / 100 : 0;
+  const totalPaidAmount = companies.reduce((s, c) => s + c.paid_amount, 0);
+  const allCal = companies.flatMap((c) => c._calDiffs);
+  const allBiz = companies.flatMap((c) => c._bizDiffs);
+
+  const top12ByCount = [...companies].sort((a, b) => b.total_count - a.total_count).slice(0, 12);
+  // فقط بیمه‌گذارهایی با حداقل ۵ پرونده‌ی دارای هر دو تاریخ (بارگذاری+پرداخت) — تا میانگین
+  // روی نمونه‌ی خیلی کوچک (مثلاً یک پرونده) گمراه‌کننده نباشد.
+  const slaEligible = companies.filter((c) => c.n_cycle >= 5);
+  const top12SlowestSla = [...slaEligible].sort((a, b) => b.sla_cal_avg - a.sla_cal_avg).slice(0, 12);
+  const top15ByCost = [...companies].sort((a, b) => b.total_cost - a.total_cost).slice(0, 15);
+
+  return {
+    n: companies.length, total_count: totalCount, total_cost: totalCost,
+    total_returned: totalReturned, overall_return_rate: overallReturnRate,
+    total_paid_amount: totalPaidAmount,
+    overall_sla_cal_avg: avg(allCal), overall_sla_cal_p90: p90TrimmedAvg(allCal),
+    overall_sla_biz_avg: avg(allBiz), overall_sla_biz_p90: p90TrimmedAvg(allBiz),
+    top12ByCount, top12SlowestSla, top15ByCost,
+  };
+}
+
+async function generateOverviewExcel(companies) {
+  const wb = new ExcelJS.Workbook();
+  const ws = wb.addWorksheet('Overview');
+  const headers = ["بیمه‌گذار", "تعداد کل", "مبلغ کل (ریال)", "تعداد ابطال/عودت", "نرخ ابطال/عودت (٪)",
+    "تعداد پرداخت‌شده", "مبلغ پرداخت‌شده (ریال)", "میانگین SLA - روز تقویمی", "P90 SLA - روز تقویمی",
+    "میانگین SLA - روز کاری", "P90 SLA - روز کاری"];
+  const rows = companies.map((c) => [c.name, c.total_count, c.total_cost, c.returned_count, c.return_rate,
+    c.paid_count, c.paid_amount, c.sla_cal_avg, c.sla_cal_p90, c.sla_biz_avg, c.sla_biz_p90]);
+  styleSheet(ws, headers, rows, '16324F', [2, 3, 4, 6, 7]);
+  const buf = await wb.xlsx.writeBuffer();
+  return new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+}
+
+async function generateOverviewPptx(companies, agg, insurerName, asOfJalali) {
+  const pres = new PptxGenJS();
+  pres.layout = "LAYOUT_WIDE";
+  const PW = 13.33, PH = 7.5;
+
+  function addHeader(slide, title, subtitle) {
+    slide.background = { color: "FFFFFF" };
+    slide.addText(title, { x: 0.6, y: 0.35, w: PW - 1.2, h: 0.7, fontFace: FONT, rtlMode: true, align: "right", fontSize: 26, bold: true, color: C.navy });
+    if (subtitle) slide.addText(subtitle, { x: 0.6, y: 0.95, w: PW - 1.2, h: 0.4, fontFace: FONT, rtlMode: true, align: "right", fontSize: 12.5, color: C.gray });
+  }
+  function kpiCard(slide, x, y, w, h, value, label, color) {
+    slide.addShape("roundRect", { x, y, w, h, rectRadius: 0.1, fill: { color: "FFFFFF" }, line: { color: "E4E4E4", width: 1 }, shadow: { type: "outer", color: "000000", opacity: 0.12, blur: 8, offset: 3, angle: 90 } });
+    slide.addText(String(value), { x: x + 0.1, y: y + 0.12, w: w - 0.2, h: h * 0.55, fontFace: FONT, align: "center", fontSize: 19, bold: true, color: color, valign: "bottom" });
+    slide.addText(label, { x: x + 0.1, y: y + h * 0.6, w: w - 0.2, h: h * 0.35, fontFace: FONT, rtlMode: true, align: "center", fontSize: 11, color: C.gray, valign: "top" });
+  }
+  function slaText(avgVal, p90Val) {
+    return (avgVal != null ? avgVal.toFixed(1) : '—') + ` روز  (P90: ${p90Val != null ? fmt(p90Val) : '—'})`;
+  }
+
+  // اسلاید ۱ - جلد
+  {
+    const s = pres.addSlide();
+    s.background = { color: C.navy };
+    s.addShape("rect", { x: 0, y: 0, w: PW, h: PH, fill: { color: C.navy } });
+    s.addShape("ellipse", { x: 9.8, y: -2.5, w: 7, h: 7, fill: { color: C.primary, transparency: 85 }, line: { type: "none" } });
+    s.addShape("ellipse", { x: -2, y: 4.5, w: 6, h: 6, fill: { color: C.accent, transparency: 90 }, line: { type: "none" } });
+    s.addText(`گزارش Overview — ${insurerName}`, { x: 0.8, y: 2.5, w: PW - 1.6, h: 1.1, fontFace: FONT, rtlMode: true, align: "right", fontSize: 38, bold: true, color: "FFFFFF" });
+    s.addText(`مقایسه ${fmt(agg.n)} بیمه‌گذار`, { x: 0.8, y: 3.55, w: PW - 1.6, h: 0.55, fontFace: FONT, rtlMode: true, align: "right", fontSize: 18, color: C.primary });
+    s.addText(`بر اساس خروجی سامانه تا تاریخ ${asOfJalali}  ·  ازکی`, { x: 0.8, y: 6.5, w: PW - 1.6, h: 0.4, fontFace: FONT, rtlMode: true, align: "right", fontSize: 13, color: "CADCFC" });
+  }
+
+  // اسلاید ۲ - خلاصه کلی
+  {
+    const s = pres.addSlide();
+    addHeader(s, "خلاصه کلی", `مقایسه ${fmt(agg.n)} بیمه‌گذار — بر اساس خروجی سامانه تا ${asOfJalali}`);
+    const cards = [
+      [fmt(agg.n), "تعداد بیمه‌گذار", C.navy],
+      [fmt(agg.total_count), "مجموع تعداد پرونده", C.navy],
+      [fmt(agg.total_cost) + " ریال", "مجموع مبلغ هزینه", C.navy],
+      [pctf(agg.overall_return_rate), "نرخ ابطال/عودت کلی", C.danger],
+      [fmt(agg.total_paid_amount) + " ریال", "مجموع مبلغ پرداخت‌شده", C.success],
+      [slaText(agg.overall_sla_cal_avg, agg.overall_sla_cal_p90), "میانگین/P90 SLA کل چرخه (روز تقویمی)", C.primary],
+    ];
+    const cw = (PW - 1.2 - 2 * 0.3) / 3, ch = 1.7;
+    let cx = 0.6, cy = 1.9;
+    cards.forEach((c, i) => { kpiCard(s, cx, cy, cw, ch, c[0], c[1], c[2]); cx += cw + 0.3; if ((i + 1) % 3 === 0) { cx = 0.6; cy += ch + 0.3; } });
+  }
+
+  // اسلاید ۳ - ۱۲ بیمه‌گذار برتر بر اساس تعداد پرونده
+  {
+    const s = pres.addSlide();
+    addHeader(s, "۱۲ بیمه‌گذار برتر — بر اساس تعداد پرونده", null);
+    const top = agg.top12ByCount;
+    s.addChart("bar", [{ name: "تعداد پرونده", labels: top.map((c) => c.name), values: top.map((c) => c.total_count) }], {
+      x: 0.6, y: 1.7, w: PW - 1.2, h: 5.3, barDir: "bar", chartColors: [C.primary],
+      catAxisLabelFontFace: FONT, catAxisLabelFontSize: 11, catAxisLabelColor: C.dark,
+      valAxisLabelFontFace: FONT, dataLabelFontFace: FONT, showValue: true, dataLabelFontSize: 10, dataLabelColor: C.dark, dataLabelPosition: "outEnd",
+    });
+  }
+
+  // اسلاید ۴ - ۱۲ بیمه‌گذار با کندترین میانگین SLA پرداخت
+  {
+    const s = pres.addSlide();
+    addHeader(s, "۱۲ بیمه‌گذار با کندترین میانگین SLA پرداخت", "فقط بیمه‌گذارهایی با حداقل ۵ پرونده‌ی دارای تاریخ بارگذاری و پرداخت — روز تقویمی، بارگذاری تا پرداخت");
+    const top = agg.top12SlowestSla;
+    if (top.length) {
+      s.addChart("bar", [{ name: "میانگین SLA (روز)", labels: top.map((c) => c.name), values: top.map((c) => c.sla_cal_avg) }], {
+        x: 0.6, y: 1.9, w: PW - 1.2, h: 5.1, barDir: "bar", chartColors: [C.danger],
+        catAxisLabelFontFace: FONT, catAxisLabelFontSize: 11, catAxisLabelColor: C.dark,
+        valAxisLabelFontFace: FONT, dataLabelFontFace: FONT, showValue: true, dataLabelFontSize: 10, dataLabelColor: C.dark, dataLabelPosition: "outEnd",
+      });
+    } else {
+      s.addText(faText("هیچ بیمه‌گذاری حداقل ۵ پرونده‌ی دارای تاریخ بارگذاری و پرداخت کامل نداشت.", { fontSize: 14, color: C.gray }), { x: 0.6, y: 2.5, w: PW - 1.2, h: 1 });
+    }
+  }
+
+  // اسلایدهای ۵ و ۶ - جدول مقایسه‌ای ۱۵ بیمه‌گذار برتر (روز تقویمی / روز کاری)
+  function buildTableSlide(title, subtitle, list, avgKey, p90Key) {
+    const s = pres.addSlide();
+    addHeader(s, title, subtitle);
+    const headerRow = ["بیمه‌گذار", "تعداد", "مبلغ هزینه (ریال)", "نرخ ابطال/عودت", "مبلغ پرداختی (ریال)", "میانگین SLA (روز)", "P90 SLA (روز)"]
+      .map((t) => ({ text: t, options: { fontFace: FONT, rtlMode: true, align: "center", bold: true, color: "FFFFFF", fill: { color: C.navy }, fontSize: 11 } }));
+    const rows = [headerRow];
+    list.forEach((c, i) => {
+      const bg = i % 2 === 0 ? "FFFFFF" : "F5F8FC";
+      rows.push([
+        { text: c.name, options: { fontFace: FONT, rtlMode: true, align: "right", fill: { color: bg }, fontSize: 10 } },
+        { text: fmt(c.total_count), options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 10 } },
+        { text: fmt(c.total_cost), options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 10 } },
+        { text: pctf(c.return_rate), options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 10 } },
+        { text: fmt(c.paid_amount), options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 10 } },
+        { text: c[avgKey] != null ? c[avgKey].toFixed(1) : '—', options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 10 } },
+        { text: c[p90Key] != null ? fmt(c[p90Key]) : '—', options: { fontFace: FONT, align: "center", fill: { color: bg }, fontSize: 10 } },
+      ]);
+    });
+    if (rows.length > 1) {
+      s.addTable(rows, { x: 0.4, y: 1.6, w: PW - 0.8, h: 0.32 * rows.length, colW: [2.4, 1.2, 2.1, 1.5, 2.1, 1.6, 1.6], border: { type: "solid", color: "E4E4E4", pt: 0.5 }, autoPage: false });
+    } else {
+      s.addText(faText("داده‌ای برای نمایش موجود نیست.", { fontSize: 13, color: C.gray }), { x: 0.5, y: 2.0, w: PW - 1.0, h: 0.5 });
+    }
+  }
+  buildTableSlide("مقایسه ۱۵ بیمه‌گذار برتر — روز تقویمی", "بر اساس مبلغ هزینه، مرتب‌شده نزولی — SLA کل چرخه (بارگذاری تا پرداخت)، روز تقویمی", agg.top15ByCost, "sla_cal_avg", "sla_cal_p90");
+  buildTableSlide("مقایسه ۱۵ بیمه‌گذار برتر — روز کاری", "همان فهرست بیمه‌گذارها، شاخص SLA این‌بار بر مبنای روز کاری (بدون جمعه و تعطیلات رسمی)", agg.top15ByCost, "sla_biz_avg", "sla_biz_p90");
+
+  return pres.write({ outputType: "blob" });
+}
+
+// ============================================================
+// مجموعه اسلایدهای هر خروجی (بر مبنای شماره اسلاید نسخه کامل ۲۵تایی)
+// ============================================================
+const MGMT_SLIDES = new Set([1, 3, 5, 6, 7, 8, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 24]);
+const INSURED_SLIDES = new Set([1, 3, 5, 6, 7, 8, 9, 18, 19, 20]);
+const OPS_SLIDES = new Set(Array.from({ length: 25 }, (_, i) => i + 1));
+
+// ============================================================
+// اتصال رابط کاربری
+// ============================================================
+const selectedFiles = { sinad: null, dp: null, nidbank: null };
+function wireFileInput(id, key, expectedLabel) {
+  document.getElementById(id).addEventListener('change', (e) => {
+    selectedFiles[key] = e.target.files[0] || null;
+    document.getElementById('runBtn').disabled = !(selectedFiles.sinad && selectedFiles.dp);
+    if (selectedFiles[key]) log(`${expectedLabel} انتخاب شد: ${selectedFiles[key].name}`);
+  });
+}
+wireFileInput('fileSinad', 'sinad', 'سیناد.xlsx');
+wireFileInput('fileDp', 'dp', 'دستور پرداخت.xlsx');
+wireFileInput('fileNidBank', 'nidbank', 'کد ملی و بانک.xlsx');
+
+[
+  ['fileSinad', 'dzSinad', 'dzNameSinad'],
+  ['fileDp', 'dzDp', 'dzNameDp'],
+  ['fileNidBank', 'dzNidBank', 'dzNameNidBank'],
+].forEach(([inputId, dzId, nameId]) => {
+  const input = document.getElementById(inputId);
+  const dz = document.getElementById(dzId);
+  const nameEl = document.getElementById(nameId);
+  input.addEventListener('change', () => {
+    const f = input.files[0];
+    if (f) { nameEl.textContent = f.name; dz.classList.add('filled'); }
+  });
+  dz.addEventListener('dragover', (e) => { e.preventDefault(); dz.classList.add('drag'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('drag'));
+  dz.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dz.classList.remove('drag');
+    const f = e.dataTransfer.files[0];
+    if (!f) return;
+    const dt = new DataTransfer();
+    dt.items.add(f);
+    input.files = dt.files;
+    input.dispatchEvent(new Event('change'));
+  });
+});
+
+document.getElementById('runBtn').addEventListener('click', async () => {
+  if (!(selectedFiles.sinad && selectedFiles.dp)) return;
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true;
+  document.getElementById('downloads').style.display = 'none';
+  try {
+    const insuredName = (document.getElementById('insuredName').value || '').trim() || '[نام بیمه‌گذار]';
+
+    log('در حال خواندن فایل‌های اکسل خام...');
+    const [wbSinad, wbDp, wbNidBank] = await Promise.all([
+      readWorkbook(selectedFiles.sinad), readWorkbook(selectedFiles.dp),
+      selectedFiles.nidbank ? readWorkbook(selectedFiles.nidbank) : Promise.resolve(null),
+    ]);
+    const wsSinad = wbSinad.worksheets[0];
+    const wsDp = wbDp.worksheets[0];
+    const wsNidBank = wbNidBank ? wbNidBank.worksheets[0] : null;
+    if (!wsSinad) throw new Error('شیتی در فایل سیناد.xlsx پیدا نشد.');
+    if (!wsDp) throw new Error('شیتی در فایل دستور پرداخت.xlsx پیدا نشد.');
+    if (wbNidBank && !wsNidBank) throw new Error('شیتی در فایل کد ملی و بانک.xlsx پیدا نشد.');
+
+    // از دور دهم به بعد، کلید گروه‌بندی خانوار (AP) ترجیحاً از ستون خودِ سیناد
+    // «کد رایانه خانواده» خوانده می‌شود؛ شیت «کد ملی و بانک» فقط برای ردیف‌هایی
+    // که آن ستون خالی دارند (یا وقتی اصلاً این فایل آپلود نشده) به‌کار می‌رود.
+    let nidBankMap = {};
+    if (wsNidBank) {
+      log('در حال بازسازی کد ملی بیمه‌شده اصلی (پشتیبان) از شیت «کد ملی و بانک» (fill-down بر اساس نسبت=سرپرست)...');
+      nidBankMap = loadNidBankMap(wsNidBank);
+      log(`${Object.keys(nidBankMap).length} کد ملی شخصی به کد ملی خانوار نگاشت شد.`);
+    } else {
+      log('فایل «کد ملی و بانک» ارائه نشده — کلید خانوار فقط از ستون «کد رایانه خانواده»ی خودِ سیناد ساخته می‌شود.');
+    }
+
+    log('در حال بارگذاری ردیف‌های سیناد و دستور پرداخت...');
+    const rows = loadSinadRowsRaw(wsSinad, nidBankMap);
+    const dpRows = loadDpRows(wsDp);
+    const notFound = rows.filter((r) => !r.nid).length;
+    log(`${rows.length} ردیف سیناد و ${dpRows.length} ردیف دستور پرداخت بارگذاری شد${notFound ? ` (${notFound} ردیف بدون کد خانواده)` : ''}.`);
+    if (notFound > 0 && !wsNidBank) {
+      log(`⚠️ هشدار: ${fmt(notFound)} ردیف سیناد نه «کد رایانه خانواده» داشتند نه فایل «کد ملی و بانک» آپلود شده بود — این ردیف‌ها از مغایرت‌گیری کنار می‌مانند. اگر عدد زیاد است، یا فایل سیناد را از سامانه دوباره بگیرید (ستون AR باید پر باشد) یا فایل «کد ملی و بانک» را هم اضافه کنید.`);
+    }
+
+    const holidaySet = getHolidaySetFromUI();
+    log(`${holidaySet.size} تاریخ تعطیل رسمی در نظر گرفته شد (به‌علاوه‌ی همه جمعه‌ها).`);
+
+    log('در حال تحلیل داده‌ها...');
+    const M = computeAnalysis(rows, dpRows, holidaySet);
+    log(`تحلیل کامل شد. تاریخ مرجع گزارش: ${M.as_of_jalali}`);
+    if (M.overview.dp_unscoped_extra_count > 0) {
+      log(`⚠️ هشدار: ${fmt(M.overview.dp_unscoped_extra_count)} ردیف از فایل «دستور پرداخت» (جمعاً ${fmt(M.overview.dp_unscoped_extra_amount)} ریال) به سازمانی مربوط بودند که در فایل سیناد همین دسته دیده نشد — این ردیف‌ها احتمالاً به بیمه‌گذار/اشخاص دیگری تعلق دارند (فایل دستور پرداخت اسکوپ درستی ندارد) و از «مجموع مبلغ واریزشده» کنار گذاشته شدند. اگر عدد نهایی هنوز کم به نظر می‌رسد، فایل دستور پرداخت را دوباره از سامانه با فیلتر درست همین بیمه‌گذار بگیرید.`);
+    }
+
+    log('در حال ساخت پاورپوینت مدیریتی...');
+    const blobMgmt = await generatePptx(M, insuredName, MGMT_SLIDES, 'mgmt');
+    log('در حال ساخت پاورپوینت بیمه‌گذار...');
+    const blobInsured = await generatePptx(M, insuredName, INSURED_SLIDES, 'insured');
+    log('در حال ساخت پاورپوینت واحد عملیات...');
+    const blobOps = await generatePptx(M, insuredName, OPS_SLIDES, 'ops');
+    log('در حال ساخت اکسل مغایرت‌گیری...');
+    const xlsxBlob = await generateExcel(M, 'جزئیات_مغایرت.xlsx');
+
+    function setLink(id, blob, filename) {
+      const a = document.getElementById(id);
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+    }
+    // نام فایل‌های خروجی: «آسیا» + نام بیمه‌گذار (اگر وارد شده باشد) — نه نام یک مشتری خاص مثل شاتل
+    const insuredNameForFile = (insuredName === '[نام بیمه‌گذار]') ? '' : String(insuredName).replace(/[\\/:*?"<>|]/g, '').trim();
+    const fileBase = insuredNameForFile ? `آسیا_${insuredNameForFile}` : 'آسیا';
+    setLink('dlPptxMgmt', blobMgmt, `گزارش_${fileBase}_مدیریتی.pptx`);
+    setLink('dlPptxInsured', blobInsured, `گزارش_${fileBase}_بیمه‌گذار.pptx`);
+    setLink('dlPptxOps', blobOps, `گزارش_${fileBase}_واحد_عملیات.pptx`);
+    setLink('dlXlsx', xlsxBlob, `جزئیات_مغایرت_${fileBase}.xlsx`);
+    document.getElementById('downloads').style.display = 'flex';
+    log('هر ۴ خروجی آماده شدند — روی هر لینک برای دانلود همان فایل کلیک کن.');
+    log('تمام.');
+  } catch (err) {
+    log('خطا: ' + (err && err.message ? err.message : String(err)));
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+// ============================================================
+// رابط کاربری — گزارش Overview چند بیمه‌گذار
+// (با ارجاع مستقیم به عنصرهای ساخته‌شده، نه querySelector — ساده‌تر و مطمئن‌تر)
+// ============================================================
+let companyRowCounter = 0;
+const companyRowEls = [];
+function updateOverviewRunEnabled() {
+  const ready = companyRowEls.length >= 2 && companyRowEls.every((div) =>
+    div._companySinad.files[0] && div._companyDp.files[0] && div._companyName.value.trim());
+  document.getElementById('runOverviewBtn').disabled = !ready;
+}
+function addCompanyRow() {
+  companyRowCounter++;
+  const idx = companyRowCounter;
+  const div = document.createElement('div');
+  div.className = 'companyRow';
+  div.dataset.idx = String(idx);
+
+  const fName = document.createElement('div'); fName.className = 'f';
+  const labelName = document.createElement('label'); labelName.textContent = 'نام بیمه‌گذار';
+  const inputName = document.createElement('input'); inputName.type = 'text'; inputName.className = 'companyName';
+  inputName.placeholder = 'مثلاً بیمه‌گذار ' + idx;
+  fName.appendChild(labelName); fName.appendChild(inputName);
+
+  const fSinad = document.createElement('div'); fSinad.className = 'f';
+  const labelSinad = document.createElement('label'); labelSinad.textContent = 'سیناد.xlsx';
+  const inputSinad = document.createElement('input'); inputSinad.type = 'file'; inputSinad.className = 'companySinad'; inputSinad.accept = '.xlsx';
+  fSinad.appendChild(labelSinad); fSinad.appendChild(inputSinad);
+
+  const fDp = document.createElement('div'); fDp.className = 'f';
+  const labelDp = document.createElement('label'); labelDp.textContent = 'دستور پرداخت.xlsx';
+  const inputDp = document.createElement('input'); inputDp.type = 'file'; inputDp.className = 'companyDp'; inputDp.accept = '.xlsx';
+  fDp.appendChild(labelDp); fDp.appendChild(inputDp);
+
+  const rmBtn = document.createElement('button'); rmBtn.type = 'button'; rmBtn.className = 'rm'; rmBtn.textContent = 'حذف';
+
+  div.appendChild(fName); div.appendChild(fSinad); div.appendChild(fDp); div.appendChild(rmBtn);
+  div._companyName = inputName; div._companySinad = inputSinad; div._companyDp = inputDp;
+
+  rmBtn.addEventListener('click', () => {
+    div.remove();
+    const i = companyRowEls.indexOf(div);
+    if (i >= 0) companyRowEls.splice(i, 1);
+    updateOverviewRunEnabled();
+  });
+  inputName.addEventListener('input', updateOverviewRunEnabled);
+  inputSinad.addEventListener('change', updateOverviewRunEnabled);
+  inputDp.addEventListener('change', updateOverviewRunEnabled);
+
+  document.getElementById('companyRows').appendChild(div);
+  companyRowEls.push(div);
+  updateOverviewRunEnabled();
+}
+document.getElementById('addCompanyBtn').addEventListener('click', addCompanyRow);
+// شروع با دو ردیف خالی — گزارش Overview حداقل ۲ بیمه‌گذار برای مقایسه لازم دارد.
+addCompanyRow();
+addCompanyRow();
+
+document.getElementById('runOverviewBtn').addEventListener('click', async () => {
+  if (companyRowEls.length < 2) return;
+  const btn = document.getElementById('runOverviewBtn');
+  btn.disabled = true;
+  document.getElementById('downloadsOverview').style.display = 'none';
+  try {
+    const insurerName = (document.getElementById('insurerName').value || '').trim() || '[نام بیمه‌گر]';
+    const holidaySet = getHolidaySetFromUI();
+    log(`--- شروع ساخت گزارش Overview برای ${companyRowEls.length} بیمه‌گذار ---`);
+
+    const companies = [];
+    let overallAsOf = null;
+    for (const rowEl of companyRowEls) {
+      const name = rowEl._companyName.value.trim();
+      const sinadFile = rowEl._companySinad.files[0];
+      const dpFile = rowEl._companyDp.files[0];
+      if (!name || !sinadFile || !dpFile) throw new Error('همه‌ی ردیف‌های بیمه‌گذار باید نام + فایل سیناد + فایل دستور پرداخت داشته باشند.');
+      log(`در حال خواندن «${name}»...`);
+      const [wbSinad, wbDp] = await Promise.all([readWorkbook(sinadFile), readWorkbook(dpFile)]);
+      const wsSinad = wbSinad.worksheets[0];
+      const wsDp = wbDp.worksheets[0];
+      if (!wsSinad) throw new Error(`شیتی در فایل سیناد «${name}» پیدا نشد.`);
+      if (!wsDp) throw new Error(`شیتی در فایل دستور پرداخت «${name}» پیدا نشد.`);
+      // این گزارش سطح خانواده ندارد، پس نیازی به کد رایانه خانواده/کد ملی و بانک نیست —
+      // فقط سطرهای خام سیناد برای مجموع‌های سطح شرکت خوانده می‌شوند.
+      const rows = loadSinadRowsRaw(wsSinad, {});
+      const dpRows = loadDpRows(wsDp);
+      const summary = computeCompanySummary(name, rows, dpRows, holidaySet);
+      if (summary._asOf && (!overallAsOf || summary._asOf > overallAsOf)) overallAsOf = summary._asOf;
+      log(`«${name}»: ${fmt(summary.total_count)} پرونده، ${fmt(summary.total_cost)} ریال، ${fmt(summary.paid_amount)} ریال واریزشده.`);
+      companies.push(summary);
+    }
+
+    log('در حال تجمیع بین بیمه‌گذارها...');
+    const agg = aggregateOverview(companies);
+    const asOfJalali = overallAsOf ? jlabel(overallAsOf) : '—';
+
+    log('در حال ساخت اکسل Overview...');
+    const xlsxBlob = await generateOverviewExcel(companies);
+    log('در حال ساخت پاورپوینت Overview...');
+    const pptxBlob = await generateOverviewPptx(companies, agg, insurerName, asOfJalali);
+
+    function setLink(id, blob, filename) {
+      const a = document.getElementById(id);
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+    }
+    const insurerNameForFile = (insurerName === '[نام بیمه‌گر]') ? 'بیمه‌گر' : String(insurerName).replace(/[\\/:*?"<>|]/g, '').trim();
+    setLink('dlOverviewPptx', pptxBlob, `Overview_${insurerNameForFile}.pptx`);
+    setLink('dlOverviewXlsx', xlsxBlob, `Overview_${insurerNameForFile}.xlsx`);
+    document.getElementById('downloadsOverview').style.display = 'flex';
+    log('هر دو خروجی Overview آماده شدند — روی هر لینک برای دانلود همان فایل کلیک کن.');
+    log('تمام.');
+  } catch (err) {
+    log('خطا: ' + (err && err.message ? err.message : String(err)));
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
+

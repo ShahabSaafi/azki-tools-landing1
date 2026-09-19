@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>جعبه‌ابزار عملیات ازکی</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ocean:#00b4ff;
+    --azure:#33c6ff;
+    --solar:#ffcc00;
+    --amber:#ffb700;
+    --ink:#0c1116;
+    --surface:#161b22;
+    --surface2:#1c222b;
+    --line:rgba(255,255,255,.08);
+    --text:#f2f5f8;
+    --muted:#8a94a3;
+    --success:#3ddc84;
+    --error:#ff5c5c;
+    --accent:var(--ocean);
+    --accent-rgb:0,180,255;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'IRANSansX','Vazirmatn',Tahoma,Arial,sans-serif;
+    background:var(--ink);
+    color:var(--text);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    position:relative;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:"";
+    position:fixed; inset:-10%; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(680px 420px at 12% -8%, rgba(0,180,255,.20), transparent 60%),
+      radial-gradient(560px 380px at 100% 8%, rgba(255,204,0,.10), transparent 60%),
+      radial-gradient(700px 500px at 90% 100%, rgba(0,180,255,.10), transparent 60%);
+    animation:drift 26s ease-in-out infinite alternate;
+  }
+  @keyframes drift{
+    0%{transform:translate(0,0) scale(1);}
+    50%{transform:translate(-1.5%,1%) scale(1.03);}
+    100%{transform:translate(1%,-1.5%) scale(1.01);}
+  }
+
+  header.top{
+    position:relative; z-index:1;
+    max-width:760px; margin:0 auto;
+    padding:34px 22px 18px;
+    text-align:center;
+  }
+  .mark{
+    width:42px;height:42px;
+    margin:0 auto 14px;
+    border-radius:13px;
+    background:linear-gradient(140deg,var(--ocean),var(--azure));
+    box-shadow:0 6px 20px rgba(0,180,255,.35);
+    display:flex;align-items:center;justify-content:center;
+    font-size:18px;font-weight:900;color:#fff;
+  }
+  header.top h1{font-size:21px;font-weight:800;letter-spacing:-.2px;margin-bottom:4px;}
+  header.top p{font-size:12.5px;color:var(--muted);}
+
+  main{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:10px 18px 60px;}
+
+  .search-wrap{position:relative;margin:18px 0 30px;}
+  .search-wrap svg{position:absolute;top:50%;right:16px;transform:translateY(-50%);opacity:.5;pointer-events:none;}
+  .search{
+    width:100%;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:13px 42px 13px 16px;
+    font-size:13.5px;
+    font-family:inherit;
+    color:var(--text);
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .search::placeholder{color:var(--muted);}
+  .search:focus{outline:none;border-color:rgba(0,180,255,.5);background:var(--surface2);}
+  .search-hint{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:10.5px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 6px;pointer-events:none;opacity:.8;}
+
+  section.group{margin-bottom:36px;animation:rise .5s cubic-bezier(.2,.8,.2,1) both;}
+  section.group:nth-of-type(2){animation-delay:.05s;}
+  section.group:nth-of-type(3){animation-delay:.10s;}
+  section.group:nth-of-type(4){animation-delay:.15s;}
+  @keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+  @media (prefers-reduced-motion: reduce){ section.group,.tile,body::before{animation:none !important;transition:none !important;} }
+
+  .group-head{display:flex;align-items:baseline;gap:8px;margin-bottom:14px;padding:0 2px;}
+  .cat-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px rgba(var(--accent-rgb),.6);}
+  .group-head h2{font-size:12.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;}
+  .group-count{font-size:11px;color:var(--muted);opacity:.7;}
+
+  .tiles{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(84px,1fr));
+    gap:14px 10px;
+  }
+
+  .tile{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    text-decoration:none;
+    color:inherit;
+    animation:pop .4s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes pop{from{opacity:0;transform:scale(.85);}to{opacity:1;transform:scale(1);}}
+  .tile-icon{
+    width:60px;height:60px;
+    border-radius:20px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:26px;
+    background:linear-gradient(155deg,var(--surface),var(--surface2));
+    border:1px solid var(--line);
+    box-shadow:0 6px 16px rgba(0,0,0,.28);
+    transition:transform .18s cubic-bezier(.3,1.4,.4,1), box-shadow .18s ease, border-color .18s ease;
+  }
+  .tile:not(.lg):hover .tile-icon{
+    transform:translateY(-4px) scale(1.06);
+    border-color:rgba(var(--accent-rgb),.45);
+    box-shadow:0 12px 28px rgba(var(--accent-rgb),.22);
+  }
+  .tile:not(.lg):active .tile-icon{transform:translateY(-1px) scale(.97);}
+  .tile-label{font-size:11.5px;font-weight:600;text-align:center;line-height:1.35;color:var(--text);max-width:88px;}
+
+  .tile.ghost{cursor:default;}
+  .tile.ghost .tile-icon{
+    background:transparent;
+    border:1.5px dashed rgba(255,255,255,.14);
+    box-shadow:none;
+    color:var(--muted);
+    font-size:18px;
+  }
+  .tile.ghost .tile-label{color:var(--muted);}
+  .tile.ghost:hover .tile-icon{transform:none;border-color:rgba(255,255,255,.22);box-shadow:none;}
+
+  /* بنتو: تایل بزرگ‌تر برای ابزار مهم/پراستفاده هر دسته */
+  .tile.lg{
+    grid-column:span 2;
+    flex-direction:row;
+    justify-content:flex-start;
+    gap:14px;
+    text-align:right;
+    background:linear-gradient(135deg, rgba(var(--accent-rgb),.14), rgba(var(--accent-rgb),.02));
+    border:1px solid rgba(var(--accent-rgb),.22);
+    border-radius:22px;
+    padding:14px 16px;
+    transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  }
+  .tile.lg .tile-icon{
+    width:50px;height:50px;border-radius:15px;font-size:22px;flex:none;
+    box-shadow:0 4px 12px rgba(0,0,0,.25);
+  }
+  .tile.lg .tile-label{max-width:none;font-size:13.5px;font-weight:700;}
+  .tile.lg:hover{transform:translateY(-3px);border-color:rgba(var(--accent-rgb),.45);box-shadow:0 12px 26px rgba(0,0,0,.28);}
+  .tile.lg:active{transform:translateY(-1px);}
+
+  .recent .tiles{grid-template-columns:repeat(auto-fill,minmax(74px,1fr));}
+  .recent .tile-icon{width:50px;height:50px;font-size:21px;border-radius:16px;}
+
+  .no-results{text-align:center;color:var(--muted);font-size:13px;padding:40px 0;}
+
+  footer{position:relative;z-index:1;text-align:center;padding:10px 20px 30px;color:var(--muted);font-size:10.5px;opacity:.7;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="mark">آ</div>
+  <h1>جعبه‌ابزار عملیات</h1>
+  <p id="greeting">تیم عملیات B2B · ازکی</p>
+</header>
+
+<main>
+  <div class="search-wrap">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8a94a3" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    <input class="search" id="search" type="text" placeholder="جستجو…" oninput="renderTools()">
+    <span class="search-hint">/</span>
+  </div>
+  <div id="sections"></div>
+</main>
+
+<footer>تیم عملیات ازکی · نسخه v1.9.0</footer>
+
+<script>
+/*
+  هر دسته یک آرایه از ابزارهاست. برای اضافه کردن ابزار، یک آبجکت به آرایهٔ
+  دستهٔ موردنظر اضافه کن. دستهٔ خالی خودش یک placeholder «به‌زودی» نشون می‌ده.
+
+  فیلدهای هر ابزار:
+    icon  → یک ایموجی
+    title → عنوان کوتاه (زیر آیکون نشون داده می‌شه، کوتاه نگه دار)
+    href  → مسیر فایل html داخل پوشه tools/
+    size  → اختیاری، "lg" برای تایل بزرگ‌تر (ابزار مهم/پراستفادهٔ آن دسته)
+
+  فیلد رنگ هر دسته (accent) پایین‌تر در CATEGORY_COLORS مشخص می‌شود.
+*/
+const CATEGORIES = [
+  { key: "account-sales", title: "اکانت و فروش", tools: [
+    { icon: "🧮", title: "محاسبه‌گر حق‌بیمه درمان", href: "tools/health-premium-calculator.html" },
+  ] },
+  { key: "issuance",      title: "صدور",          tools: [
+    { icon: "🔗", title: "تطبیق شماره شبا", href: "tools/sheba-matcher.html" },
+    { icon: "✅", title: "اعتبارسنجی اکسل بیمه", href: "tools/insurance-excel-validator.html" },
+  ] },
+  { key: "claims",        title: "خسارت",         tools: [
+    { icon: "📊", title: "گزارش خسارت آسیا", href: "tools/asia-claims-report.html" },
+    { icon: "📈", title: "گزارش خسارت دی", href: "tools/dey-claims-report.html" },
+    { icon: "🧾", title: "گزارش خسارت البرز", href: "tools/alborz-claims-report.html" },
+    { icon: "📋", title: "گزارش خسارت آسماری", href: "tools/asemari-claims-report.html" },
+  ] },
+];
+
+// رنگ اختصاصی هر دسته: [hex, "r,g,b"]
+const CATEGORY_COLORS = {
+  "account-sales": ["#ffcc00", "255,204,0"],
+  "issuance":       ["#00b4ff", "0,180,255"],
+  "claims":         ["#22d3c5", "34,211,197"],
+};
+
+const RECENT_KEY = "azki_recent_tools";
+function getRecent(){
+  try { return JSON.parse(localStorage.getItem(RECENT_KEY) || "[]"); } catch(e){ return []; }
+}
+function recordRecent(tool){
+  try {
+    let list = getRecent().filter(t => t.href !== tool.href);
+    list.unshift(tool);
+    list = list.slice(0, 4);
+    localStorage.setItem(RECENT_KEY, JSON.stringify(list));
+  } catch(e){}
+}
+
+function tileHtml(t, extraClass){
+  const cls = "tile" + (extraClass ? " " + extraClass : "") + (t.size === "lg" ? " lg" : "");
+  return `
+    <a class="${cls}" href="${t.href}" target="_blank" rel="noopener"
+       data-href="${t.href}" data-title="${t.title}" data-icon="${t.icon}">
+      <div class="tile-icon">${t.icon}</div>
+      <div class="tile-label">${t.title}</div>
+    </a>
+  `;
+}
+
+function renderTools(){
+  const q = (document.getElementById("search").value || "").trim().toLowerCase();
+  const wrap = document.getElementById("sections");
+
+  let sectionsHtml = "";
+
+  // ردیف «اخیراً استفاده‌شده» — فقط وقتی سرچ خالی است و آیتمی وجود دارد
+  if (!q) {
+    const recent = getRecent();
+    if (recent.length) {
+      sectionsHtml += `
+        <section class="group recent">
+          <div class="group-head">
+            <span class="cat-dot" style="background:var(--muted);box-shadow:none;"></span>
+            <h2>اخیراً استفاده‌شده</h2>
+          </div>
+          <div class="tiles">${recent.map(t => tileHtml(t)).join("")}</div>
+        </section>
+      `;
+    }
+  }
+
+  sectionsHtml += CATEGORIES.map(cat => {
+    const filtered = q ? cat.tools.filter(t => t.title.toLowerCase().includes(q)) : cat.tools;
+    if (q && filtered.length === 0) return "";
+
+    const [hex, rgb] = CATEGORY_COLORS[cat.key] || ["#00b4ff", "0,180,255"];
+
+    const tilesHtml = filtered.length
+      ? filtered.map(t => tileHtml(t)).join("")
+      : (q ? "" : `
+          <div class="tile ghost">
+            <div class="tile-icon">✦</div>
+            <div class="tile-label">به‌زودی</div>
+          </div>
+        `);
+
+    return `
+      <section class="group" style="--accent:${hex};--accent-rgb:${rgb};">
+        <div class="group-head">
+          <span class="cat-dot"></span>
+          <h2>${cat.title}</h2>
+          <span class="group-count">${cat.tools.length ? cat.tools.length : ""}</span>
+        </div>
+        <div class="tiles">${tilesHtml}</div>
+      </section>
+    `;
+  }).join("");
+
+  wrap.innerHTML = sectionsHtml || '<div class="no-results">ابزاری پیدا نشد.</div>';
+}
+
+// ثبت «اخیراً استفاده‌شده» با کلیک روی هر تایل واقعی (نه ghost)
+document.getElementById("sections").addEventListener("click", (e) => {
+  const tile = e.target.closest(".tile[data-href]");
+  if (!tile) return;
+  recordRecent({ href: tile.dataset.href, title: tile.dataset.title, icon: tile.dataset.icon });
+});
+
+// میانبر کیبورد «/» برای فوکوس روی سرچ
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "/" || e.metaKey || e.ctrlKey || e.altKey) return;
+  const el = document.activeElement;
+  const typing = el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.isContentEditable);
+  if (typing) return;
+  e.preventDefault();
+  document.getElementById("search").focus();
+});
+
+// سلام پویا بر اساس ساعت محلی مرورگر
+(function setGreeting(){
+  const h = new Date().getHours();
+  let g;
+  if (h >= 5 && h < 11) g = "صبح بخیر ☀️";
+  else if (h >= 11 && h < 14) g = "ظهر بخیر 🌤️";
+  else if (h >= 14 && h < 19) g = "عصر بخیر 🌇";
+  else g = "شب بخیر 🌙";
+  document.getElementById("greeting").textContent = g + " · تیم عملیات B2B ازکی";
+})();
+
+renderTools();
+</script>
+
+</body>
+</html>

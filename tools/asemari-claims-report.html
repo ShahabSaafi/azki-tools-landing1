@@ -1,0 +1,1820 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>گزارش خسارت آسماری — ازکی</title>
+<style>
+  :root{
+    --navy:#12171e; --primary:#00B4FF; --primary-dark:#33c6ff; --accent:#FFCC00;
+    --dark:#f2f5f8; --gray:#8a94a3; --lightgray:#232a35; --border:#2a323d;
+    --success:#1aa361; --danger:#ff5c5c; --bg:#0c1116; --card:#161b22;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Vazirmatn","IRANSansX",Tahoma,sans-serif;background:var(--bg);color:var(--dark);direction:rtl}
+  header{background:var(--navy);color:#fff;padding:22px 28px}
+  header h1{margin:0;font-size:20px}
+  header p{margin:6px 0 0;color:#8fc2da;font-size:13px}
+  main{max-width:1100px;margin:0 auto;padding:20px 24px 60px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:18px;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .card h2{font-size:15px;margin:0 0 12px;color:var(--dark)}
+  .row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  label{font-size:13px;color:var(--gray);display:block;margin-bottom:4px}
+  input[type=file]{font-size:13px}
+  select, input[type=text]{font-family:inherit;font-size:13px;padding:8px 10px;border:1px solid var(--border);border-radius:6px;min-width:220px;background:var(--card);color:var(--dark);color-scheme:dark}
+  button{font-family:inherit;font-size:13px;padding:10px 18px;border-radius:6px;border:none;background:var(--primary);color:#fff;cursor:pointer;font-weight:600}
+  button:disabled{background:#3a4553;cursor:not-allowed}
+  button.secondary{background:var(--lightgray);color:var(--dark)}
+  .tabs{display:flex;gap:8px;margin-bottom:16px}
+  .tab-btn{background:var(--lightgray);color:var(--dark);padding:9px 18px}
+  .tab-btn.active{background:var(--navy);color:#fff}
+  .tab-panel{display:none}
+  .tab-panel.active{display:block}
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:8px}
+  .kpi{border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;background:var(--card)}
+  .kpi .v{font-size:19px;font-weight:800;color:var(--primary-dark)}
+  .kpi .l{font-size:11.5px;color:var(--gray);margin-top:4px}
+  .status{font-size:13px;padding:10px 12px;border-radius:6px;margin-top:10px}
+  .status.info{background:rgba(0,180,255,.12);color:#7fe8ff}
+  .status.ok{background:rgba(61,220,132,.12);color:#3ddc84}
+  .status.err{background:rgba(255,92,92,.14);color:#ff5c5c}
+  .status.warn{background:rgba(255,204,0,.12);color:#ffcc00}
+  .downloads a{display:inline-block;margin:6px 8px 0 0;padding:9px 14px;background:var(--success);color:#fff;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600}
+  textarea{width:100%;min-height:110px;font-family:monospace;font-size:12px;padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--dark)}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px}
+  th,td{border:1px solid var(--border);padding:6px 8px;text-align:center}
+  th{background:var(--lightgray)}
+  .small{font-size:12px;color:var(--gray)}
+  .hint{font-size:12px;color:var(--gray);margin-top:4px}
+  .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700}
+  .badge.warn{background:rgba(255,204,0,.16);color:#ffcc00}
+  .badge.ok{background:rgba(61,220,132,.16);color:#3ddc84}
+  fieldset{border:1px solid var(--border);border-radius:8px;padding:12px}
+  legend{padding:0 6px;font-size:12.5px;color:var(--gray)}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:1100px;margin:0 auto;padding:14px 24px 0;}
+  .topbar .back{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#8a94a3;text-decoration:none;background:#161b22;border:1px solid #2a323d;padding:8px 14px;border-radius:10px;transition:.15s;}
+  .topbar .back:hover{border-color:#00B4FF;color:#00B4FF;}
+  .topbar .back:active{transform:scale(.97);}
+  .topbar .tool-tag{font-size:11.5px;font-weight:700;color:#00B4FF;background:rgba(0,180,255,.10);padding:4px 10px;border-radius:999px;}
+  .card h2{display:flex;align-items:center;gap:8px;}
+  .step-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#00B4FF;color:#fff;font-size:12px;flex:none;}
+  .dropzone{border:2px dashed #3a4553;border-radius:12px;padding:16px 14px;text-align:center;cursor:pointer;transition:.15s;background:#1c222b;}
+  .dropzone:hover,.dropzone.drag{border-color:#00B4FF;background:rgba(0,180,255,.12);}
+  .dropzone.filled{border-style:solid;border-color:#3ddc84;background:rgba(61,220,132,.12);}
+  .dropzone .dz-title{font-weight:700;font-size:13.5px;}
+  .dropzone .dz-hint{color:#8a94a3;font-size:12px;margin-top:4px;}
+  .dropzone input[type=file]{display:none;}
+</style>
+</head>
+<body>
+<div class="topbar"><a class="back" href="../index.html">→ جعبه‌ابزار عملیات</a><span class="tool-tag">خسارت آسماری</span></div>
+<header>
+  <h1>ابزار آفلاین گزارش خسارت — آسماری</h1>
+  <p>تحلیل کاملاً محلی (بدون ارسال داده به هیچ سروری) — بر اساس ساختار گزارش تأییدشدهٔ بیمه آسیا، تطبیق‌یافته با منطق داده و SLA آسماری</p>
+</header>
+<main>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="overview">Overview — چند بیمه‌گذار (۳۶۵ روز اخیر)</button>
+    <button class="tab-btn" data-tab="single">گزارش تک‌شرکتی</button>
+  </div>
+
+  <div class="card">
+    <h2><span class="step-num">۱</span> بارگذاری فایل جامع خسارت آسماری</h2>
+    <label class="dropzone" id="dzAsemari"><div class="dz-title">فایل جامع خسارت آسماری.xlsx</div><div class="dz-hint">فایل را اینجا رها کن یا کلیک کن</div><div class="dz-hint" id="dzNameAsemari"></div><input type="file" id="fileInput" accept=".xlsx,.xls"></label>
+    <div class="hint">فایل اکسل جامع (ستون‌های بیمه‌گذار، تاریخ شروع قرارداد، کد ملی، نوع خسارت، نوع بستری، تاریخ تشکیل پرونده، مبلغ صورتحساب، مبلغ پرداختی، تاریخ پرداخت و ...) — پسوند .xls یا .xlsx هر دو پشتیبانی می‌شود.</div>
+    <div id="loadStatus"></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="step-num">۲</span> تعطیلات رسمی (برای محاسبهٔ SLA به روز کاری)</h2>
+    <div class="hint">جمعه‌ها همیشه به‌صورت خودکار تعطیل در نظر گرفته می‌شوند. لیست زیر (قابل ویرایش) از منبع رسمی time.ir برای سال‌های ۱۴۰۴ تا ۱۴۰۶ است. برای رکوردهایی با سال خارج از این بازه، فقط جمعه‌ها لحاظ می‌شود.</div>
+    <textarea id="holidayText"></textarea>
+    <div class="row" style="margin-top:8px">
+      <button class="secondary" id="resetHolidays">بازنشانی به لیست پیش‌فرض</button>
+    </div>
+  </div>
+
+  <div class="tab-panel active" id="tab-overview">
+    <div class="card">
+      <h2>گزارش Overview پورتفوی فعال</h2>
+      <div class="hint">فقط قراردادهایی که «تاریخ شروع قرارداد» آن‌ها در ۳۶۵ روز اخیر (از امروز) است، در این گزارش لحاظ می‌شوند.</div>
+      <div id="overviewSummary" class="small" style="margin-top:8px"></div>
+      <div class="row" style="margin-top:12px">
+        <input type="text" id="insurerName" placeholder="نام بیمه‌گر (اختیاری، برای عنوان گزارش)">
+        <button id="runOverviewBtn" disabled>ساخت گزارش Overview (PPTX + Excel)</button>
+      </div>
+      <div id="overviewStatus"></div>
+      <div class="downloads" id="overviewDownloads"></div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-single">
+    <div class="card">
+      <h2>گزارش تک‌شرکتی</h2>
+      <div class="row">
+        <div>
+          <label>نام بیمه‌گذار (تایپ کنید تا فیلتر شود، یا از لیست انتخاب کنید)</label>
+          <input type="text" id="companySelectInput" list="companyDatalist" autocomplete="off"
+            placeholder="ابتدا فایل را بارگذاری کنید…" disabled style="min-width:320px">
+          <datalist id="companyDatalist"></datalist>
+        </div>
+        <div>
+          <label>تاریخ شروع قرارداد (برای انتخاب تمدید مشخص)</label>
+          <select id="contractSelect"><option value="">—</option></select>
+        </div>
+      </div>
+      <div id="singleSummary" class="small" style="margin-top:10px"></div>
+      <div class="row" style="margin-top:12px">
+        <button id="runSingleBtn" disabled>ساخت گزارش‌ها (۳ پاورپوینت + ۱ اکسل)</button>
+      </div>
+      <div id="singleStatus"></div>
+      <div class="downloads" id="singleDownloads"></div>
+    </div>
+  </div>
+
+  <div class="card small" style="color:var(--gray)">
+    نکات روش‌شناسی: «نوع خسارت = معرفی‌نامه» در گزارش نگه داشته می‌شود ولی با پرونده‌های «خسارت» ترکیب نمی‌شود و در محاسبات SLA/P90 شرکت نمی‌کند (چون تاریخ صدور آن تقریباً همیشه برابر تاریخ تشکیل پرونده است). P90 در این ابزار مطابق روش گزارش آسیا محاسبه می‌شود: مرتب‌سازی صعودی SLAها، نگه‌داشتن سریع‌ترین ۹۰٪ پرونده‌ها (کمترین SLA / «سوت‌شده‌ها») و گزارش میانگین همین زیرمجموعه — این مقدار همواره کمتر یا مساوی میانگین کلی SLA است. پرونده‌های خسارتی که ارزیابی و مبلغ پرداختی برایشان تعیین شده ولی هنوز تاریخ پرداخت ثبت نشده، «پرداخت نشده» نامیده می‌شوند (نه «در انتظار پرداخت») و از محاسبات SLA/P90 مستثنا هستند، ولی مبلغ و جزئیاتشان جداگانه در گزارش‌ها و اکسل آورده می‌شود.
+  </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<!-- NOTE: pptxgenjs is loaded lazily (see loadPptxGenJsOnce in app.js), not here.
+     Loading it eagerly alongside xlsx.full.min.js causes a severe (10x+) slowdown of
+     XLSX.read() on large files in some browsers — observed and confirmed during testing. -->
+<script>window.__PPTXGENJS_URL__ = "https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js";</script>
+
+<script>
+// core.js — Asmari claims analysis core logic
+// Framework-agnostic: works in browser (attaches to window.AsmariCore) and Node (module.exports).
+(function (root) {
+  'use strict';
+
+  // ---------------- Jalali <-> Gregorian (validated algorithm) ----------------
+  function div(a, b) { return Math.trunc(a / b); }
+  function mod(a, b) { return a - Math.trunc(a / b) * b; }
+  var breaks = [-61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210, 1635, 2060, 2097, 2192, 2262, 2324, 2394, 2456, 3178];
+
+  function jalCal(jy) {
+    var bl = breaks.length, gy = jy + 621, leapJ = -14, jp = breaks[0], jm, jump, leap, n, i;
+    if (jy < jp || jy >= breaks[bl - 1]) throw new Error('Invalid Jalaali year ' + jy);
+    for (i = 1; i < bl; i += 1) {
+      jm = breaks[i];
+      jump = jm - jp;
+      if (jy < jm) break;
+      leapJ = leapJ + div(jump, 33) * 8 + div(mod(jump, 33), 4);
+      jp = jm;
+    }
+    n = jy - jp;
+    leapJ = leapJ + div(n, 33) * 8 + div(mod(n, 33) + 3, 4);
+    if (mod(jump, 33) === 4 && jump - n === 4) leapJ += 1;
+    var leapG = div(gy, 4) - div((div(gy, 100) + 1) * 3, 4) - 150;
+    var march = 20 + leapJ - leapG;
+    if (jump - n < 6) n = n - jump + div(jump + 4, 33) * 33;
+    leap = mod(mod(n + 1, 33) - 1, 4);
+    if (leap === -1) leap = 4;
+    return { leap: leap, gy: gy, march: march };
+  }
+
+  function g2d(gy, gm, gd) {
+    var d = div((gy + div(gm - 8, 6) + 100100) * 1461, 4) + div(153 * mod(gm + 9, 12) + 2, 5) + gd - 34840408;
+    d = d - div(div(gy + 100100 + div(gm - 8, 6), 100) * 3, 4) + 752;
+    return d;
+  }
+
+  function d2g(jdn) {
+    var j, i, gd, gm, gy;
+    j = 4 * jdn + 139361631;
+    j = j + div(div(4 * jdn + 183187720, 146097) * 3, 4) * 4 - 3908;
+    i = div(mod(j, 1461), 4) * 5 + 308;
+    gd = div(mod(i, 153), 5) + 1;
+    gm = mod(div(i, 153), 12) + 1;
+    gy = div(j, 1461) - 100100 + div(8 - gm, 6);
+    return { gy: gy, gm: gm, gd: gd };
+  }
+
+  function j2d(jy, jm, jd) {
+    var r = jalCal(jy);
+    return g2d(r.gy, 3, r.march) + (jm - 1) * 31 - div(jm, 7) * (jm - 7) + jd - 1;
+  }
+
+  function d2j(jdn) {
+    var gy = d2g(jdn).gy, jy = gy - 621, r = jalCal(jy), jdn1f = g2d(gy, 3, r.march);
+    var jd, jm, k;
+    k = jdn - jdn1f;
+    if (k >= 0) {
+      if (k <= 185) {
+        jm = 1 + div(k, 31);
+        jd = mod(k, 31) + 1;
+        return { jy: jy, jm: jm, jd: jd };
+      } else {
+        k -= 186;
+      }
+    } else {
+      jy -= 1;
+      k += 179;
+      if (r.leap === 1) k += 1;
+    }
+    jm = 7 + div(k, 30);
+    jd = mod(k, 30) + 1;
+    return { jy: jy, jm: jm, jd: jd };
+  }
+
+  function jalaliToGregorian(jy, jm, jd) { return d2g(j2d(jy, jm, jd)); }
+  function gregorianToJalali(gy, gm, gd) { return d2j(g2d(gy, gm, gd)); }
+
+  function parseJalali(s) {
+    if (s === null || s === undefined) return null;
+    var t = String(s).trim();
+    if (!t || t === '-') return null;
+    var m = t.match(/^(\d{3,4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+    if (!m) return null;
+    var y = +m[1], mo = +m[2], d = +m[3];
+    if (mo < 1 || mo > 12 || d < 1 || d > 31) return null;
+    return { y: y, m: mo, d: d };
+  }
+
+  function jalaliToUtcMs(s) {
+    var p = parseJalali(s);
+    if (!p) return null;
+    try {
+      var g = jalaliToGregorian(p.y, p.m, p.d);
+      return Date.UTC(g.gy, g.gm - 1, g.gd);
+    } catch (e) { return null; }
+  }
+
+  function dayDiff(sStart, sEnd) {
+    var a = jalaliToUtcMs(sStart), b = jalaliToUtcMs(sEnd);
+    if (a === null || b === null) return null;
+    return Math.round((b - a) / 86400000);
+  }
+
+  function jalaliToday() {
+    var now = new Date();
+    var j = gregorianToJalali(now.getUTCFullYear(), now.getUTCMonth() + 1, now.getUTCDate());
+    return j.jy + '/' + pad2(j.jm) + '/' + pad2(j.jd);
+  }
+  function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+
+  function isFridayJalali(s) {
+    var ms = jalaliToUtcMs(s);
+    if (ms === null) return false;
+    return new Date(ms).getUTCDay() === 5;
+  }
+
+  // ---------------- Holidays / business days ----------------
+  // holidayList: array of [jy, jm, jd, label]
+  function buildHolidayDaySet(holidayList) {
+    var s = new Set();
+    var years = new Set();
+    (holidayList || []).forEach(function (h) {
+      var ms = jalaliToUtcMs(h[0] + '/' + h[1] + '/' + h[2]);
+      if (ms !== null) { s.add(Math.round(ms / 86400000)); years.add(h[0]); }
+    });
+    return { daySet: s, coveredYears: years };
+  }
+
+  function businessDaysBetween(sStart, sEnd, holidayDaySet) {
+    var a = jalaliToUtcMs(sStart), b = jalaliToUtcMs(sEnd);
+    if (a === null || b === null) return null;
+    var dayA = Math.round(a / 86400000), dayB = Math.round(b / 86400000);
+    if (dayB <= dayA) return 0;
+    var count = 0;
+    for (var di = dayA + 1; di <= dayB; di++) {
+      var dow = new Date(di * 86400000).getUTCDay();
+      if (dow === 5) continue; // Friday
+      if (holidayDaySet && holidayDaySet.has(di)) continue;
+      count++;
+    }
+    return count;
+  }
+
+  // ---------------- number / stats helpers ----------------
+  function tonum(x) {
+    if (x === null || x === undefined) return 0;
+    var s = String(x).trim().replace(/,/g, '');
+    if (s === '' || s === '-') return 0;
+    var n = parseFloat(s);
+    return isNaN(n) ? 0 : n;
+  }
+  function sortAsc(arr) { return arr.slice().sort(function (a, b) { return a - b; }); }
+  function avg(list) {
+    if (!list || !list.length) return null;
+    var sum = 0;
+    for (var i = 0; i < list.length; i++) sum += list[i];
+    return sum / list.length;
+  }
+  function median(list) {
+    if (!list || !list.length) return null;
+    var s = sortAsc(list), n = s.length;
+    return n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2;
+  }
+  // P90 — trimmed-mean definition (matches Asia reference tool's p90TrimmedAvg):
+  // sort ascending (fastest/lowest SLA first), keep the fastest 90% of cases
+  // ("سوت شده‌ها" / quickest-resolved), and report the AVERAGE of just that
+  // subset. This is guaranteed to be <= the overall average SLA (confirmed
+  // per user's explicit correction: "باید از میانگین SLA قطعا کمتر باشن").
+  function p90TrimmedAvg(list) {
+    if (!list || !list.length) return null;
+    var s = sortAsc(list);
+    var keep = Math.max(1, Math.ceil(s.length * 0.9));
+    return avg(s.slice(0, keep));
+  }
+
+  // ---------------- text normalization ----------------
+  function normHtype(v) {
+    var s = (v || '').toString().replace(/‌/g, ' ').replace(/\s+/g, ' ').trim();
+    if (s === 'خسارت') return 'khesarat';
+    if (s.indexOf('معرفی') === 0 || s.indexOf('معرفي') === 0) return 'moarefi';
+    return 'other';
+  }
+  function normOtype(v) {
+    var s = (v || '').toString().trim();
+    if (s.indexOf('دندان') >= 0) return 'dandan';
+    if (s.indexOf('بستر') >= 0) return 'bastari';
+    return 'para'; // پاراکلینیکی — also the safe default (only 3 categories observed in data)
+  }
+  var OTYPE_FA = { para: 'پاراکلینیکی', bastari: 'بستری', dandan: 'دندانپزشکی', overall: 'کلی' };
+
+  function cleanCompanyName(raw) {
+    var s = (raw || '').toString().trim();
+    var m = s.match(/^(.*?)\s*\(([\dA-Za-z۰-۹]+)\)\s*$/);
+    if (m) return { name: m[1].trim(), code: m[2].trim() };
+    return { name: s, code: '' };
+  }
+  function canonNid(v) {
+    var s = (v || '').toString().trim().replace(/\D/g, '');
+    if (!s) return '';
+    while (s.length < 10) s = '0' + s;
+    return s;
+  }
+
+  // ---------------- column mapping (header-name based, robust to column shifts) ----------------
+  var REQUIRED_HEADERS = {
+    policyholder: ['بیمه گذار / قرارداد', 'بیمه‌گذار / قرارداد', 'بیمه گذار/قرارداد'],
+    contractNo: ['شماره قرارداد'],
+    contractStart: ['تاریخ شروع قرارداد'],
+    nid: ['کد ملی'],
+    fname: ['نام'],
+    lname: ['نام خانوادگی'],
+    htype: ['نوع خسارت'],
+    hospital: ['بیمارستان'],
+    otype: ['نوع بستری'],
+    coverage: ['پوشش'],
+    caseDate: ['تاریخ تشکیل پرونده'],
+    issueDate: ['تاریخ صدور'],
+    billed: ['مبلغ صورتحساب'],
+    deduction: ['کسورات'],
+    paid: ['مبلغ پرداختی'],
+    payDate: ['تاریخ پرداخت']
+  };
+  function normHeader(h) { return (h || '').toString().replace(/‌/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function buildColumnMap(headerRow) {
+    var idx = {};
+    headerRow.forEach(function (h, i) { idx[normHeader(h)] = i; });
+    var map = {}, missing = [];
+    Object.keys(REQUIRED_HEADERS).forEach(function (key) {
+      var found = -1;
+      REQUIRED_HEADERS[key].some(function (cand) {
+        var nc = normHeader(cand);
+        if (idx.hasOwnProperty(nc)) { found = idx[nc]; return true; }
+        return false;
+      });
+      if (found === -1) {
+        var wanted = REQUIRED_HEADERS[key][0];
+        Object.keys(idx).some(function (hk) {
+          if (hk.indexOf(wanted) >= 0 || wanted.indexOf(hk) >= 0) { found = idx[hk]; return true; }
+          return false;
+        });
+      }
+      if (found === -1) missing.push(key + ' (' + REQUIRED_HEADERS[key][0] + ')');
+      map[key] = found;
+    });
+    if (missing.length) throw new Error('ستون‌های زیر در فایل پیدا نشد: ' + missing.join('، '));
+    return map;
+  }
+
+  // ---------------- record extraction ----------------
+  function extractRecord(row, map) {
+    var ph = row[map.policyholder];
+    var cn = cleanCompanyName(ph);
+    var caseDate = (row[map.caseDate] || '').toString().trim();
+    var payDateRaw = row[map.payDate];
+    var payDateStr = (payDateRaw === null || payDateRaw === undefined) ? '' : String(payDateRaw).trim();
+    var htype = normHtype(row[map.htype]);
+    var validPayDate = payDateStr !== '' && payDateStr !== '-' && parseJalali(payDateStr) !== null;
+    var isPaidKhesarat = htype === 'khesarat' && validPayDate;
+    var billed = tonum(row[map.billed]);
+    var deduction = tonum(row[map.deduction]);
+    var paid = tonum(row[map.paid]);
+    var slaCal = isPaidKhesarat ? dayDiff(caseDate, payDateStr) : null;
+    return {
+      companyRaw: (ph || '').toString().trim(),
+      companyName: cn.name,
+      companyCode: cn.code,
+      contractStart: (row[map.contractStart] || '').toString().trim(),
+      nid: canonNid(row[map.nid]),
+      fullName: ((row[map.fname] || '') + ' ' + (row[map.lname] || '')).trim(),
+      htype: htype,
+      otype: normOtype(row[map.otype]),
+      coverage: (row[map.coverage] || '').toString().trim(),
+      hospital: (row[map.hospital] || '').toString().trim(),
+      caseDate: caseDate,
+      payDate: validPayDate ? payDateStr : '',
+      billed: billed,
+      deduction: deduction,
+      paid: paid,
+      // "بدون تاریخ پرداخت" فقط برای پرونده‌هایی معنا دارد که مبلغ پرداختی مشخص
+      // (بزرگ‌تر از صفر) دارند ولی هنوز تاریخ واریز ثبت نشده. اگر مبلغ پرداختی
+      // صفر برآورد شده باشد (یعنی هنوز ارزیابی/تأیید نهایی نشده)، نباید در این
+      // دسته شمرده شود. همچنین ستون تاریخ پرداخت باید *واقعاً خالی* باشد — نه
+      // "-" و نه هر مقدار دیگری (مثل یک عدد نامعتبر) — چون این‌ها می‌توانند
+      // معنای دیگری (مثلاً غیرقابل‌اعمال) داشته باشند و نباید با "هنوز ثبت نشده"
+      // یکی شمرده شوند؛ به همین دلیل مستقیماً payDateStr خام بررسی می‌شود، نه
+      // validPayDate (که "-" و مقادیر نامعتبر را هم مثل خالی در نظر می‌گیرد).
+      isPendingKhesarat: htype === 'khesarat' && payDateStr === '' && paid > 0,
+      isPaidKhesarat: isPaidKhesarat,
+      isCapReached: htype === 'khesarat' && paid === 0 && Math.abs(billed - deduction) < 1 && billed > 0,
+      slaCalDays: slaCal
+    };
+  }
+
+  // ---------------- SLA stat block over a set of paid-khesarat records ----------------
+  function slaStatsFor(records, holidayDaySet) {
+    function byLevel(pred) {
+      var cal = [], biz = [];
+      records.forEach(function (r) {
+        if (!pred(r)) return;
+        if (r.slaCalDays !== null && r.slaCalDays !== undefined && r.slaCalDays >= 0) {
+          cal.push(r.slaCalDays);
+          var bd = businessDaysBetween(r.caseDate, r.payDate, holidayDaySet);
+          if (bd !== null) biz.push(bd);
+        }
+      });
+      return {
+        n: cal.length,
+        avgCal: avg(cal), p90Cal: p90TrimmedAvg(cal), medianCal: median(cal),
+        avgBiz: avg(biz), p90Biz: p90TrimmedAvg(biz)
+      };
+    }
+    return {
+      overall: byLevel(function () { return true; }),
+      para: byLevel(function (r) { return r.otype === 'para'; }),
+      bastari: byLevel(function (r) { return r.otype === 'bastari'; }),
+      dandan: byLevel(function (r) { return r.otype === 'dandan'; })
+    };
+  }
+
+  // ---------------- company-level summary ----------------
+  function computeCompanySummary(companyName, contractStart, allRecords, holidayDaySet, asOfJalali) {
+    var recs = allRecords; // already filtered to this company+contract by caller
+    var khesarat = recs.filter(function (r) { return r.htype === 'khesarat'; });
+    var moarefi = recs.filter(function (r) { return r.htype === 'moarefi'; });
+    var paidK = khesarat.filter(function (r) { return r.isPaidKhesarat; });
+    // «بدون تاریخ پرداخت» فقط برای پرونده‌هایی گزارش می‌شود که بیش از ۷ روز کاری
+    // از تاریخ تشکیل پرونده‌شان گذشته باشد — پرونده‌های تازه‌تر هنوز در فرآیند
+    // بررسی/تأیید هستند و طبیعی است که هنوز تاریخ پرداخت نداشته باشند.
+    var pendingK = khesarat.filter(function (r) {
+      if (!r.isPendingKhesarat) return false;
+      var bd = businessDaysBetween(r.caseDate, asOfJalali, holidayDaySet);
+      return bd !== null && bd > 7;
+    });
+    var capReached = khesarat.filter(function (r) { return r.isCapReached; });
+
+    var uniquePersonsK = new Set(khesarat.map(function (r) { return r.nid; }).filter(Boolean));
+    var uniquePersonsAll = new Set(recs.map(function (r) { return r.nid; }).filter(Boolean));
+
+    var todayMs = jalaliToUtcMs(asOfJalali);
+    var pendingDetail = pendingK.map(function (r) {
+      var caseMs = jalaliToUtcMs(r.caseDate);
+      var daysElapsed = (caseMs !== null && todayMs !== null) ? Math.round((todayMs - caseMs) / 86400000) : null;
+      return {
+        nid: r.nid, name: r.fullName, caseDate: r.caseDate, payDate: r.payDate, htype: r.htype,
+        billed: r.billed, paid: r.paid,
+        otype: r.otype, coverage: r.coverage, hospital: r.hospital, daysElapsed: daysElapsed,
+        isCapReached: r.isCapReached
+      };
+    });
+
+    return {
+      companyName: companyName,
+      contractStart: contractStart,
+      totalRecords: recs.length,
+      khesaratCount: khesarat.length,
+      moarefiCount: moarefi.length,
+      uniquePersonsKhesarat: uniquePersonsK.size,
+      uniquePersonsAll: uniquePersonsAll.size,
+      billedSumKhesarat: khesarat.reduce(function (s, r) { return s + r.billed; }, 0),
+      deductionSumKhesarat: khesarat.reduce(function (s, r) { return s + r.deduction; }, 0),
+      // paidSumKhesarat: total evaluated/approved payment amount across ALL خسارت
+      // records that have a paid amount assigned — regardless of whether تاریخ
+      // پرداخت has been entered yet. Confirmed against the user's own Excel
+      // cross-check on the Overview report (expected 15.52B toman ==
+      // this field / 10). "پرداخت نشده" (pendingPayableSum, below) is a labeled
+      // SUBSET of this total shown separately for visibility — not an exclusive
+      // bucket subtracted out of it.
+      paidSumKhesarat: khesarat.reduce(function (s, r) { return s + r.paid; }, 0),
+      // paidActualDisbursedOnlySum: the stricter subset — only records with a real
+      // تاریخ پرداخت (isPaidKhesarat === true). Kept available for reference but
+      // not used as the headline "مجموع پرداختی" figure (see paidSumKhesarat above).
+      paidActualDisbursedOnlySum: paidK.reduce(function (s, r) { return s + r.paid; }, 0),
+      billedSumMoarefi: moarefi.reduce(function (s, r) { return s + r.billed; }, 0),
+      paidSumMoarefi: moarefi.reduce(function (s, r) { return s + r.paid; }, 0),
+      paidCount: paidK.length,
+      pendingCount: pendingK.length,
+      pendingBilledSum: pendingK.reduce(function (s, r) { return s + r.billed; }, 0),
+      // پرداخت نشده (not-paid): sum of the "مبلغ پرداختی" already assigned during
+      // evaluation for خسارت records whose تاریخ پرداخت is still blank.
+      pendingPayableSum: pendingK.reduce(function (s, r) { return s + r.paid; }, 0),
+      capReachedCount: capReached.length,
+      capReachedBilledSum: capReached.reduce(function (s, r) { return s + r.billed; }, 0),
+      otherZeroCount: khesarat.filter(function (r) { return r.paid === 0 && !r.isCapReached; }).length,
+      sla: slaStatsFor(paidK, holidayDaySet),
+      pendingDetail: pendingDetail
+    };
+  }
+
+  // ---------------- portfolio-wide monthly SLA/P90 trend (trailing 12 months) ----------------
+  // Groups paid-khesarat records by the Jalali year-month of caseDate (تاریخ تشکیل پرونده),
+  // matching Asia's AK_date-bucketing convention, for the trailing 12 months ending at asOfJalali.
+  // Returns { months: [{jy,jm,label}], overall:[...], para:[...], bastari:[...], dandan:[...] }
+  // where each level array has one entry per month: {n, avgCal, p90Cal, avgBiz, p90Biz}.
+  var JALALI_MONTH_NAMES = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+  function monthKey(jy, jm) { return jy * 100 + jm; }
+  function addMonthsJalali(jy, jm, delta) {
+    var total = (jy * 12 + (jm - 1)) + delta;
+    var ny = Math.floor(total / 12);
+    var nm = (total % 12 + 12) % 12 + 1;
+    return { jy: ny, jm: nm };
+  }
+  function computeMonthlyTrend(paidRecords, holidayDaySet, asOfJalali, monthsBack) {
+    var n = monthsBack || 12;
+    var asOfP = parseJalali(asOfJalali) || parseJalali(jalaliToday());
+    var months = [];
+    for (var i = n - 1; i >= 0; i--) {
+      var mm = addMonthsJalali(asOfP.y, asOfP.m, -i);
+      months.push({ jy: mm.jy, jm: mm.jm, label: JALALI_MONTH_NAMES[mm.jm - 1] + ' ' + mm.jy });
+    }
+    var monthIdxByKey = {};
+    months.forEach(function (m, i) { monthIdxByKey[monthKey(m.jy, m.jm)] = i; });
+
+    function emptyBucketArr() {
+      return months.map(function () { return { n: 0, calList: [], bizList: [] }; });
+    }
+    var buckets = { overall: emptyBucketArr(), para: emptyBucketArr(), bastari: emptyBucketArr(), dandan: emptyBucketArr() };
+
+    paidRecords.forEach(function (r) {
+      var cp = parseJalali(r.caseDate);
+      if (!cp) return;
+      var key = monthKey(cp.y, cp.m);
+      var idx = monthIdxByKey[key];
+      if (idx === undefined) return; // outside trailing-12-month window
+      if (r.slaCalDays === null || r.slaCalDays === undefined || r.slaCalDays < 0) return;
+      var bd = businessDaysBetween(r.caseDate, r.payDate, holidayDaySet);
+      ['overall', r.otype].forEach(function (lvl) {
+        if (!buckets[lvl]) return;
+        var b = buckets[lvl][idx];
+        b.n++;
+        b.calList.push(r.slaCalDays);
+        if (bd !== null) b.bizList.push(bd);
+      });
+    });
+
+    function summarize(bucketArr) {
+      return bucketArr.map(function (b) {
+        return {
+          n: b.n,
+          avgCal: avg(b.calList), p90Cal: p90TrimmedAvg(b.calList),
+          avgBiz: avg(b.bizList), p90Biz: p90TrimmedAvg(b.bizList)
+        };
+      });
+    }
+
+    return {
+      months: months,
+      overall: summarize(buckets.overall),
+      para: summarize(buckets.para),
+      bastari: summarize(buckets.bastari),
+      dandan: summarize(buckets.dandan)
+    };
+  }
+
+  // ---------------- company-level "from contract start" monthly series ----------------
+  // One bucket per calendar month from the company's own contract-start month through
+  // asOfJalali (inclusive), grouped by caseDate (تاریخ تشکیل پرونده — نزدیک‌ترین معادل
+  // موجود در دیتا برای «تاریخ بارگذاری مدارک»، چون ستون جداگانه‌ای برای آن در فایل منبع
+  // وجود ندارد). برای هر ماه: خسارت (تعداد، مجموع مبلغ هزینه/صورتحساب، SLA میانگین/P90
+  // تقویمی و کاری) و معرفی‌نامه/آنلاین (تعداد و مجموع مبلغ پرداختی).
+  function aggregateCompanyMonthlySeries(allRecords, holidayDaySet, contractStart, asOfJalali) {
+    var csP = parseJalali(contractStart) || parseJalali(jalaliToday());
+    var asOfP = parseJalali(asOfJalali) || parseJalali(jalaliToday());
+    var totalMonths = Math.max(1, (asOfP.y * 12 + (asOfP.m - 1)) - (csP.y * 12 + (csP.m - 1)) + 1);
+    var months = [];
+    for (var i = 0; i < totalMonths; i++) {
+      var mm = addMonthsJalali(csP.y, csP.m, i);
+      months.push({ jy: mm.jy, jm: mm.jm, label: JALALI_MONTH_NAMES[mm.jm - 1] + ' ' + mm.jy });
+    }
+    var idxByKey = {};
+    months.forEach(function (m, i) { idxByKey[monthKey(m.jy, m.jm)] = i; });
+
+    var kBuckets = months.map(function () { return { count: 0, billedSum: 0, calList: [], bizList: [] }; });
+    var mBuckets = months.map(function () { return { count: 0, paidSum: 0 }; });
+
+    allRecords.forEach(function (r) {
+      var cp = parseJalali(r.caseDate);
+      if (!cp) return;
+      var idx = idxByKey[monthKey(cp.y, cp.m)];
+      if (idx === undefined) return;
+      if (r.htype === 'khesarat') {
+        var b = kBuckets[idx];
+        b.count++;
+        b.billedSum += r.billed;
+        if (r.isPaidKhesarat && r.slaCalDays !== null && r.slaCalDays !== undefined && r.slaCalDays >= 0) {
+          b.calList.push(r.slaCalDays);
+          var bd = businessDaysBetween(r.caseDate, r.payDate, holidayDaySet);
+          if (bd !== null) b.bizList.push(bd);
+        }
+      } else if (r.htype === 'moarefi') {
+        var mb = mBuckets[idx];
+        mb.count++;
+        mb.paidSum += r.paid;
+      }
+    });
+
+    return {
+      months: months,
+      khesarat: kBuckets.map(function (b) {
+        return {
+          count: b.count, billedSum: b.billedSum, n: b.calList.length,
+          avgCal: avg(b.calList), p90Cal: p90TrimmedAvg(b.calList),
+          avgBiz: avg(b.bizList), p90Biz: p90TrimmedAvg(b.bizList),
+          // calList: خام روزهای SLA تقویمی این ماه (فقط پرونده‌های پرداخت‌شده) — برای
+          // دسته‌بندی بازه‌ای SLA در نمودار روند ماهانهٔ بازه‌ها (اسلاید ۱۰).
+          calList: b.calList.slice()
+        };
+      }),
+      moarefi: mBuckets.map(function (b) { return { count: b.count, paidSum: b.paidSum }; })
+    };
+  }
+
+  // ---------------- company-level weekly SLA series (calendar-day), from contract start ----------------
+  // بازه‌های ۷روزه، لنگرشده به تاریخ شروع قرارداد، بر اساس caseDate (نزدیک‌ترین معادل
+  // موجود در دیتا برای «تاریخ بارگذاری مدارک»). فقط پرونده‌های خسارتِ پرداخت‌شده لحاظ
+  // می‌شوند (چون SLA نیاز به تاریخ پرداخت دارد). خروجی هر هفته: n، میانگین روز تقویمی،
+  // و calList خام (برای دسته‌بندی بازه‌ای SLA در لایهٔ UI/نمودار).
+  function aggregateCompanyWeeklySeries(paidKhesaratRecords, holidayDaySet, contractStart, asOfJalali) {
+    var csMs = jalaliToUtcMs(contractStart);
+    var asOfMs = jalaliToUtcMs(asOfJalali);
+    if (csMs === null || asOfMs === null || asOfMs < csMs) return { weeks: [], overall: [] };
+    var WEEK_MS = 7 * 86400000;
+    var totalWeeks = Math.max(1, Math.floor((asOfMs - csMs) / WEEK_MS) + 1);
+    var weeks = [];
+    for (var i = 0; i < totalWeeks; i++) {
+      var wStartMs = csMs + i * WEEK_MS;
+      var d = new Date(wStartMs);
+      var j = gregorianToJalali(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+      weeks.push({ idx: i, startMs: wStartMs, label: pad2(j.jm) + '/' + pad2(j.jd) });
+    }
+    var buckets = weeks.map(function () { return { calList: [] }; });
+    paidKhesaratRecords.forEach(function (r) {
+      var caseMs = jalaliToUtcMs(r.caseDate);
+      if (caseMs === null || caseMs < csMs) return;
+      var wi = Math.floor((caseMs - csMs) / WEEK_MS);
+      if (wi < 0 || wi >= weeks.length) return;
+      if (r.slaCalDays === null || r.slaCalDays === undefined || r.slaCalDays < 0) return;
+      buckets[wi].calList.push(r.slaCalDays);
+    });
+    return {
+      weeks: weeks,
+      overall: buckets.map(function (b) { return { n: b.calList.length, avgCal: avg(b.calList), calList: b.calList.slice() }; })
+    };
+  }
+
+  // ---------------- company-level half-month SLA series (calendar-based), from contract start ----------------
+  // برای هر ماه از ماه شروع قرارداد تا asOfJalali، دقیقاً دو نقطهٔ داده تولید می‌شود: نیمهٔ
+  // اول (روزهای ۱ تا ۱۵) و نیمهٔ دوم (روزهای ۱۶ تا پایان ماه) — بر اساس caseDate (نزدیک‌ترین
+  // معادل موجود در دیتا برای «تاریخ بارگذاری مدارک»). فقط پرونده‌های خسارتِ پرداخت‌شده لحاظ
+  // می‌شوند. خروجی هر نقطه: n، میانگین روز تقویمی، و calList خام.
+  function aggregateCompanyHalfMonthSeries(paidKhesaratRecords, holidayDaySet, contractStart, asOfJalali) {
+    var csP = parseJalali(contractStart) || parseJalali(jalaliToday());
+    var asOfP = parseJalali(asOfJalali) || parseJalali(jalaliToday());
+    var totalMonths = Math.max(1, (asOfP.y * 12 + (asOfP.m - 1)) - (csP.y * 12 + (csP.m - 1)) + 1);
+    var periods = [];
+    for (var i = 0; i < totalMonths; i++) {
+      var mm = addMonthsJalali(csP.y, csP.m, i);
+      periods.push({ jy: mm.jy, jm: mm.jm, half: 1, label: pad2(mm.jm) + '/01' });
+      periods.push({ jy: mm.jy, jm: mm.jm, half: 2, label: pad2(mm.jm) + '/16' });
+    }
+    var idxByKey = {};
+    periods.forEach(function (p, i) { idxByKey[monthKey(p.jy, p.jm) + '_' + p.half] = i; });
+    var buckets = periods.map(function () { return { calList: [] }; });
+    paidKhesaratRecords.forEach(function (r) {
+      var cp = parseJalali(r.caseDate);
+      if (!cp) return;
+      var half = cp.d <= 15 ? 1 : 2;
+      var idx = idxByKey[monthKey(cp.y, cp.m) + '_' + half];
+      if (idx === undefined) return;
+      if (r.slaCalDays === null || r.slaCalDays === undefined || r.slaCalDays < 0) return;
+      buckets[idx].calList.push(r.slaCalDays);
+    });
+    return {
+      periods: periods,
+      overall: buckets.map(function (b) { return { n: b.calList.length, avgCal: avg(b.calList), calList: b.calList.slice() }; })
+    };
+  }
+
+  var Core = {
+    jalaliToGregorian: jalaliToGregorian,
+    gregorianToJalali: gregorianToJalali,
+    parseJalali: parseJalali,
+    jalaliToUtcMs: jalaliToUtcMs,
+    dayDiff: dayDiff,
+    jalaliToday: jalaliToday,
+    isFridayJalali: isFridayJalali,
+    buildHolidayDaySet: buildHolidayDaySet,
+    businessDaysBetween: businessDaysBetween,
+    tonum: tonum,
+    avg: avg,
+    median: median,
+    p90TrimmedAvg: p90TrimmedAvg,
+    normHtype: normHtype,
+    normOtype: normOtype,
+    OTYPE_FA: OTYPE_FA,
+    cleanCompanyName: cleanCompanyName,
+    canonNid: canonNid,
+    buildColumnMap: buildColumnMap,
+    extractRecord: extractRecord,
+    slaStatsFor: slaStatsFor,
+    computeCompanySummary: computeCompanySummary,
+    computeMonthlyTrend: computeMonthlyTrend,
+    aggregateCompanyMonthlySeries: aggregateCompanyMonthlySeries,
+    aggregateCompanyWeeklySeries: aggregateCompanyWeeklySeries,
+    aggregateCompanyHalfMonthSeries: aggregateCompanyHalfMonthSeries,
+    JALALI_MONTH_NAMES: JALALI_MONTH_NAMES
+  };
+
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = Core;
+  } else {
+    root.AsmariCore = Core;
+  }
+
+})(typeof window !== 'undefined' ? window : this);
+
+</script>
+
+<script>
+'use strict';
+var Core = window.AsmariCore;
+
+/* PptxGenJS is loaded lazily (only when actually generating a deck) because loading it
+   eagerly alongside xlsx.full.min.js causes a severe slowdown of XLSX.read() on large files. */
+var _pptxLoadPromise = null;
+function loadPptxGenJsOnce(){
+  if(window.PptxGenJS) return Promise.resolve();
+  if(_pptxLoadPromise) return _pptxLoadPromise;
+  _pptxLoadPromise = new Promise(function(resolve, reject){
+    var s = document.createElement('script');
+    s.src = window.__PPTXGENJS_URL__;
+    s.onload = function(){ resolve(); };
+    s.onerror = function(){ reject(new Error('بارگذاری کتابخانهٔ PptxGenJS ناموفق بود.')); };
+    document.body.appendChild(s);
+  });
+  return _pptxLoadPromise;
+}
+
+// ---------------- پچ باگ شناخته‌شدهٔ pptxgenjs: Override جعلی slideMasterN.xml در Content_Types ----------------
+// با بررسی بایت‌به‌بایت یک پاورپوینت واقعی که کاربر گزارش داد در PowerPoint با پیام
+// «[Repaired]» باز می‌شود و بعضی کارت‌های KPI (مثلاً «دفعات مراجعه به مراکز آنلاین») صفر نشان
+// می‌دهند — با اینکه محتوای خام XML آن شکل‌ها کاملاً درست بود — ریشهٔ واقعی مشکل پیدا شد: در
+// سورس خودِ pptxgenjs (تابع makeXmlContTypes، تأییدشده در نسخهٔ ۳٫۱۲٫۰ که از CDN بارگذاری
+// می‌شود، و همچنین در آخرین نسخهٔ فعلی ۴٫۰٫۱)، به‌ازای *هر اسلاید* یک ورودی
+// <Override PartName="/ppt/slideMasters/slideMaster{idx+1}.xml" .../> در [Content_Types].xml
+// نوشته می‌شود — در حالی‌که همیشه فقط یک اسلایدمستر واقعی (slideMaster1.xml) ساخته می‌شود. برای
+// هر گزارش با بیش از ۱ اسلاید (یعنی تقریباً همهٔ گزارش‌های این ابزار)، این باعث چند Override
+// جعلی (اشاره به فایل‌های slideMaster2.xml، slideMaster3.xml، ... که اصلاً در بستهٔ zip وجود
+// ندارند) می‌شود. LibreOffice و python-pptx این ناهماهنگی را نادیده می‌گیرند، ولی PowerPoint
+// واقعی هنگام باز کردن آن را «ترمیم» می‌کند و طی این ترمیم، به‌طور غیرقابل‌پیش‌بینی محتوای بعضی
+// شکل‌های دیگر (نه لزوماً مرتبط) را هم خالی/صفر می‌کند.
+// راه‌حل: بعد از تولید blob نهایی توسط pptxgenjs، آن را با JSZip (که خودِ pptxgenjs هم از آن
+// استفاده می‌کند و به‌صورت window.JSZip در دسترس است) دوباره باز می‌کنیم، Overrideهای جعلی
+// slideMasterN.xml را که فایل واقعی‌شان در زیپ نیست حذف می‌کنیم، و blob را دوباره می‌سازیم.
+function fixPptxContentTypes(blob){
+  if(typeof JSZip === 'undefined') return Promise.resolve(blob); // احتیاط: اگر JSZip در دسترس نبود
+  return JSZip.loadAsync(blob).then(function(zip){
+    var ctPath = '[Content_Types].xml';
+    var ctFile = zip.file(ctPath);
+    if(!ctFile) return blob;
+    return ctFile.async('string').then(function(ctXml){
+      var realMasters = {};
+      Object.keys(zip.files).forEach(function(name){
+        var m = /^ppt\/slideMasters\/slideMaster(\d+)\.xml$/.exec(name);
+        if(m) realMasters[m[1]] = true;
+      });
+      var fixedXml = ctXml.replace(/<Override PartName="\/ppt\/slideMasters\/slideMaster(\d+)\.xml"[^>]*\/>/g, function(full, num){
+        return realMasters[num] ? full : '';
+      });
+      if(fixedXml === ctXml) return blob; // چیزی برای اصلاح نبود
+      zip.file(ctPath, fixedXml);
+      return zip.generateAsync({ type:'blob', compression:'DEFLATE',
+        mimeType:'application/vnd.openxmlformats-officedocument.presentationml.presentation' });
+    });
+  }).catch(function(e){
+    console.error('fixPptxContentTypes: اصلاح ناموفق بود، فایل اصلی برگردانده شد', e);
+    return blob;
+  });
+}
+
+/* ---------------- bundled default holidays (1404-1406, project reference) ---------------- */
+var DEFAULT_HOLIDAYS = [
+  [1404,1,1,"جشن نوروز"],[1404,1,2,"عید نوروز + شهادت امام علی (ع)"],[1404,1,3,"عید نوروز"],
+  [1404,1,4,"عید نوروز"],[1404,1,11,"عید سعید فطر"],[1404,1,12,"روز جمهوری اسلامی"],
+  [1404,1,13,"سیزده‌به‌در"],[1404,2,4,"شهادت امام جعفر صادق (ع)"],[1404,3,14,"رحلت امام خمینی (ره)"],
+  [1404,3,15,"قیام ۱۵ خرداد"],[1404,3,16,"عید سعید قربان"],[1404,3,24,"عید سعید غدیر خم"],
+  [1404,4,14,"تاسوعای حسینی"],[1404,4,15,"عاشورای حسینی"],[1404,5,23,"اربعین حسینی"],
+  [1404,5,31,"رحلت رسول اکرم (ص) و شهادت امام حسن مجتبی (ع)"],[1404,6,2,"شهادت امام رضا (ع)"],
+  [1404,6,10,"شهادت امام حسن عسکری (ع)"],[1404,6,19,"میلاد رسول اکرم (ص) و امام جعفر صادق (ع)"],
+  [1404,9,3,"شهادت حضرت فاطمه زهرا (س)"],[1404,10,13,"ولادت امام علی (ع)"],[1404,10,27,"مبعث رسول اکرم (ص)"],
+  [1404,11,15,"ولادت امام مهدی (عج)"],[1404,11,22,"پیروزی انقلاب اسلامی"],[1404,12,20,"شهادت امام علی (ع)"],
+  [1404,12,29,"روز ملی‌شدن صنعت نفت"],
+  [1405,1,1,"جشن نوروز + عید سعید فطر"],[1405,1,2,"عید نوروز + تعطیل عید فطر"],[1405,1,3,"عید نوروز"],
+  [1405,1,4,"عید نوروز"],[1405,1,12,"روز جمهوری اسلامی"],[1405,1,13,"سیزده‌به‌در"],
+  [1405,1,25,"شهادت امام جعفر صادق (ع)"],[1405,3,7,"عید سعید قربان"],[1405,3,14,"رحلت امام خمینی (ره)"],
+  [1405,3,15,"قیام ۱۵ خرداد + عید سعید غدیر خم"],[1405,4,4,"تاسوعای حسینی"],[1405,4,5,"عاشورای حسینی"],
+  [1405,5,13,"اربعین حسینی"],[1405,5,21,"رحلت رسول اکرم (ص) و شهادت امام حسن مجتبی (ع)"],
+  [1405,5,23,"شهادت امام رضا (ع)"],[1405,5,31,"شهادت امام حسن عسکری (ع)"],
+  [1405,6,9,"میلاد رسول اکرم (ص) و امام جعفر صادق (ع)"],[1405,8,23,"شهادت حضرت فاطمه زهرا (س)"],
+  [1405,10,2,"ولادت امام علی (ع)"],[1405,10,16,"مبعث رسول اکرم (ص)"],[1405,11,4,"ولادت امام مهدی (عج)"],
+  [1405,11,22,"پیروزی انقلاب اسلامی"],[1405,12,10,"شهادت امام علی (ع)"],[1405,12,19,"عید سعید فطر (تقریبی)"],
+  [1405,12,20,"تعطیل عید فطر (تقریبی)"],[1405,12,29,"روز ملی‌شدن صنعت نفت"],
+  [1406,1,1,"جشن نوروز"],[1406,1,2,"عید نوروز"],[1406,1,3,"عید نوروز"],[1406,1,4,"عید نوروز"],
+  [1406,1,12,"روز جمهوری اسلامی"],[1406,1,13,"سیزده‌به‌در"],[1406,1,14,"شهادت امام جعفر صادق (ع)"],
+  [1406,2,27,"عید سعید قربان (تقریبی)"],[1406,3,4,"عید سعید غدیر خم (تقریبی)"],[1406,3,14,"رحلت امام خمینی (ره)"],
+  [1406,3,15,"قیام ۱۵ خرداد"],[1406,3,25,"تاسوعای حسینی"],[1406,3,26,"عاشورای حسینی"],
+  [1406,5,3,"اربعین حسینی"],[1406,5,11,"رحلت رسول اکرم (ص) و شهادت امام حسن مجتبی (ع)"],
+  [1406,5,12,"شهادت امام رضا (ع)"],[1406,5,20,"شهادت امام حسن عسکری (ع)"],
+  [1406,5,29,"میلاد رسول اکرم (ص) و امام جعفر صادق (ع)"],[1406,8,12,"شهادت حضرت فاطمه زهرا (س)"],
+  [1406,9,21,"ولادت امام علی (ع)"],[1406,10,5,"مبعث رسول اکرم (ص)"],[1406,10,23,"ولادت امام مهدی (عج)"],
+  [1406,11,22,"پیروزی انقلاب اسلامی"],[1406,11,29,"شهادت امام علی (ع)"],[1406,12,8,"عید سعید فطر (تقریبی)"],
+  [1406,12,9,"تعطیل عید فطر (تقریبی)"],[1406,12,29,"روز ملی‌شدن صنعت نفت"]
+];
+
+/* ---------------- visual language (adapted from آسیا reference tool) ---------------- */
+var C = { primary:"00B4FF", primaryDark:"0092FF", accent:"FFCC00", dark:"2C2C2C", gray:"757575",
+  lightGray:"F2F2F2", cardBg:"FFFFFF", success:"00A651", danger:"E63946", navy:"16324F", warn:"FFA500" };
+var FONT = "IRANSansX";
+
+function fmt(n){ if(n===null||n===undefined||isNaN(n)) return '-'; return Math.round(n).toLocaleString('en-US'); }
+// NOTE: all currency figures in the source file (مبلغ صورتحساب، مبلغ پرداختی، ...) are
+// denominated in ریال (Rial), confirmed against the user's own Excel cross-check.
+// fmtT takes the RAW ریال value and displays it in تومان (÷10), which is the unit
+// the user wants shown throughout the reports.
+function fmtT(nRial){ // ریال ورودی -> نمایش به تومان
+  if(nRial===null||nRial===undefined||isNaN(nRial)) return '-';
+  var t = nRial/10;
+  var a = Math.abs(t);
+  if(a>=1e9) return (t/1e9).toFixed(2)+' میلیارد';
+  if(a>=1e6) return (t/1e6).toFixed(1)+' میلیون';
+  return fmt(t);
+}
+function rialToToman(nRial){ return (nRial===null||nRial===undefined||isNaN(nRial)) ? null : nRial/10; }
+function pctf(n){ if(n===null||n===undefined||isNaN(n)) return '-'; return n.toFixed(1)+'%'; }
+function dayf(n){ if(n===null||n===undefined||isNaN(n)) return '-'; return Math.round(n*10)/10+' روز'; }
+
+function faText(txt, opts){
+  var o = Object.assign({ fontFace: FONT, rtlMode: true, align: 'right', color: C.dark }, opts||{});
+  return { text: String(txt), options: o };
+}
+function kpiCard(slide, x, y, w, h, value, label, color){
+  slide.addShape('roundRect', { x:x, y:y, w:w, h:h, rectRadius:0.08, fill:{color:C.cardBg},
+    line:{color:'E1E0D9', width:0.75}, shadow:{type:'outer',color:'000000',opacity:0.12,blur:3,offset:1,angle:90} });
+  // وسط‌چین (مطابق سبک گزارش مرجع آسیا/شاتل) + rtlMode:true روی هر دو خط — نکته: باگ
+  // برعکس‌شدن پرانتزها ناشی از نبودِ rtlMode بود، نه از وسط‌چین بودن؛ رفع اصلی همان
+  // rtlMode:true است، بنابراین وسط‌چین هم امن است (مطابق نمونهٔ مرجع که وسط‌چین و بی‌مشکل است).
+  slide.addText(String(value), { x:x, y:y+h*0.18, w:w, h:h*0.45, align:'center', fontFace:FONT, rtlMode:true,
+    fontSize: w<2 ? 15 : 18, bold:true, color: color||C.primaryDark, margin:[0,0.08,0,0.08] });
+  slide.addText(String(label), { x:x, y:y+h*0.60, w:w, h:h*0.35, align:'center', fontFace:FONT,
+    fontSize:9.5, color:C.gray, rtlMode:true, margin:[0,0.08,0,0.08] });
+}
+// بولت‌های فاصله‌دار با نقطهٔ آبی گرد (به‌جای «•» متنی) — مطابق سبک اسلاید «خلاصهٔ مدیریتی»
+// در نمونهٔ مرجع آسیا/شاتل: هر بولت روی یک ردیف مساوی از ارتفاع صفحه پخش می‌شود.
+function addSpacedBullets(slide, bullets, x0, y0, w, yEnd){
+  var n = bullets.length;
+  if(!n) return;
+  var rowH = (yEnd - y0) / n;
+  bullets.forEach(function(b, i){
+    var rowY = y0 + i*rowH;
+    var cy = rowY + rowH/2;
+    var dotR = 0.06;
+    slide.addShape('ellipse', { x:x0+w-dotR*2, y:cy-dotR, w:dotR*2, h:dotR*2, fill:{color:C.primary}, line:{type:'none'} });
+    slide.addText(faText(b).text, { x:x0, y:rowY, w:w-0.3, h:rowH, fontFace:FONT, rtlMode:true, align:'right', valign:'middle',
+      fontSize:13.5, color:C.dark, lineSpacingMultiple:1.25 });
+  });
+}
+var LAYOUT_WIDE = { name:'WIDE', width:13.33, height:7.5 };
+
+function stripCompanyCode(name){
+  // removes a trailing "(کد/شماره)" parenthetical from the company name, e.g.
+  // "شرکت ... ترنگ (14008423967)" -> "شرکت ... ترنگ"
+  var s = (name || '').toString().trim();
+  var m = s.match(/^(.*?)\s*\(([\dA-Za-z۰-۹]+)\)\s*$/);
+  return m ? m[1].trim() : s;
+}
+
+function coverSlide(pptx, title, subtitle, asOfJalali){
+  var s = pptx.addSlide();
+  s.background = { color: C.navy };
+  s.addShape('ellipse', { x:10.6, y:-1.6, w:5.2, h:5.2, fill:{color:'FFFFFF', transparency:92}, line:{type:'none'} });
+  s.addShape('ellipse', { x:-1.6, y:5.4, w:4.2, h:4.2, fill:{color:'FFFFFF', transparency:94}, line:{type:'none'} });
+  s.addText(faText(title, { x:0.8, y:2.9, w:11.7, h:1.1, fontSize:30, bold:true, color:'FFFFFF', align:'center' }).text,
+    { x:0.8, y:2.9, w:11.7, h:1.1, fontSize:30, bold:true, color:'FFFFFF', align:'center', fontFace:FONT, rtlMode:true });
+  s.addText(subtitle, { x:0.8, y:4.0, w:11.7, h:0.6, fontSize:15, color:'CFE3EE', align:'center', fontFace:FONT, rtlMode:true });
+  s.addText('بر اساس آخرین داده موجود — تاریخ گزارش: ' + asOfJalali, { x:0.8, y:4.6, w:11.7, h:0.5,
+    fontSize:11.5, color:'8FB7CC', align:'center', fontFace:FONT, rtlMode:true });
+  return s;
+}
+
+/* ---------------- holiday textarea helpers ---------------- */
+function holidaysToText(list){
+  return list.map(function(h){ return h[0]+'/'+pad2(h[1])+'/'+pad2(h[2])+'\t'+h[3]; }).join('\n');
+}
+function pad2(n){ return n<10 ? '0'+n : ''+n; }
+function textToHolidays(text){
+  var out = [];
+  text.split('\n').forEach(function(line){
+    var t = line.trim();
+    if(!t) return;
+    var m = t.match(/^(\d{3,4})\/(\d{1,2})\/(\d{1,2})/);
+    if(!m) return;
+    var label = t.replace(m[0],'').trim().replace(/^\t/,'');
+    out.push([+m[1], +m[2], +m[3], label||'']);
+  });
+  return out;
+}
+
+/* ---------------- SLA bucket histogram helper ---------------- */
+var BUCKET_DEFS = [
+  [0,5,'کمتر از ۵ روز'], [5,7,'۵ تا ۷ روز'], [7,10,'۷ تا ۱۰ روز'], [10,12,'۱۰ تا ۱۲ روز'],
+  [12,15,'۱۲ تا ۱۵ روز'], [15,30,'۱۵ تا ۳۰ روز'], [30,Infinity,'بیش از ۳۰ روز']
+];
+function classifyBuckets(calDaysList){
+  return BUCKET_DEFS.map(function(b){
+    var count = calDaysList.filter(function(v){ return v>=b[0] && v<b[1]; }).length;
+    return { label:b[2], count:count };
+  });
+}
+// مثل classifyBuckets ولی روی رکوردهای کامل (نه فقط عدد روز) کار می‌کند تا مبلغ پرداختی
+// هر بازه هم قابل جمع باشد (برای جدول اسلاید ۹، مطابق نمونهٔ مرجع آسیا/شاتل).
+function classifyBucketsWithAmount(records){
+  return BUCKET_DEFS.map(function(b){
+    var matched = records.filter(function(r){ return r.slaCalDays>=b[0] && r.slaCalDays<b[1]; });
+    var amount = matched.reduce(function(s,r){ return s+(r.paid||0); }, 0);
+    return { label:b[2], count:matched.length, amount:amount };
+  });
+}
+
+/* ---------------- state ---------------- */
+var STATE = { records: [], map: null, headers: null, byCompanyContract: null, byCompanyName: null, asOf: null, holidayDaySet: null };
+
+var $ = function(id){ return document.getElementById(id); };
+
+function setStatus(el, msg, cls){
+  el.innerHTML = '<div class="status '+(cls||'info')+'">'+msg+'</div>';
+}
+
+/* ---------------- tabs ---------------- */
+document.querySelectorAll('.tab-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+    document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+    btn.classList.add('active');
+    $('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+$('holidayText').value = holidaysToText(DEFAULT_HOLIDAYS);
+$('resetHolidays').addEventListener('click', function(){ $('holidayText').value = holidaysToText(DEFAULT_HOLIDAYS); });
+
+/* ---------------- file loading ---------------- */
+(function(){
+  var input = document.getElementById('fileInput');
+  var dz = document.getElementById('dzAsemari');
+  var nameEl = document.getElementById('dzNameAsemari');
+  input.addEventListener('change', function(){
+    var f = input.files[0];
+    if (f) { nameEl.textContent = f.name; dz.classList.add('filled'); }
+  });
+  dz.addEventListener('dragover', function(e){ e.preventDefault(); dz.classList.add('drag'); });
+  dz.addEventListener('dragleave', function(){ dz.classList.remove('drag'); });
+  dz.addEventListener('drop', function(e){
+    e.preventDefault();
+    dz.classList.remove('drag');
+    var f = e.dataTransfer.files[0];
+    if (!f) return;
+    var dt = new DataTransfer();
+    dt.items.add(f);
+    input.files = dt.files;
+    input.dispatchEvent(new Event('change'));
+  });
+})();
+
+$('fileInput').addEventListener('change', function(e){
+  var f = e.target.files[0];
+  if(!f) return;
+  setStatus($('loadStatus'), 'در حال خواندن فایل («'+f.name+'»، '+Math.round(f.size/1024/1024)+' مگابایت)... ممکن است ۲۰ تا ۶۰ ثانیه طول بکشد.', 'info');
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    try {
+      var data = new Uint8Array(ev.target.result);
+      var wb = XLSX.read(data, { type:'array', cellDates:false });
+      // پیدا کردن شیت/ردیفِ هدر واقعی: بعضی خروجی‌های اکسل (مثلاً وقتی کاربر یک شیت
+      // Pivot/خلاصه هم قبل از شیت اصلی دارد) شیت اول را غیرقابل‌استفاده می‌کنند. به‌جای
+      // فرض «شیت اول = دادهٔ اصلی»، همهٔ شیت‌ها (و در هر شیت چند ردیف اول، برای مواردی که
+      // یکی-دو ردیف عنوان/خالی قبل از هدر واقعی هست) را امتحان می‌کنیم و اولین جایی که
+      // Core.buildColumnMap بدون خطا موفق شود را به‌عنوان دادهٔ اصلی انتخاب می‌کنیم.
+      var picked = null, lastErr = null;
+      for(var si=0; si<wb.SheetNames.length && !picked; si++){
+        var wsTry = wb.Sheets[wb.SheetNames[si]];
+        var rowsTry = XLSX.utils.sheet_to_json(wsTry, { header:1, raw:true, defval:'' });
+        if(!rowsTry.length || !rowsTry[0] || !rowsTry[0].length) continue;
+        try {
+          var mapTry = Core.buildColumnMap(rowsTry[0]);
+          // احتیاط: یک هدر واقعی باید هر ستون لازم را به یک اندیس *متفاوت* نگاشت کند.
+          // اگر buildColumnMap (به‌خاطر فالبک تطبیق زیررشته‌ای‌اش) چند کلید را به یک
+          // ستون یکسان نگاشت داد، این یعنی ردیف مورد بررسی واقعاً هدر نیست (بلکه یک
+          // ردیف داده یا چیز دیگری است) — چنین شیتی را نپذیر.
+          var seenIdx = {}, hasDup = false;
+          Object.keys(mapTry).forEach(function(k){
+            var v = mapTry[k];
+            if(seenIdx[v]) hasDup = true;
+            seenIdx[v] = true;
+          });
+          if(hasDup){ lastErr = new Error('ردیف هدر شیت «'+wb.SheetNames[si]+'» معتبر به نظر نمی‌رسد.'); continue; }
+          picked = { sheetName: wb.SheetNames[si], rows: rowsTry, headerRowIdx: 0, map: mapTry };
+        } catch(eTry){ lastErr = eTry; }
+      }
+      if(!picked){
+        // هیچ شیتی ستون‌های لازم را نداشت — همان خطای قبلی نمایش داده می‌شود تا کاربر
+        // بداند دقیقاً چه ستون‌هایی پیدا نشد.
+        throw (lastErr || new Error('فایل خالی است یا قابل خواندن نیست.'));
+      }
+      var rows = picked.rows, map = picked.map;
+      var records = [];
+      for(var i=picked.headerRowIdx+1;i<rows.length;i++){
+        if(!rows[i] || !rows[i].length) continue;
+        var rec = Core.extractRecord(rows[i], map);
+        rec.raw = rows[i]; // keep the original row verbatim, for the "بدون کسری" full-dump Excel sheet
+        records.push(rec);
+      }
+      STATE.records = records;
+      STATE.map = map;
+      STATE.headers = rows[picked.headerRowIdx];
+      if(wb.SheetNames.length>1){
+        console.log('شیت انتخاب‌شده برای دادهٔ اصلی: «'+picked.sheetName+'» (از بین '+wb.SheetNames.length+' شیت)، ردیف هدر: '+(picked.headerRowIdx+1));
+      }
+      onDataLoaded(records, f.name);
+    } catch(err){
+      console.error(err);
+      setStatus($('loadStatus'), 'خطا در خواندن فایل: '+err.message, 'err');
+    }
+  };
+  reader.onerror = function(){ setStatus($('loadStatus'), 'خطا در خواندن فایل.', 'err'); };
+  reader.readAsArrayBuffer(f);
+});
+
+function onDataLoaded(records, fname){
+  var khesarat = records.filter(function(r){ return r.htype==='khesarat'; });
+  var moarefi = records.filter(function(r){ return r.htype==='moarefi'; });
+  var byCC = new Map();
+  var byCompanyName = new Map(); // companyRaw -> Set(contractStart)
+  records.forEach(function(r){
+    var key = r.companyRaw+'||'+r.contractStart;
+    if(!byCC.has(key)) byCC.set(key, []);
+    byCC.get(key).push(r);
+    if(!byCompanyName.has(r.companyRaw)) byCompanyName.set(r.companyRaw, new Set());
+    byCompanyName.get(r.companyRaw).add(r.contractStart);
+  });
+  STATE.byCompanyContract = byCC;
+  STATE.byCompanyName = byCompanyName;
+  STATE.asOf = Core.jalaliToday();
+
+  setStatus($('loadStatus'),
+    'بارگذاری موفق: '+fmt(records.length)+' رکورد ('+fmt(khesarat.length)+' سامانه کمک‌رسان، '+fmt(moarefi.length)+
+    ' معرفی‌نامه) از '+byCompanyName.size+' بیمه‌گذار در '+byCC.size+' قرارداد/تمدید. تاریخ مرجع (امروز): '+STATE.asOf,
+    'ok');
+
+  // populate typeable company combobox (datalist), sorted, exact-match on companyRaw (column A)
+  var names = Array.from(byCompanyName.keys()).sort();
+  var dl = $('companyDatalist');
+  dl.innerHTML = '';
+  names.forEach(function(n){
+    var o = document.createElement('option'); o.value = n; dl.appendChild(o);
+  });
+  var inp = $('companySelectInput');
+  inp.disabled = false;
+  inp.value = '';
+  inp.placeholder = 'تایپ کنید یا از لیست انتخاب کنید…';
+
+  $('runOverviewBtn').disabled = false;
+  computeAndShowOverviewSummary();
+}
+
+function handleCompanyInputChange(){
+  var name = $('companySelectInput').value;
+  var csSel = $('contractSelect');
+  csSel.innerHTML = '<option value="">—</option>';
+  $('runSingleBtn').disabled = true;
+  $('singleSummary').innerHTML = '';
+  if(!name || !STATE.byCompanyName || !STATE.byCompanyName.has(name)) return;
+  var starts = Array.from(STATE.byCompanyName.get(name)).sort();
+  starts.forEach(function(s){
+    var o = document.createElement('option'); o.value = s; o.textContent = s; csSel.appendChild(o);
+  });
+  if(starts.length===1){ csSel.value = starts[0]; csSel.dispatchEvent(new Event('change')); }
+}
+$('companySelectInput').addEventListener('input', handleCompanyInputChange);
+$('companySelectInput').addEventListener('change', handleCompanyInputChange);
+
+$('contractSelect').addEventListener('change', function(){
+  var name = $('companySelectInput').value, cs = this.value;
+  if(!name || !cs){ $('runSingleBtn').disabled = true; $('singleSummary').innerHTML=''; return; }
+  var recs = STATE.byCompanyContract.get(name+'||'+cs) || [];
+  var k = recs.filter(function(r){ return r.htype==='khesarat'; }).length;
+  var m = recs.filter(function(r){ return r.htype==='moarefi'; }).length;
+  $('singleSummary').innerHTML = 'تعداد رکورد: '+fmt(recs.length)+' (سامانه کمک‌رسان: '+fmt(k)+'، معرفی‌نامه: '+fmt(m)+')';
+  $('runSingleBtn').disabled = false;
+});
+
+/* ---------------- overview summary preview (before generation) ---------------- */
+function getActiveOverviewSet(){
+  var today = STATE.asOf;
+  var p = Core.parseJalali(today);
+  var oneYearAgoMs = Core.jalaliToUtcMs((p.y-1)+'/'+p.m+'/'+p.d);
+  var out = [];
+  STATE.byCompanyContract.forEach(function(recs, key){
+    var csMs = Core.jalaliToUtcMs(recs[0].contractStart);
+    if(csMs!==null && oneYearAgoMs!==null && csMs>=oneYearAgoMs){
+      out.push(recs);
+    }
+  });
+  return out;
+}
+
+function computeAndShowOverviewSummary(){
+  var groups = getActiveOverviewSet();
+  var totalRows = groups.reduce(function(s,g){ return s+g.length; }, 0);
+  var totalK = groups.reduce(function(s,g){ return s+g.filter(function(r){return r.htype==='khesarat';}).length; }, 0);
+  $('overviewSummary').innerHTML = fmt(groups.length)+' قرارداد فعال (شروع در ۳۶۵ روز اخیر) از '+fmt(new Set(groups.map(function(g){return g[0].companyName;})).size)+
+    ' بیمه‌گذار — مجموعاً '+fmt(totalRows)+' رکورد ('+fmt(totalK)+' سامانه کمک‌رسان).';
+}
+
+/* ---------------- shared: monthly trend chart slide (used by both company decks & overview) ---------------- */
+function monthShortLabel(m){ return m.label.split(' ')[0] + ' ' + String(m.jy).slice(-2); }
+
+/* ==================================================================
+   SINGLE-COMPANY REPORT — 3 audience-specific decks (مثل آسیا/شاتل) + ۱ اکسل
+   ================================================================== */
+// ساختار جدید (۱۱ اسلاید): ۱ جلد، ۲ خلاصهٔ مدیریتی، ۳ حجم/مبالغ، ۴ ترکیب پرونده‌ها (سه
+// دونات)، ۵ SLA (نمودار ستونی افقی)، ۶ روند ماهانه هزینه/آنلاین (از شروع قرارداد)،
+// ۷ روند هفتگی SLA تقویمی، ۸ روند ماهانه SLA تقویمی+کاری، ۹ توزیع SLA + جدول،
+// ۱۰ روند هفتگی بازه‌های SLA (رنگی/انباشته)، ۱۱ جدول ماهانهٔ SLA.
+var OPS_SLIDES      = new Set([1,2,3,4,5,6,7,8,9,10,11]); // عملیاتی — کامل‌ترین
+var MGMT_SLIDES     = new Set([1,2,3,4,5,6,7,8,9,11]);    // مدیریتی — بدون روند هفتگی بازه‌ای (اسلاید ۱۰، خیلی ریز است)
+var INSURED_SLIDES  = new Set([1,2,3,4,5,6,7,8]);          // بیمه‌گذار — سبک‌تر، بدون جزئیات ریز عملیاتی
+
+$('runSingleBtn').addEventListener('click', function(){
+  var name = $('companySelectInput').value, cs = $('contractSelect').value;
+  var recs = STATE.byCompanyContract.get(name+'||'+cs) || [];
+  var holidayList = textToHolidays($('holidayText').value);
+  var hd = Core.buildHolidayDaySet(holidayList).daySet;
+  var summary = Core.computeCompanySummary(name, cs, recs, hd, STATE.asOf);
+  var paidK = recs.filter(function(r){ return r.isPaidKhesarat; });
+  var buckets = classifyBucketsWithAmount(paidK.filter(function(r){ return r.slaCalDays!==null && r.slaCalDays!==undefined; }));
+  var monthlySeries = Core.aggregateCompanyMonthlySeries(recs, hd, cs, STATE.asOf);
+  var weeklySeries = Core.aggregateCompanyWeeklySeries(paidK, hd, cs, STATE.asOf);
+  var halfMonthSeries = Core.aggregateCompanyHalfMonthSeries(paidK, hd, cs, STATE.asOf);
+  var lastPaymentDate = maxJalaliDateStr(paidK.map(function(r){ return r.payDate; }));
+
+  setStatus($('singleStatus'), 'در حال ساخت ۳ پاورپوینت (عملیاتی/مدیریتی/بیمه‌گذار) و ۱ اکسل...', 'info');
+  $('singleDownloads').innerHTML = '';
+  var btn = this; btn.disabled = true;
+  setTimeout(function(){
+    Promise.all([
+      generateCompanyDeck(summary, buckets, monthlySeries, weeklySeries, halfMonthSeries, lastPaymentDate, OPS_SLIDES, 'ops', 'عملیاتی'),
+      generateCompanyDeck(summary, buckets, monthlySeries, weeklySeries, halfMonthSeries, lastPaymentDate, MGMT_SLIDES, 'mgmt', 'مدیریتی'),
+      generateCompanyDeck(summary, buckets, monthlySeries, weeklySeries, halfMonthSeries, lastPaymentDate, INSURED_SLIDES, 'insured', 'بیمه‌گذار'),
+      generateCompanyExcel(summary, recs, hd)
+    ]).then(function(results){
+      var safe = (name||'آسماری').replace(/[\\/:*?"<>|]/g,'_');
+      addDownload($('singleDownloads'), results[0], 'آسماری_عملیاتی_'+safe+'.pptx');
+      addDownload($('singleDownloads'), results[1], 'آسماری_مدیریتی_'+safe+'.pptx');
+      addDownload($('singleDownloads'), results[2], 'آسماری_بیمه‌گذار_'+safe+'.pptx');
+      addDownload($('singleDownloads'), results[3], 'آسماری_جزئیات_'+safe+'.xlsx');
+      setStatus($('singleStatus'), 'ساخت هر ۴ خروجی کامل شد.', 'ok');
+      btn.disabled = false;
+    }).catch(function(err){
+      console.error(err);
+      setStatus($('singleStatus'), 'خطا: '+err.message, 'err');
+      btn.disabled = false;
+    });
+  }, 30);
+});
+
+function addDownload(container, blob, filename){
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = filename; a.textContent = 'دانلود '+filename;
+  container.appendChild(a);
+}
+
+function layoutKpiRow(slide, items, x0, y, totalW, h){
+  var gap = 0.18, n = items.length, w = (totalW-gap*(n-1))/n;
+  items.forEach(function(it,i){
+    var x = x0 + (n-1-i)*(w+gap); // RTL order
+    kpiCard(slide, x, y, w, h, it[0], it[1], it[2]);
+  });
+}
+function layoutKpiGrid(slide, items, x0, y0, totalW, cols, rowH){
+  var gap=0.18, w = (totalW-gap*(cols-1))/cols;
+  items.forEach(function(it, idx){
+    var r = Math.floor(idx/cols), c = idx%cols;
+    var itemsInRow = Math.min(cols, items.length - r*cols); // items actually present in this row
+    var rowW = itemsInRow*w + (itemsInRow-1)*gap;
+    var rowOffset = (totalW - rowW)/2; // centers a partial last row; 0 for a full row (no-op)
+    var x = x0 + rowOffset + (itemsInRow-1-c)*(w+gap); // RTL
+    var y = y0 + r*(rowH+gap);
+    kpiCard(slide, x, y, w, rowH, it[0], it[1], it[2]);
+  });
+}
+
+async function generateCompanyDeck(S, buckets, monthlySeries, weeklySeries, halfMonthSeries, lastPaymentDate, slideSet, audience, deckLabel){
+  await loadPptxGenJsOnce();
+  var pptx = new PptxGenJS();
+  pptx.defineLayout(LAYOUT_WIDE); pptx.layout = 'WIDE';
+  var has = function(n){ return slideSet.has(n); };
+
+  // 1) Cover
+  if(has(1)){
+    // فقط در نسخهٔ بیمه‌گذار، کد اقتصادی/ملیِ داخل پرانتز جلوی اسم بیمه‌گذار حذف می‌شود
+    // (کد داخلی برای خودِ بیمه‌گذار معنی ندارد؛ در نسخهٔ عملیاتی/مدیریتی دست‌نخورده می‌ماند).
+    var coverCompanyName = audience==='insured' ? stripCompanyCode(S.companyName) : S.companyName;
+    coverSlide(pptx, 'گزارش سامانه کمک‌رسان — '+coverCompanyName, 'نسخهٔ '+deckLabel+' — تاریخ شروع قرارداد: '+S.contractStart, STATE.asOf);
+  }
+
+  // 2) خلاصهٔ مدیریتی — ردیف KPI درشت بالا + بولت‌های فاصله‌دار در باقی صفحه (تا صفحه پر شود)
+  if(has(2)){
+    var s2 = pptx.addSlide();
+    s2.addText(faText('خلاصهٔ مدیریتی').text, { x:0.6,y:0.35,w:12.1,h:0.5, fontSize:20, bold:true, color:C.navy, fontFace:FONT, rtlMode:true, align:'right', valign:'top' });
+    s2.addText(faText('نگاه یک‌نگاهی به وضعیت پرونده‌های سامانه کمک‌رسان و پرداختی — '+S.companyName).text,
+      { x:0.6,y:0.82,w:12.1,h:0.3, fontSize:11, color:C.gray, fontFace:FONT, rtlMode:true, align:'right', valign:'top' });
+    var head2 = [
+      [fmt(S.khesaratCount), 'پروندهٔ سامانه کمک‌رسان', C.primaryDark],
+      [dayf(S.sla.overall.avgCal), 'SLA میانگین (روز تقویمی)', C.primaryDark],
+      [fmtT(S.paidSumKhesarat)+' تومان', 'پرداخت‌شده (سامانه کمک‌رسان)', C.success]
+    ];
+    layoutKpiRow(s2, head2, 0.6, 1.35, 12.1, 1.6);
+    var bullets = [
+      'مجموع '+fmt(S.totalRecords)+' رکورد ثبت‌شده، شامل '+fmt(S.khesaratCount)+' پروندهٔ سامانه کمک‌رسان (کانون اصلی تحلیل) و '+fmt(S.moarefiCount)+' مراجعه به مراکز آنلاین (پرداخت مستقیم).',
+      'مجموع مبلغ هزینهٔ پرونده‌های سامانه کمک‌رسان: '+fmtT(S.billedSumKhesarat)+' تومان — پرداخت‌شده: '+fmtT(S.paidSumKhesarat)+' تومان.',
+      'SLA میانگین (تشکیل پرونده تا پرداخت، روز تقویمی): '+dayf(S.sla.overall.avgCal)+' — P90 (میانگین سریع‌ترین ۹۰٪ پرونده‌ها): '+dayf(S.sla.overall.p90Cal)+'.'
+    ];
+    if(audience!=='insured'){
+      bullets.push('تعداد پرونده‌های «بدون تاریخ پرداخت» (ارزیابی و تأییدشده، نیاز به بررسی): '+fmt(S.pendingCount)+' مورد به مبلغ '+fmtT(S.pendingPayableSum)+' تومان — جزئیات کامل در اکسل پیوست.');
+    }
+    bullets.push('آخرین تاریخ واریزی ثبت‌شده برای این بیمه‌گذار: '+(lastPaymentDate||'نامشخص')+'.');
+    addSpacedBullets(s2, bullets, 0.6, 3.15, 12.1, 7.2);
+  }
+
+  // 3) حجم پرونده‌ها و مبالغ — گرید ۳×۲، کارت‌های بازطراحی‌شده
+  if(has(3)){
+    var s3 = pptx.addSlide();
+    s3.addText(faText('حجم پرونده‌ها و مبالغ').text, { x:0.6,y:0.35,w:12,h:0.55, fontSize:18, bold:true, color:C.navy, fontFace:FONT, rtlMode:true, align:'right' });
+    var kpis3 = [
+      [fmt(S.khesaratCount), 'تعداد پرونده سامانه کمک‌رسان', C.primaryDark],
+      [fmt(S.moarefiCount), 'دفعات مراجعه به مراکز آنلاین', C.gray],
+      [fmtT(S.paidSumMoarefi)+' تومان', 'مبلغ پرداختی مراکز آنلاین', C.gray],
+      [fmtT(S.billedSumKhesarat)+' تومان', 'مجموع مبلغ هزینه (سامانه کمک‌رسان)', C.dark],
+      [fmtT(S.paidSumKhesarat)+' تومان', 'پرداخت شده (سامانه کمک‌رسان)', C.success]
+    ];
+    // «بدون تاریخ پرداخت»: باید دقیقاً همان عدد/مبلغِ اسلاید ۲ باشد — تعداد پروندهٔ
+    // pending (S.pendingCount) و مبلغ تأییدشدهٔ پرداخت‌نشدهٔ همان پرونده‌ها
+    // (S.pendingPayableSum)، نه فرمول «صورتحساب - کسورات - پرداختی» که رقم کاملاً
+    // متفاوت (و اشتباه) تولید می‌کرد.
+    var newestUnpaidCaseDate = maxJalaliDateStr((S.pendingDetail||[]).map(function(d){ return d.caseDate; }));
+    if(audience!=='insured'){
+      kpis3.push([fmtT(S.pendingPayableSum)+' تومان', 'بدون تاریخ پرداخت — '+fmt(S.pendingCount)+' مورد (نیاز به بررسی)', C.danger]);
+    }
+    var gridRowH3 = 1.95, gridGap3 = 0.18, gridY0 = 1.15;
+    layoutKpiGrid(s3, kpis3, 0.6, gridY0, 12.1, 3, gridRowH3);
+    var gridRows3 = Math.ceil(kpis3.length/3);
+    var footerY3 = gridY0 + gridRows3*gridRowH3 + (gridRows3-1)*gridGap3 + 0.28;
+    s3.addText(faText('آخرین تاریخ واریزی: '+(lastPaymentDate || 'نامشخص')).text,
+      { x:0.6,y:footerY3,w:12.1,h:0.4, fontSize:13.5, bold:true, color:C.navy, fontFace:FONT, rtlMode:true, align:'right' });
+    if(audience!=='insured'){
+      s3.addText(faText('جدیدترین پروندهٔ «بدون تاریخ پرداخت» (بر اساس تاریخ تشکیل پرونده): '+(newestUnpaidCaseDate || 'نامشخص')).text,
+        { x:0.6,y:footerY3+0.42,w:12.1,h:0.4, fontSize:12, bold:true, color:C.danger, fontFace:FONT, rtlMode:true, align:'right' });
+    }
+  }
+
+  // 4) ترکیب پرونده‌ها — سه دونات: تعداد / مبلغ هزینه / واریز شده (سامانه کمک‌رسان در برابر آنلاین)
+  if(has(4)){
+    var s4d = pptx.addSlide();
+    s4d.addText(faText('ترکیب پرونده‌ها — تعداد، هزینه و پرداختی (سامانه کمک‌رسان در برابر آنلاین)').text,
+      { x:0.6,y:0.3,w:12.1,h:0.5, fontSize:16.5, bold:true, color:C.navy, fontFace:FONT, rtlMode:true, align:'right' });
+    var dw4 = 3.9, dh4 = 4.55, dy4 = 1.25, gap4 = 0.25;
+    var dx4c = 0.6, dx4b = dx4c+dw4+gap4, dx4a = dx4b+dw4+gap4; // RTL: راست‌ترین = اول
+    s4d.addChart(pptx.ChartType.doughnut, [{ name:'تعداد', labels:['سامانه کمک‌رسان','آنلاین'], values:[S.khesaratCount, S.moarefiCount] }],
+      { x:dx4a,y:dy4,w:dw4,h:dh4, chartColors:[C.primary, C.gray], showLegend:true, legendPos:'b', legendFontFace:FONT, legendFontSize:10, showPercent:true, dataLabelFontSize:11, dataLabelColor:'FFFFFF' });
+    s4d.addText(faText('تعداد پرونده').text, { x:dx4a,y:dy4+dh4+0.05,w:dw4,h:0.35, fontSize:11.5,bold:true,fontFace:FONT,rtlMode:true,align:'center',color:C.navy });
+    s4d.addChart(pptx.ChartType.doughnut, [{ name:'مبلغ هزینه', labels:['سامانه کمک‌رسان','آنلاین'], values:[S.billedSumKhesarat, S.billedSumMoarefi] }],
+      { x:dx4b,y:dy4,w:dw4,h:dh4, chartColors:[C.accent, C.gray], showLegend:true, legendPos:'b', legendFontFace:FONT, legendFontSize:10, showPercent:true, dataLabelFontSize:11, dataLabelColor:'2C2C2C' });
+    s4d.addText(faText('مبلغ هزینه').text, { x:dx4b,y:dy4+dh4+0.05,w:dw4,h:0.35, fontSize:11.5,bold:true,fontFace:FONT,rtlMode:true,align:'center',color:C.navy });
+    s4d.addChart(pptx.ChartType.doughnut, [{ name:'واریز شده', labels:['سامانه کمک‌رسان','آنلاین'], values:[S.paidSumKhesarat, S.paidSumMoarefi] }],
+      { x:dx4c,y:dy4,w:dw4,h:dh4, chartColors:[C.success, C.gray], showLegend:true, legendPos:'b', legendFontFace:FONT, legendFontSize:10, showPercent:true, dataLabelFontSize:11, dataLabelColor:'FFFFFF' });
+    s4d.addText(faText('واریز شده').text, { x:dx4c,y:dy4+dh4+0.05,w:dw4,h:0.35, fontSize:11.5,bold:true,fontFace:FONT,rtlMode:true,align:'center',color:C.navy });
+  }
+
+  // 5) SLA — نمودار ستونی افقی (به‌جای جدول متنی سابق): روز تقویمی + روز کاری، هر دو با میانگین و P90
+  if(has(5)){
+    var s5 = pptx.addSlide();
+    s5.addText(faText('شاخص‌های SLA بر مبنای روز تقویمی و روز کاری').text,
+      { x:0.6,y:0.3,w:12.1,h:0.5, fontSize:16.5, bold:true, color:C.navy, fontFace:FONT, rtlMode:true, align:'right' });
+    s5.addText(faText('میانگین SLA (تشکیل پرونده تا پرداخت) به تفکیک سطح — فقط پرونده‌های سامانه کمک‌رسانِ پرداخت‌شده').text,
+      { x:0.6,y:0.72,w:12.1,h:0.3, fontSize:10.5, color:C.gray, fontFace:FONT, rtlMode:true, align:'right' });
+    var levels5 = ['کلی','پاراکلینیکی','بستری','دندانپزشکی'];
+    var slaArr5 = [S.sla.overall, S.sla.para, S.sla.bastari, S.sla.dandan];
+    var calVals5 = slaArr5.map(function(s){return s.avgCal===null?0:Math.round(s.avgCal*10)/10;});
+    var bizVals5 = slaArr5.map(function(s){return s.avgBiz===null?0:Math.round(s.avgBiz*10)/10;});
+    s5.addChart(pptx.ChartType.bar, [
+      { name:'روز تقویمی', labels:levels5, values:calVals5 },
+      { name:'روز کاری', labels:levels5, values:bizVals5 }
+    ], { x:0.6,y:1.1,w:12.1,h:3.35, barDir:'col', barGrouping:'clustered', chartColors:[C.gray, C.primary],
+      showValue:true, dataLabelFontFace:FONT, dataLabelFontSize:10.5, dataLabelPosition:'outEnd',
+      showLegend:true, legendPos:'b', legendFontFace:FONT, legendFontSize:10.5,
+      catAxisLabelFontFace:FONT, valAxisLabelFontFace:FONT, catAxisLabelFontSize:11.5, valAxisLabelFontSize:9,
+      valAxisTitle:'میانگین روز', valAxisTitleFontFace:FONT });
+    var redTableRows5 = [[
+      {text:'شاخص',options:{bold:true,fill:{color:C.navy},color:'FFFFFF',fontSize:11,align:'center',rtlMode:true}},
+      {text:'روز تقویمی',options:{bold:true,fill:{color:C.navy},color:'FFFFFF',fontSize:11,align:'center',rtlMode:true}},
+      {text:'روز کاری',options:{bold:true,fill:{color:C.navy},color:'FFFFFF',fontSize:11,align:'center',rtlMode:true}}
+    ]].concat(levels5.map(function(lv, i){
+      var cal = calVals5[i], biz = bizVals5[i];
+      var rowFill = i%2===1 ? 'F2F6FA' : 'FFFFFF';
+      return [
+        {text:lv, options:{fontSize:11, bold:true, color:C.navy, fill:{color:rowFill}, align:'center', rtlMode:true}},
+        {text:dayf(cal), options:{fontSize:11, align:'center', fill:{color:rowFill}, rtlMode:true}},
+        {text:dayf(biz), options:{fontSize:11, align:'center', bold:true, color:C.primaryDark, fill:{color:rowFill}, rtlMode:true}}
+      ];
+    }));
+    s5.addTable(redTableRows5, { x:1.4, y:4.75, h:2.3, fontFace:FONT, rtlMode:true, align:'center', valign:'middle',
+      border:{type:'solid',color:'E1E0D9',pt:0.5}, margin:[0.03,0.1,0.03,0.1], colW:[3.2,3.2,3.2] });
+  }
+
+  // 6) روند ماهانهٔ هزینهٔ سامانه کمک‌رسان + استفادهٔ آنلاین، از شروع قرارداد (دو نمودار ستونی عمودی)
+  if(has(6)){
+    var s6 = pptx.addSlide();
+    s6.addText(faText('روند ماهانه هزینهٔ سامانه کمک‌رسان و استفادهٔ آنلاین (از شروع قرارداد)').text,
+      { x:0.5,y:0.3,w:12.3,h:0.5, fontSize:16, bold:true, color:C.navy, fontFace:FONT, rtlMode:true, align:'right' });
+    var mLabels6 = monthlySeries.months.map(monthShortLabel);
+    var costVals6 = monthlySeries.khesarat.map(function(m){ return Math.round(rialToToman(m.billedSum)); });
+    var khesaratCountVals6 = monthlySeries.khesarat.map(function(m){ return m.count; });
+    var onlineVals6 = monthlySeries.moarefi.map(function(m){ return m.count; });
+    // نمودار ترکیبی دو-محوره (ستون+خط با محور ثانویه) در رندر واقعی پایدار نبود (مقیاس
+    // محور ثانویه اعمال نمی‌شد و سری دوم صاف روی صفر می‌افتاد)، بنابراین به‌جای آن، تعداد
+    // پرونده به‌صورت متن داخل برچسب محور دسته (زیر نام هر ماه) نمایش داده می‌شود — روشی
+    // کاملاً پایدار که هم مبلغ و هم تعداد را در یک نمودار نشان می‌دهد.
+    // فرمت لازم برای برچسب چندسطحی محور دستهٔ PptxGenJS: آرایه‌ای از چند آرایهٔ موازی
+    // (سطح اول = نام ماه، سطح دوم = متن مکمل) — نه آرایه‌ای از جفت‌های [ماه،تعداد].
+    // نکته: پرانتز داخل برچسب محور دسته (بر خلاف متن/جدول) با rtlMode درست نمی‌شود و
+    // برعکس رندر می‌شود، پس اینجا از پرانتز استفاده نشده (خط جداگانه به‌جای آن کافی است).
+    var mLabels6WithCount = [ mLabels6, khesaratCountVals6.map(function(c){ return fmt(c)+' مورد'; }) ];
+    var mLabels6WithOnlineAmt = [ mLabels6, monthlySeries.moarefi.map(function(m){ return fmtT(m.paidSum)+' تومان'; }) ];
+    s6.addText(faText('مبلغ هزینهٔ سامانه کمک‌رسان ثبت‌شده در هر ماه (تومان) — همراه با تعداد پرونده').text,
+      { x:0.5,y:0.92,w:12.3,h:0.35, fontSize:12,bold:true,fontFace:FONT,rtlMode:true,align:'right',color:C.navy });
+    s6.addChart(pptx.ChartType.bar, [{ name:'مبلغ هزینه — تومان', labels:mLabels6WithCount, values:costVals6 }], {
+      x:0.5,y:1.3,w:12.3,h:2.65, barDir:'col', chartColors:[C.primary],
+      showValue:true, dataLabelFontSize:8, dataLabelPosition:'outEnd', dataLabelFontFace:FONT,
+      catAxisLabelFontFace:FONT, valAxisLabelFontFace:FONT, catAxisLabelFontSize:7.5, valAxisLabelFontSize:8.5, showLegend:false
+    });
+    s6.addText(faText('تعداد دفعات مراجعه به مراکز آنلاین در هر ماه — همراه با مبلغ پرداختی').text,
+      { x:0.5,y:4.05,w:12.3,h:0.35, fontSize:12,bold:true,fontFace:FONT,rtlMode:true,align:'right',color:C.navy });
+    s6.addChart(pptx.ChartType.bar, [{ name:'تعداد', labels:mLabels6WithOnlineAmt, values:onlineVals6 }], {
+      x:0.5,y:4.45,w:12.3,h:2.65, barDir:'col', chartColors:[C.accent],
+      showValue:true, dataLabelFontSize:8, dataLabelPosition:'outEnd', dataLabelFontFace:FONT,
+      catAxisLabelFontFace:FONT, valAxisLabelFontFace:FONT, catAxisLabelFontSize:7.5, valAxisLabelFontSize:8.5, showLegend:false
+    });
+  }
+
+  // 7) روند SLA در بازه‌های نیم‌ماهه — سطح کلی، روز تقویمی، از شروع قرارداد (هر ماه ۲ نقطه:
+  // اول ماه = نیمهٔ اول (روز ۱ تا ۱۵)، وسط ماه = نیمهٔ دوم (روز ۱۶ تا پایان ماه)
+  if(has(7)){
+    var s7 = pptx.addSlide();
+    s7.addText(faText('روند SLA در بازه‌های نیم‌ماهه — سطح کلی (روز تقویمی، از شروع قرارداد)').text,
+      { x:0.5,y:0.3,w:12.3,h:0.55, fontSize:16.5, bold:true, color:C.navy, fontFace:FONT, rtlMode:true, align:'right' });
+    var wLabels7 = halfMonthSeries.periods.map(function(p){return p.label;});
+    var wValues7 = halfMonthSeries.overall.map(function(m){ return m.avgCal===null?null:Math.round(m.avgCal*10)/10; });
+    s7.addChart(pptx.ChartType.line, [{ name:'میانگین SLA — روز تقویمی', labels:wLabels7, values:wValues7 }], {
+      x:0.5,y:0.95,w:12.3,h:5.65, chartColors:[C.primary], lineSize:2, lineDataSymbol:'circle', lineDataSymbolSize:4.5,
+      showLegend:true, legendPos:'b', legendFontFace:FONT, legendFontSize:10,
+      catAxisLabelFontFace:FONT, valAxisLabelFontFace:FONT, catAxisLabelFontSize:8.5, valAxisLabelFontSize:9,
+      valAxisTitle:'روز تقویمی', valAxisTitleFontFace:FONT, showValue:true, dataLabelFontSize:7.5,
+      dataLabelFontFace:FONT, dataLabelPosition:'t', catAxisLabelRotate:45
+    });
+    s7.addText(faText('توجه: مقادیر این نمودار بر حسب روز تقویمی است (نه روز کاری). محور افقی، دو نقطه در هر ماه را نشان می‌دهد: اول ماه (روزهای ۱ تا ۱۵) و شانزدهم (روزهای ۱۶ تا پایان ماه)، از تاریخ شروع قرارداد.').text,
+      { x:0.5,y:6.65,w:12.3,h:0.5, fontSize:10, color:C.gray, fontFace:FONT, rtlMode:true, align:'right' });
+  }
+
+  // 8) روند ماهانهٔ SLA — روز تقویمی و روز کاری کنار هم، با برچسب عددی دقیق
+  if(has(8)){
+    var s8 = pptx.addSlide();
+    s8.addText(faText('روند ماهانه SLA — روز تقویمی و روز کاری (از شروع قرارداد)').text,
+      { x:0.5,y:0.3,w:12.3,h:0.55, fontSize:16, bold:true, color:C.navy, fontFace:FONT, rtlMode:true, align:'right' });
+    var mLabels8 = monthlySeries.months.map(monthShortLabel);
+    var calVals8 = monthlySeries.khesarat.map(function(m){ return m.avgCal===null?null:Math.round(m.avgCal*10)/10; });
+    var bizVals8 = monthlySeries.khesarat.map(function(m){ return m.avgBiz===null?null:Math.round(m.avgBiz*10)/10; });
+    s8.addChart(pptx.ChartType.bar, [
+      { name:'میانگین SLA — روز تقویمی', labels:mLabels8, values:calVals8 },
+      { name:'میانگین SLA — روز کاری', labels:mLabels8, values:bizVals8 }
+    ], { x:0.5,y:0.95,w:12.3,h:5.85, barDir:'col', barGrouping:'clustered', chartColors:[C.navy, C.primary],
+      showValue:true, dataLabelPosition:'outEnd', dataLabelFontFace:FONT, dataLabelFontSize:8, dataLabelFormatCode:'0.0',
+      showLegend:true, legendPos:'b', legendFontFace:FONT, legendFontSize:10,
+      catAxisLabelFontFace:FONT, valAxisLabelFontFace:FONT, catAxisLabelFontSize:8, valAxisLabelFontSize:9,
+      valAxisTitle:'روز', valAxisTitleFontFace:FONT, catAxisLabelRotate:45 });
+  }
+
+  // 9) توزیع SLA (هیستوگرام) — با تعداد+درصد و جدول زیر نمودار
+  if(has(9)){
+    var s9 = pptx.addSlide();
+    s9.addText(faText('توزیع SLA پرونده‌های سامانه کمک‌رسانِ پرداخت‌شده (روز تقویمی، سطح کلی)').text,
+      { x:0.6,y:0.3,w:12.1,h:0.5, fontSize:16, bold:true, color:C.navy, fontFace:FONT, rtlMode:true, align:'right' });
+    var totalBk9 = buckets.reduce(function(s,b){return s+b.count;},0) || 1;
+    var totalBkAmt9 = buckets.reduce(function(s,b){return s+b.amount;},0) || 1;
+    s9.addChart(pptx.ChartType.bar, [{
+      name:'تعداد پرونده', labels: buckets.map(function(b){return b.label;}),
+      values: buckets.map(function(b){return b.count;})
+    }], { x:0.6,y:0.9,w:12.1,h:3.15, barDir:'col', chartColors:[C.primary], showValue:true, valAxisTitle:'تعداد',
+      dataLabelFontFace:FONT, dataLabelFontSize:10, catAxisLabelFontFace:FONT, valAxisLabelFontFace:FONT,
+      catAxisLabelFontSize:9.5, valAxisLabelFontSize:9, showLegend:false });
+    // ردیف‌های بازه‌های سریع (کمتر از ۷ روز) با زمینهٔ سبز روشن مشخص می‌شوند — مطابق نمونهٔ مرجع.
+    // ترتیب ستون‌ها: بازه، تعداد، مبلغ، سپس هر دو درصد کنار هم (طبق خواستهٔ کاربر).
+    // rtlMode:true روی تک‌تک سلول‌ها ست شده — نه فقط سطح کل جدول — چون پرانتزهای داخل
+    // سلول (مثل «مبلغ (تومان)») بدون این کار در پاورپوینت واقعی ممکن است برعکس رندر شوند.
+    var bTableRows9 = [[
+      {text:'بازه SLA',options:{bold:true,fill:{color:C.navy},color:'FFFFFF',fontSize:10.5,align:'right',rtlMode:true}},
+      {text:'تعداد',options:{bold:true,fill:{color:C.navy},color:'FFFFFF',fontSize:10.5,align:'center',rtlMode:true}},
+      {text:'مبلغ (تومان)',options:{bold:true,fill:{color:C.navy},color:'FFFFFF',fontSize:10.5,align:'center',rtlMode:true}},
+      {text:'درصد از تعداد',options:{bold:true,fill:{color:C.navy},color:'FFFFFF',fontSize:10.5,align:'center',rtlMode:true}},
+      {text:'درصد از مبلغ',options:{bold:true,fill:{color:C.navy},color:'FFFFFF',fontSize:10.5,align:'center',rtlMode:true}}
+    ]].concat(buckets.map(function(b, i){
+      var isFast = i<=1; // کمتر از ۵ روز، ۵ تا ۷ روز
+      var rowFill = isFast ? 'E3F5E9' : (i%2===1 ? 'F2F6FA' : 'FFFFFF');
+      var fg = isFast ? C.success : C.dark;
+      return [
+        {text:b.label, options:{fontSize:10, align:'right', color:fg, bold:isFast, fill:{color:rowFill}, rtlMode:true}},
+        {text:fmt(b.count), options:{fontSize:10, align:'center', color:fg, fill:{color:rowFill}, rtlMode:true}},
+        {text:fmtT(b.amount), options:{fontSize:10, align:'center', color:fg, fill:{color:rowFill}, rtlMode:true}},
+        {text:pctf(b.count/totalBk9*100), options:{fontSize:10, align:'center', color:fg, fill:{color:rowFill}, rtlMode:true}},
+        {text:pctf(b.amount/totalBkAmt9*100), options:{fontSize:10, align:'center', color:fg, fill:{color:rowFill}, rtlMode:true}}
+      ];
+    }));
+    s9.addTable(bTableRows9, { x:0.9,y:4.25,h:2.85, fontFace:FONT, rtlMode:true, valign:'middle',
+      border:{type:'solid',color:'E1E0D9',pt:0.5}, margin:[0.03,0.08,0.03,0.08], colW:[2.9,1.7,2.6,2.0,2.1] });
+  }
+
+  // 10) روند ماهانهٔ بازه‌های SLA — نمودار ستونی انباشته‌ورنگی، از شروع قرارداد
+  if(has(10)){
+    var s10 = pptx.addSlide();
+    s10.addText(faText('روند ماهانهٔ بازه‌های SLA').text,
+      { x:0.5,y:0.3,w:12.3,h:0.55, fontSize:16.5, bold:true, color:C.navy, fontFace:FONT, rtlMode:true, align:'right' });
+    s10.addText(faText('ترکیب درصدی بازه‌های پرداخت به تفکیک ماهِ تشکیل پرونده — سبز = سریع، قرمز = کند').text,
+      { x:0.5,y:0.72,w:12.3,h:0.3, fontSize:10.5, color:C.gray, fontFace:FONT, rtlMode:true, align:'right' });
+    var wLabels10 = monthlySeries.months.map(monthShortLabel);
+    var perWeekBuckets10 = monthlySeries.khesarat.map(function(mk){ return classifyBuckets(mk.calList||[]); });
+    // گرادیان سبز (سریع) به قرمز (کند)، دقیقاً مطابق نمونهٔ مرجع آسیا/شاتل — رنگ هر سری با
+    // ترتیب BUCKET_DEFS (از سریع‌ترین به کندترین بازه) هماهنگ است.
+    var seriesColors10 = ['1B7A3D','4CAF6D','A8DDB5','FFD34D','FFA500','E86A3E','C62828'];
+    var series10 = BUCKET_DEFS.map(function(bd, bi){
+      return { name: bd[2], labels: wLabels10, values: perWeekBuckets10.map(function(pb){ return pb[bi].count; }) };
+    });
+    s10.addChart(pptx.ChartType.bar, series10, {
+      x:0.5,y:1.1,w:12.3,h:5.35, barDir:'col', barGrouping:'percentStacked', chartColors:seriesColors10,
+      showLegend:true, legendPos:'b', legendFontFace:FONT, legendFontSize:9,
+      catAxisLabelFontFace:FONT, valAxisLabelFontFace:FONT, catAxisLabelFontSize:7.5, valAxisLabelFontSize:9,
+      valAxisTitle:'درصد از پرونده‌های پرداخت‌شده', valAxisTitleFontFace:FONT, catAxisLabelRotate:45, showValue:false
+    });
+    s10.addText(faText('هر ستون، ترکیب درصدی بازه‌های SLA پرونده‌های پرداخت‌شدهٔ همان ماه را نشان می‌دهد (مجموع هر ستون ۱۰۰٪ است).').text,
+      { x:0.5,y:6.55,w:12.3,h:0.5, fontSize:10, color:C.gray, fontFace:FONT, rtlMode:true, align:'right' });
+  }
+
+  // 11) جدول روند ماهانهٔ SLA (از شروع قرارداد) — با autoPage در صورت جا نشدن در یک اسلاید
+  if(has(11)){
+    var s11 = pptx.addSlide();
+    s11.addText(faText('جدول روند ماهانه SLA (از شروع قرارداد)').text,
+      { x:0.5,y:0.3,w:12.3,h:0.5, fontSize:16, bold:true, color:C.navy, fontFace:FONT, rtlMode:true, align:'right' });
+    var headers11 = ['ماه','تعداد سامانه کمک‌رسان','هزینه (تومان)','SLA تقویمی','P90 تقویمی','SLA کاری'];
+    var tableRows11 = [headers11.map(function(h){ return { text:h, options:{ bold:true, fill:{color:C.navy}, color:'FFFFFF', fontSize:10.5, align:'center', rtlMode:true } }; })]
+      .concat(monthlySeries.months.map(function(m, i){
+        var k = monthlySeries.khesarat[i];
+        var rowFill = i%2===1 ? 'F2F6FA' : 'FFFFFF';
+        var vals = [m.label, fmt(k.count), fmtT(k.billedSum), dayf(k.avgCal), dayf(k.p90Cal), dayf(k.avgBiz)];
+        return vals.map(function(v, ci){
+          return { text:String(v), options:{ fontSize:10, align:'center', fill:{color:rowFill}, bold: ci===0, rtlMode:true } };
+        });
+      }));
+    s11.addTable(tableRows11, {
+      x:0.5, y:0.9, h:6.3,
+      fontFace:FONT, rtlMode:true, valign:'middle', margin:[0.03,0.08,0.03,0.08],
+      border:{type:'solid',color:'E1E0D9',pt:0.5},
+      autoPage:true, autoPageRepeatHeader:true, autoPageSlideStartY:0.4,
+      colW:[2.5,1.9,2.4,2.1,1.8,1.6] // sum = 12.3in
+    });
+  }
+
+  return pptx.write({ outputType:'blob' }).then(fixPptxContentTypes);
+}
+
+async function generateCompanyExcel(S, recs, holidayDaySet){
+  var wb = new ExcelJS.Workbook();
+
+  // Sheet 1: خلاصه
+  var wsSum = wb.addWorksheet('خلاصه', { views:[{rightToLeft:true}] });
+  wsSum.columns = [{width:34},{width:20}];
+  addTitleRow(wsSum, 'خلاصهٔ گزارش — '+S.companyName+' ('+S.contractStart+')');
+  var summaryRows = [
+    ['تعداد کل رکورد', S.totalRecords],
+    ['تعداد پروندهٔ سامانه کمک‌رسان', S.khesaratCount],
+    ['تعداد معرفی‌نامه', S.moarefiCount],
+    ['تعداد افراد یکتا (سامانه کمک‌رسان)', S.uniquePersonsKhesarat],
+    ['مجموع صورتحساب (سامانه کمک‌رسان)', S.billedSumKhesarat],
+    ['مجموع کسورات (سامانه کمک‌رسان)', S.deductionSumKhesarat],
+    ['مجموع پرداختی واقعی (سامانه کمک‌رسان — دارای تاریخ پرداخت)', S.paidSumKhesarat],
+    ['مجموع صورتحساب (معرفی‌نامه)', S.billedSumMoarefi],
+    ['مجموع پرداختی (معرفی‌نامه)', S.paidSumMoarefi],
+    ['تعداد پرداخت نشده (بدون تاریخ پرداخت)', S.pendingCount],
+    ['مبلغ تأییدشدهٔ پرداخت نشده', S.pendingPayableSum],
+    ['تعداد سقف تعهدات تکمیل‌شده', S.capReachedCount],
+    ['تعداد پرداخت صفر (سایر دلایل — نیازمند بررسی)', S.otherZeroCount]
+  ];
+  summaryRows.forEach(function(r){ wsSum.addRow(r); });
+  wsSum.addRow([]);
+  wsSum.addRow(['سطح SLA','تعداد','میانگین (روز تقویمی)','P90 (روز تقویمی)','میانگین (روز کاری)','P90 (روز کاری)']).font = { bold:true };
+  [['کلی',S.sla.overall],['پاراکلینیکی',S.sla.para],['بستری',S.sla.bastari],['دندانپزشکی',S.sla.dandan]].forEach(function(lv){
+    var st = lv[1];
+    wsSum.addRow([lv[0], st.n, round1(st.avgCal), round1(st.p90Cal), round1(st.avgBiz), round1(st.p90Biz)]);
+  });
+
+  // Sheet 2: نیازمند بررسی (پرداخت‌نشده + پرداخت صفر مشکوک)
+  var khesarat = recs.filter(function(r){ return r.htype==='khesarat'; });
+  var needsReview = khesarat.filter(function(r){
+    if(r.isPaidKhesarat && r.paid===0 && !r.isCapReached) return true;
+    // «بدون تاریخ پرداخت» فقط وقتی نمایش داده می‌شود که بیش از ۷ روز کاری از
+    // تاریخ تشکیل پرونده گذشته باشد — بقیه هنوز در فرآیند بررسی/تأیید هستند.
+    if(r.isPendingKhesarat){
+      var bd = Core.businessDaysBetween(r.caseDate, STATE.asOf, holidayDaySet);
+      return bd !== null && bd > 7;
+    }
+    return false;
+  });
+  var wsReview = wb.addWorksheet('نیازمند بررسی', { views:[{rightToLeft:true}] });
+  var reviewHeaders = ['نوع مورد','نوع سامانه کمک‌رسان','کد ملی','نام و نام خانوادگی','تاریخ تشکیل پرونده','تاریخ پرداخت','روز سپری‌شده از تشکیل پرونده','مبلغ صورتحساب','مبلغ پرداختی (تأییدشده)','نوع بستری','پوشش','بیمارستان'];
+  styleHeaderRow(wsReview, reviewHeaders);
+  var todayMs = Core.jalaliToUtcMs(STATE.asOf);
+  needsReview
+    .sort(function(a,b){
+      var am = Core.jalaliToUtcMs(a.caseDate), bm = Core.jalaliToUtcMs(b.caseDate);
+      return (am||0)-(bm||0);
+    })
+    .forEach(function(r){
+      var caseMs = Core.jalaliToUtcMs(r.caseDate);
+      var daysElapsed = (caseMs!==null && todayMs!==null) ? Math.round((todayMs-caseMs)/86400000) : '';
+      var reason = r.isPendingKhesarat ? 'پرداخت نشده (بدون تاریخ پرداخت)' : 'پرداخت صفر — نیازمند بررسی';
+      // این شیت فقط شامل رکوردهای «سامانه کمک‌رسان» است (khesarat فیلتر شده در بالا)؛ ستون
+      // «نوع سامانه کمک‌رسان» برای شفافیت و اطمینان از صحت فیلتر اضافه شده — همیشه «سامانه کمک‌رسان» است.
+      wsReview.addRow([reason, 'سامانه کمک‌رسان', r.nid, r.fullName, r.caseDate, r.payDate||'', daysElapsed, r.billed, r.paid, Core.OTYPE_FA[r.otype], r.coverage, r.hospital]);
+    });
+  autosize(wsReview, reviewHeaders.length);
+
+  // Sheet 3: تمام رکوردهای این بیمه‌گذار — دقیقاً مطابق فایل اصلی، بدون کسری
+  var wsAll = wb.addWorksheet('تمام رکوردها (بدون کسری)', { views:[{rightToLeft:true}] });
+  var headers = (STATE.headers || []).map(function(h){ return h===null||h===undefined ? '' : String(h); });
+  styleHeaderRow(wsAll, headers);
+  recs.forEach(function(r){ wsAll.addRow(r.raw || []); });
+  autosize(wsAll, headers.length);
+
+  return wb.xlsx.writeBuffer().then(function(buf){ return new Blob([buf], { type:'application/octet-stream' }); });
+}
+
+function round1(n){ return n===null||n===undefined ? null : Math.round(n*10)/10; }
+function addTitleRow(ws, title){
+  var row = ws.addRow([title]);
+  row.font = { bold:true, size:13, color:{argb:'FF16324F'} };
+  ws.addRow([]);
+}
+function styleHeaderRow(ws, headers){
+  var row = ws.addRow(headers);
+  row.eachCell(function(cell){
+    cell.font = { bold:true, color:{argb:'FFFFFFFF'} };
+    cell.fill = { type:'pattern', pattern:'solid', fgColor:{argb:'FF16324F'} };
+    cell.alignment = { horizontal:'center', vertical:'middle' };
+  });
+  ws.views = [{ state:'frozen', ySplit:1, rightToLeft:true }];
+}
+function autosize(ws, nCols){
+  for(var i=1;i<=nCols;i++){ ws.getColumn(i).width = 18; }
+}
+
+// جدیدترین تاریخ جلالی در یک لیست رشته‌ای از تاریخ‌ها (برای «آخرین تاریخ واریزی»)
+function maxJalaliDateStr(dateStrs){
+  var best = null, bestMs = null;
+  (dateStrs||[]).forEach(function(s){
+    var ms = Core.jalaliToUtcMs(s);
+    if(ms===null) return;
+    if(bestMs===null || ms>bestMs){ bestMs = ms; best = s; }
+  });
+  return best;
+}
+
+/* ==================================================================
+   OVERVIEW REPORT
+   ================================================================== */
+$('runOverviewBtn').addEventListener('click', function(){
+  var groups = getActiveOverviewSet();
+  var holidayList = textToHolidays($('holidayText').value);
+  var hd = Core.buildHolidayDaySet(holidayList).daySet;
+  var insurerName = $('insurerName').value.trim() || 'آسماری';
+  setStatus($('overviewStatus'), 'در حال محاسبه و ساخت گزارش Overview برای '+groups.length+' قرارداد...', 'info');
+  $('overviewDownloads').innerHTML = '';
+  var btn = this; btn.disabled = true;
+  setTimeout(function(){
+    try {
+      var companies = groups.map(function(recs){
+        return Core.computeCompanySummary(recs[0].companyName, recs[0].contractStart, recs, hd, STATE.asOf);
+      });
+      var pooledPaidRecs = [];
+      groups.forEach(function(recs){ pooledPaidRecs = pooledPaidRecs.concat(recs.filter(function(r){ return r.isPaidKhesarat; })); });
+      var portfolioSla = Core.slaStatsFor(pooledPaidRecs, hd);
+      var monthlyTrend = Core.computeMonthlyTrend(pooledPaidRecs, hd, STATE.asOf, 12);
+      // آخرین تاریخ واریزی آسماری: جدیدترین «تاریخ پرداخت» در بین همهٔ پرونده‌های پرداخت‌شدهٔ فعال
+      var lastPaymentDate = maxJalaliDateStr(pooledPaidRecs.map(function(r){ return r.payDate; }));
+
+      var agg = aggregatePortfolio(companies, portfolioSla);
+      agg.lastPaymentDate = lastPaymentDate;
+
+      Promise.all([
+        generateOverviewPptx(companies, agg, insurerName, monthlyTrend),
+        generateOverviewExcel(companies, agg, insurerName)
+      ]).then(function(results){
+        var safe = insurerName.replace(/[\\/:*?"<>|]/g,'_');
+        addDownload($('overviewDownloads'), results[0], 'Overview_'+safe+'.pptx');
+        addDownload($('overviewDownloads'), results[1], 'Overview_'+safe+'.xlsx');
+        setStatus($('overviewStatus'), 'ساخت گزارش Overview کامل شد.', 'ok');
+        btn.disabled = false;
+      }).catch(function(err){
+        console.error(err); setStatus($('overviewStatus'), 'خطا: '+err.message, 'err'); btn.disabled = false;
+      });
+    } catch(err){
+      console.error(err); setStatus($('overviewStatus'), 'خطا: '+err.message, 'err'); btn.disabled = false;
+    }
+  }, 30);
+});
+
+function aggregatePortfolio(companies, portfolioSla){
+  var n = companies.length;
+  var totalKhesarat = companies.reduce(function(s,c){return s+c.khesaratCount;},0);
+  var totalMoarefi = companies.reduce(function(s,c){return s+c.moarefiCount;},0);
+  var totalBilled = companies.reduce(function(s,c){return s+c.billedSumKhesarat;},0);
+  var totalPaid = companies.reduce(function(s,c){return s+c.paidSumKhesarat;},0); // now correctly actual-paid-only (per company fix)
+  var totalPending = companies.reduce(function(s,c){return s+c.pendingCount;},0);
+  var totalNotPaidAmount = companies.reduce(function(s,c){return s+c.pendingPayableSum;},0);
+  var sumUniquePersons = companies.reduce(function(s,c){return s+c.uniquePersonsKhesarat;},0);
+
+  var top12ByCount = companies.slice().sort(function(a,b){return b.khesaratCount-a.khesaratCount;}).slice(0,12);
+  var completeCycle = companies.filter(function(c){return c.sla.overall.n>=5;});
+  var top12Slowest = completeCycle.slice().sort(function(a,b){return (b.sla.overall.avgCal||0)-(a.sla.overall.avgCal||0);}).slice(0,12);
+  // همهٔ بیمه‌گذاران فعال، مرتب‌شده بر اساس هزینه (صورتحساب) — نه فقط ۱۵ تای برتر؛
+  // کاربر خواسته همهٔ شرکت‌ها را ببیند، حتی اگر لازم شود جدول روی چند اسلاید پخش شود.
+  var allByCost = companies.slice().sort(function(a,b){return b.billedSumKhesarat-a.billedSumKhesarat;});
+
+  return {
+    n:n, totalKhesarat:totalKhesarat, totalMoarefi:totalMoarefi, totalBilled:totalBilled, totalPaid:totalPaid,
+    totalPending:totalPending, totalNotPaidAmount:totalNotPaidAmount, sumUniquePersons:sumUniquePersons, portfolioSla:portfolioSla,
+    top12ByCount:top12ByCount, top12Slowest:top12Slowest, allByCost:allByCost
+  };
+}
+
+async function generateOverviewPptx(companies, agg, insurerName, monthlyTrend){
+  await loadPptxGenJsOnce();
+  var pptx = new PptxGenJS();
+  pptx.defineLayout(LAYOUT_WIDE); pptx.layout = 'WIDE';
+
+  coverSlide(pptx, 'گزارش Overview — '+insurerName, 'پورتفوی قراردادهای فعال (شروع در ۳۶۵ روز اخیر)', STATE.asOf);
+
+  var s2 = pptx.addSlide();
+  s2.addText(faText('خلاصهٔ پورتفوی').text, { x:0.6,y:0.4,w:12,h:0.6, fontSize:20, bold:true, color:C.navy, fontFace:FONT, rtlMode:true, align:'right' });
+  var kpis2 = [
+    [fmt(agg.n), 'تعداد قرارداد/بیمه‌گذار فعال', C.primaryDark],
+    [fmt(agg.totalKhesarat), 'مجموع پروندهٔ سامانه کمک‌رسان', C.primaryDark],
+    [fmtT(agg.totalBilled)+' تومان', 'مجموع صورتحساب', C.dark],
+    [fmtT(agg.totalPaid)+' تومان', 'مجموع پرداختی واقعی', C.success],
+    [fmt(agg.totalPending), 'تعداد پرداخت‌نشده', C.danger],
+    [fmtT(agg.totalNotPaidAmount)+' تومان', 'مبلغ پرداخت‌نشده', C.danger],
+    [dayf(agg.portfolioSla.overall.avgCal), 'SLA میانگین کلی (روز تقویمی)', C.primaryDark],
+    [dayf(agg.portfolioSla.overall.avgBiz), 'SLA میانگین کلی (روز کاری)', C.primaryDark]
+  ];
+  layoutKpiGrid(s2, kpis2, 0.6, 1.2, 12.1, 4, 1.6);
+  s2.addText(faText('آخرین تاریخ واریزی آسماری (در بین همهٔ پرونده‌های پرداخت‌شدهٔ فعال): '+(agg.lastPaymentDate || 'نامشخص')).text,
+    { x:0.6,y:4.95,w:12.1,h:0.45, fontSize:13, bold:true, color:C.navy, fontFace:FONT, rtlMode:true, align:'right' });
+
+  // slide 3: portfolio-wide monthly SLA average trend — فقط سطح کلی، نمودار ستونی (نه خطی)
+  // چون دقت عدد برای کاربر مهم است و نمودار خطی خوانا نبود. (اسلاید P90 قبلی حذف شد —
+  // P90 کلی حالا در جدول اسلاید بعدی آمده.)
+  addMonthlyBarSlide(pptx, monthlyTrend, 'avgCal', 'روند میانگین SLA کلی پورتفوی — ماه به ماه (۱۲ ماه اخیر، روز تقویمی)');
+
+  // اسلاید(های) بعدی: همهٔ بیمه‌گذاران فعال (نه فقط ۱۵ تای برتر)، به‌صورت خودکار روی چند
+  // اسلاید پخش می‌شود (autoPage) تا جدول از مرز اسلاید بیرون نزند.
+  addAllCompaniesTableSlides(pptx, agg.allByCost);
+
+  return pptx.write({ outputType:'blob' }).then(fixPptxContentTypes);
+}
+
+// نمودار ستونی ماه‌به‌ماه برای سطح کلی — با نمایش عدد روی هر ستون، چون دقت عدد مهم است
+function addMonthlyBarSlide(pptx, trend, metricKey, titleText){
+  var s = pptx.addSlide();
+  s.addText(faText(titleText).text, { x:0.5,y:0.3,w:12.3,h:0.55, fontSize:16.5, bold:true, color:C.navy, fontFace:FONT, rtlMode:true, align:'right' });
+  var labels = trend.months.map(monthShortLabel);
+  var values = trend.overall.map(function(m){ return m[metricKey]===null||m[metricKey]===undefined ? null : Math.round(m[metricKey]*10)/10; });
+  s.addChart(pptx.ChartType.bar, [{ name:'میانگین SLA — روز تقویمی', labels:labels, values:values }], {
+    x:0.5, y:0.95, w:12.3, h:5.85, barDir:'col', chartColors:[C.primary],
+    showValue:true, dataLabelPosition:'outEnd', dataLabelFontFace:FONT, dataLabelFontSize:10.5, dataLabelColor:C.dark, dataLabelFormatCode:'0.0',
+    valAxisTitle:'روز', valAxisTitleFontFace:FONT, catAxisLabelFontFace:FONT, valAxisLabelFontFace:FONT,
+    catAxisLabelFontSize:10, valAxisLabelFontSize:9.5, showLegend:false
+  });
+  return s;
+}
+
+// جدول همهٔ بیمه‌گذاران فعال (نه فقط ۱۵ تای برتر)، مرتب بر اساس هزینه — شامل هر سه معیار
+// سطح کلی: میانگین SLA تقویمی، میانگین SLA کاری، P90. چون تعداد شرکت‌ها زیاد است، از
+// autoPage استفاده می‌شود تا PptxGenJS خودش به‌صورت خودکار اسلایدهای بعدی را بسازد و
+// سطر هدر را روی هرکدام تکرار کند — به این ترتیب جدول هرگز از مرز اسلاید بیرون نمی‌زند.
+function addAllCompaniesTableSlides(pptx, list){
+  var s = pptx.addSlide();
+  s.addText(faText('لیست کامل بیمه‌گذاران فعال بر اساس هزینه ('+fmt(list.length)+' بیمه‌گذار)').text,
+    { x:0.5,y:0.3,w:12.3,h:0.5, fontSize:16, bold:true, color:C.navy, fontFace:FONT, rtlMode:true, align:'right' });
+  var headers = ['بیمه‌گذار','تاریخ شروع قرارداد','تعداد سامانه کمک‌رسان','صورتحساب (تومان)','پرداختی واقعی (تومان)','میانگین SLA (تقویمی)','میانگین SLA (کاری)','P90 (تقویمی)'];
+  var tableRows = [headers.map(function(h){ return { text:h, options:{ bold:true, fill:{color:C.navy}, color:'FFFFFF', fontSize:10.5, align:'center', rtlMode:true } }; })]
+    .concat(list.map(function(c, i){
+      var st = c.sla.overall;
+      var rowFill = i%2===1 ? 'F2F6FA' : 'FFFFFF';
+      var vals = [c.companyName, c.contractStart, fmt(c.khesaratCount), fmtT(c.billedSumKhesarat), fmtT(c.paidSumKhesarat),
+        dayf(st.avgCal), dayf(st.avgBiz), dayf(st.p90Cal)];
+      return vals.map(function(v, ci){
+        return { text:String(v), options:{ fontSize:10, align: ci===0?'right':'center', fill:{color:rowFill}, rtlMode:true } };
+      });
+    }));
+  s.addTable(tableRows, {
+    x:0.3, y:0.95, h:6.2,
+    fontFace:FONT, rtlMode:true, valign:'middle', margin:[0.03,0.08,0.03,0.08],
+    border:{type:'solid',color:'E1E0D9',pt:0.5},
+    autoPage:true, autoPageRepeatHeader:true, autoPageSlideStartY:0.4,
+    colW:[2.85,1.3,1.05,1.7,1.7,1.35,1.3,1.15] // sum = 12.4in, fits the 13.33in wide slide with x:0.3 margin
+  });
+}
+
+async function generateOverviewExcel(companies, agg, insurerName){
+  var wb = new ExcelJS.Workbook();
+  var ws = wb.addWorksheet('Overview', { views:[{rightToLeft:true}] });
+  var headers = ['بیمه‌گذار','تاریخ شروع قرارداد','تعداد رکورد کل','تعداد سامانه کمک‌رسان','تعداد معرفی‌نامه','تعداد افراد یکتا',
+    'مجموع صورتحساب (تومان)','مجموع پرداختی واقعی (تومان)','تعداد پرداخت‌نشده','مبلغ پرداخت‌نشده (تومان)',
+    'SLA میانگین کلی (تقویمی)','P90 کلی (تقویمی)','SLA میانگین پاراکلینیکی','P90 پاراکلینیکی',
+    'SLA میانگین بستری','P90 بستری','SLA میانگین دندانپزشکی','P90 دندانپزشکی'];
+  styleHeaderRow(ws, headers);
+  companies.sort(function(a,b){return b.khesaratCount-a.khesaratCount;}).forEach(function(c){
+    ws.addRow([c.companyName, c.contractStart, c.totalRecords, c.khesaratCount, c.moarefiCount, c.uniquePersonsKhesarat,
+      round1(rialToToman(c.billedSumKhesarat)), round1(rialToToman(c.paidSumKhesarat)), c.pendingCount, round1(rialToToman(c.pendingPayableSum)),
+      round1(c.sla.overall.avgCal), round1(c.sla.overall.p90Cal), round1(c.sla.para.avgCal), round1(c.sla.para.p90Cal),
+      round1(c.sla.bastari.avgCal), round1(c.sla.bastari.p90Cal), round1(c.sla.dandan.avgCal), round1(c.sla.dandan.p90Cal)]);
+  });
+  autosize(ws, headers.length);
+
+  var wsP = wb.addWorksheet('پرداخت نشده - همه شرکت‌ها', { views:[{rightToLeft:true}] });
+  var pHeaders = ['بیمه‌گذار','تاریخ شروع قرارداد','کد ملی','نام','نوع سامانه کمک‌رسان','تاریخ تشکیل پرونده','تاریخ پرداخت','روز سپری‌شده','مبلغ صورتحساب (تومان)','مبلغ پرداختی تأییدشده (تومان)','نوع بستری','پوشش','وضعیت'];
+  styleHeaderRow(wsP, pHeaders);
+  companies.forEach(function(c){
+    c.pendingDetail.forEach(function(p){
+      // برای بازبینی: تاریخ پرداخت اینجا باید همیشه خالی باشد و نوع سامانه کمک‌رسان
+      // همیشه «سامانه کمک‌رسان» — این دو ستون برای شفافیت و اطمینان از صحت فیلتر اضافه شدند.
+      wsP.addRow([c.companyName, c.contractStart, p.nid, p.name, 'سامانه کمک‌رسان', p.caseDate, p.payDate || '', p.daysElapsed, rialToToman(p.billed), rialToToman(p.paid),
+        Core.OTYPE_FA[p.otype], p.coverage, p.isCapReached ? 'سقف تعهدات تکمیل‌شده' : 'نیازمند پیگیری']);
+    });
+  });
+  autosize(wsP, pHeaders.length);
+
+  return wb.xlsx.writeBuffer().then(function(buf){ return new Blob([buf], { type:'application/octet-stream' }); });
+}
+
+</script>
+
+</body>
+</html>

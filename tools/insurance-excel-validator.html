@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ابزار بررسی و اعتبارسنجی اکسل بیمه</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+<style>
+  :root{
+    --bg:#0c1116; --panel:#161b22; --panel2:#1c222b; --border:#2a323d;
+    --text:#f2f5f8; --muted:#8a94a3; --accent:#00b4ff; --accent2:#33c6ff;
+    --ok:#3ddc84; --warn:#ffcc00; --err:#ff5c5c; --info:#33c6ff;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Vazirmatn","IRANSans","Tahoma",sans-serif;
+    min-height:100vh;
+    padding:24px;
+  }
+  .wrap{max-width:1180px;margin:0 auto;}
+  header.top{margin-bottom:24px;}
+  header.top h1{font-size:22px;margin:0 0 6px;}
+  header.top p{color:var(--muted);margin:0;font-size:14px;line-height:1.9;}
+  .card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px;
+    margin-bottom:18px;
+  }
+  .card h2{font-size:16px;margin:0 0 14px;display:flex;align-items:center;gap:8px;}
+  .card h2 .num{
+    width:24px;height:24px;border-radius:50%;background:var(--accent);
+    color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .drop{
+    border:2px dashed var(--border);
+    border-radius:12px;
+    padding:36px 20px;
+    text-align:center;
+    cursor:pointer;
+    transition:.15s;
+    color:var(--muted);
+  }
+  .drop:hover, .drop.drag{border-color:var(--accent); background:rgba(91,140,255,.06); color:var(--text);}
+  .drop b{color:var(--text);}
+  .drop svg{opacity:.6;margin-bottom:10px;}
+  input[type=file]{display:none;}
+  .fileinfo{
+    display:flex;align-items:center;gap:12px;
+    background:var(--panel2);border:1px solid var(--border);
+    border-radius:10px;padding:12px 14px;margin-top:12px;font-size:13px;
+  }
+  .fileinfo .name{font-weight:600;flex:1;}
+  .fileinfo button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;text-decoration:underline;}
+  select, input[type=number], input[type=text]{
+    background:var(--panel2);border:1px solid var(--border);color:var(--text);
+    border-radius:8px;padding:8px 10px;font-family:inherit;font-size:13px;width:100%;color-scheme:dark;
+  }
+  .row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;align-items:flex-end;}
+  .field{flex:1;min-width:180px;}
+  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;}
+  .map-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+  .map-grid .field label .req{color:var(--err);margin-right:4px;}
+  .map-grid select.unmapped{border-color:var(--err);}
+  .hint{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.8;}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;border:none;border-radius:10px;padding:11px 20px;
+    font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;
+  }
+  .btn:disabled{opacity:.4;cursor:not-allowed;}
+  .btn.secondary{background:var(--panel2);border:1px solid var(--border);color:var(--text);}
+  .btn.small{padding:8px 14px;font-size:13px;}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+  .banner{
+    border-radius:10px;padding:12px 14px;font-size:13px;margin-bottom:14px;line-height:1.8;
+  }
+  .banner.warn{background:rgba(255,204,0,.12);border:1px solid rgba(255,204,0,.35);color:#ffcc00;}
+  .banner.err{background:rgba(255,92,92,.12);border:1px solid rgba(255,92,92,.35);color:#ff5c5c;}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:18px;}
+  .stat{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;}
+  .stat .n{font-size:26px;font-weight:700;}
+  .stat .l{font-size:12px;color:var(--muted);margin-top:4px;}
+  .stat.ok .n{color:var(--ok);} .stat.err .n{color:var(--err);} .stat.warn .n{color:var(--warn);} .stat.info .n{color:var(--info);}
+
+  .tabs{display:flex;gap:6px;margin-bottom:14px;border-bottom:1px solid var(--border);}
+  .tab{padding:10px 16px;cursor:pointer;color:var(--muted);font-size:13px;border-bottom:2px solid transparent;}
+  .tab.active{color:var(--text);border-color:var(--accent);font-weight:600;}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center;}
+  .toolbar select, .toolbar input{width:auto;min-width:150px;}
+  .toolbar input[type=text]{min-width:220px;}
+  .table-scroll{overflow-x:auto;border:1px solid var(--border);border-radius:10px;}
+  table{border-collapse:collapse;width:100%;font-size:13px;min-width:700px;}
+  thead th{
+    background:var(--panel2);color:var(--muted);text-align:right;padding:10px 12px;
+    font-weight:600;font-size:12px;white-space:nowrap;position:sticky;top:0;
+  }
+  tbody td{padding:9px 12px;border-top:1px solid var(--border);vertical-align:top;}
+  tbody tr:hover{background:rgba(255,255,255,.02);}
+  .sev{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;}
+  .sev.error{background:rgba(255,92,92,.15);color:var(--err);}
+  .sev.warning{background:rgba(255,204,0,.15);color:var(--warn);}
+  .sev.info{background:rgba(51,198,255,.15);color:var(--info);}
+  tr.rowstatus-error{background:rgba(255,92,92,.05);}
+  tr.rowstatus-warning{background:rgba(255,204,0,.05);}
+  .rowbadge{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;display:inline-block;}
+  .rowbadge.ok{background:rgba(61,220,132,.15);color:var(--ok);}
+  .rowbadge.error{background:rgba(255,92,92,.15);color:var(--err);}
+  .rowbadge.warning{background:rgba(255,204,0,.15);color:var(--warn);}
+  .rowbadge.info{background:rgba(51,198,255,.15);color:var(--info);}
+  .muted{color:var(--muted);}
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:30px;padding-bottom:10px;}
+  .empty{padding:30px;text-align:center;color:var(--muted);font-size:13px;}
+  ::-webkit-scrollbar{height:8px;width:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:1180px;margin:0 auto;padding:14px 24px 0;}
+.topbar .back{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;background:var(--panel);border:1px solid var(--border);padding:8px 14px;border-radius:10px;transition:.15s;}
+.topbar .back:hover{border-color:var(--accent);color:var(--accent);}
+.topbar .back:active{transform:scale(.97);}
+.topbar .tool-tag{font-size:11.5px;font-weight:700;color:var(--accent);background:rgba(0,180,255,.10);padding:4px 10px;border-radius:999px;}
+</style>
+</head>
+<body>
+<div class="topbar"><a class="back" href="../index.html">→ جعبه‌ابزار عملیات</a><span class="tool-tag">کنترل کیفیت</span></div>
+<div class="wrap">
+
+  <header class="top">
+    <h1>اعتبارسنجی اکسل بیمه</h1>
+    <p>فایل اکسل را بده، ستون‌ها و ارتباط بین افراد خانواده به‌صورت خودکار بررسی و گزارش خطا/مغایرت تولید می‌شود — کاملاً آفلاین.</p>
+  </header>
+
+  <!-- STEP 1: upload -->
+  <section class="card" id="uploadCard">
+    <h2><span class="num">1</span> بارگذاری فایل اکسل</h2>
+    <div class="drop" id="dropZone">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+      <div><b>فایل را اینجا رها کنید</b> یا کلیک کنید برای انتخاب<br><span style="font-size:12px;">فرمت‌های مجاز: xlsx, xls, csv</span></div>
+      <input type="file" id="fileInput" accept=".xlsx,.xls,.csv">
+    </div>
+    <div class="fileinfo" id="fileInfo" style="display:none;">
+      <span>📄</span>
+      <span class="name" id="fileName"></span>
+      <button id="clearFile">حذف و انتخاب فایل دیگر</button>
+    </div>
+  </section>
+
+  <!-- STEP 2: sheet + mapping -->
+  <section class="card" id="mapCard" style="display:none;">
+    <h2><span class="num">2</span> انتخاب شیت و تطبیق ستون‌ها</h2>
+    <div class="row">
+      <div class="field">
+        <label>شیت (کاربرگ)</label>
+        <select id="sheetSelect"></select>
+      </div>
+      <div class="field">
+        <label>شماره ردیف عنوان ستون‌ها (Header Row)</label>
+        <input type="number" id="headerRowInput" min="1" value="1">
+      </div>
+    </div>
+    <div class="hint">تشخیص شیت و ستون‌ها به‌صورت خودکار انجام شده؛ در صورت نیاز، ستون‌های زیر را دستی اصلاح کنید. ستون‌های ستاره‌دار اجباری هستند.</div>
+    <div id="bannerArea"></div>
+    <div class="map-grid" id="mapGrid" style="margin-top:14px;"></div>
+    <div class="actions">
+      <button class="btn" id="runBtn">✅ شروع بررسی فایل</button>
+    </div>
+  </section>
+
+  <!-- STEP 3: results -->
+  <section id="resultsSection" style="display:none;">
+    <section class="card">
+      <h2><span class="num">3</span> نتیجه بررسی</h2>
+      <div class="stats" id="statsArea"></div>
+      <div class="actions">
+        <button class="btn" id="downloadReportBtn">🟥 دانلود گزارش خطاها (رنگی + توضیحات)</button>
+        <button class="btn" id="downloadAnnotatedBtn">🟥 دانلود اکسل کامل با علامت‌گذاری رنگی خطاها</button>
+        <button class="btn" id="downloadAutofixBtn" style="background:#2e7d32;">🟢 دانلود فایل اصلاح‌شده خودکار</button>
+        <button class="btn" id="downloadUploadReadyBtn" style="background:#1565c0;">📤 دانلود فایل آماده آپلود (دقیقاً همون قالب ورودی)</button>
+        <button class="btn secondary" id="downloadSampleBtn">✅ دانلود نمونه اکسل با فرمت صحیح</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tabs">
+        <div class="tab active" data-tab="issues">گزارش خطاها و مغایرت‌ها</div>
+        <div class="tab" data-tab="preview">پیش‌نمایش کامل داده‌ها</div>
+      </div>
+
+      <div id="tab-issues">
+        <div class="toolbar">
+          <select id="sevFilter">
+            <option value="">همه شدت‌ها</option>
+            <option value="error">فقط خطا</option>
+            <option value="warning">فقط هشدار</option>
+            <option value="info">فقط اصلاح خودکار</option>
+          </select>
+          <input type="text" id="searchBox" placeholder="جستجو بر اساس نام، کد ملی، نوع خطا، ردیف...">
+          <span class="muted" id="issueCountLabel" style="font-size:12px;"></span>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>ردیف اکسل</th>
+                <th>نام و نام خانوادگی</th>
+                <th>کد ملی</th>
+                <th>شدت</th>
+                <th>نوع خطا / مغایرت</th>
+                <th>مقدار ثبت‌شده</th>
+                <th>مقدار مورد انتظار / توضیح</th>
+              </tr>
+            </thead>
+            <tbody id="issuesBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="tab-preview" style="display:none;">
+        <div class="toolbar">
+          <input type="text" id="previewSearch" placeholder="جستجو در داده‌ها...">
+          <span class="muted" id="previewCountLabel" style="font-size:12px;"></span>
+        </div>
+        <div class="table-scroll">
+          <table id="previewTable">
+            <thead><tr id="previewHeadRow"></tr></thead>
+            <tbody id="previewBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <footer>پردازش کاملاً در مرورگر همین دستگاه انجام می‌شود؛ هیچ داده‌ای به سرور ارسال نمی‌شود.</footer>
+</div>
+
+<script>
+// ============================================================================
+// Core validation engine
+// ============================================================================
+const FIELD_DEFS = [
+  { key: 'Name', label: 'نام', aliases: ['name', 'نام'], required: true },
+  { key: 'LName', label: 'نام خانوادگی', aliases: ['lname', 'نام خانوادگی', 'نام خانوادگي', 'فامیل'], required: true },
+  { key: 'CodeKhanvar', label: 'کد خانوار (کدملی بیمه‌شده اصلی)', aliases: ['codekhanvar', 'کدملی بیمه شده اصلی', 'کد ملی بیمه شده اصلی', 'کد خانوار'], required: true },
+  { key: 'IdentityNo', label: 'شماره شناسنامه', aliases: ['identityno', 'شماره شناسنامه'], required: true },
+  { key: 'BirthYear', label: 'سال تولد', aliases: ['birthyear', 'سال تولد'], required: true },
+  { key: 'BirthMonth', label: 'ماه تولد', aliases: ['birthmonth', 'ماه تولد'], required: true },
+  { key: 'BirthDay', label: 'روز تولد', aliases: ['birthday', 'روز تولد'], required: true },
+  { key: 'CodeMelli', label: 'کد ملی', aliases: ['codemelli', 'كد ملي', 'کد ملی', 'کدملی'], required: true },
+  { key: 'Mobile', label: 'شماره موبایل', aliases: ['mobile', 'موبایل', 'شماره موبایل بیمه شده اصلی', 'شماره موبایل'], required: true },
+  { key: 'Jens', label: 'جنسیت', aliases: ['jens', 'جنسیت', 'جنسيت'], required: true },
+  { key: 'BSKind', label: 'اصلی/فرعی (BSKind)', aliases: ['bskind', 'نوع بیمه شده', 'نوع بيمه شده', 'اصلی/فرعی'], required: true },
+  { key: 'Nesbat', label: 'نسبت', aliases: ['nesbat', 'نسبت', 'نسبت با بیمه شده اصلی'], required: true },
+  { key: 'TakafolKind', label: 'وضعیت تکفل (TakafolKind)', aliases: ['takafolkind', 'وضعیت تکفل'], required: true },
+  { key: 'ShebaAcc', label: 'شماره شبا', aliases: ['shebaacc', 'شماره شبا'], required: true },
+];
+
+function normalizeHeader(s) {
+  if (s === null || s === undefined) return '';
+  return String(s)
+    .replace(/\r|\n/g, ' ')
+    .replace(/[‌‏‎]/g, '')
+    .replace(/ي/g, 'ی').replace(/ك/g, 'ک')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, ' ');
+}
+
+function headerScore(cellText, aliases) {
+  const norm = normalizeHeader(cellText);
+  if (!norm) return 0;
+  for (const a of aliases) {
+    const an = normalizeHeader(a);
+    if (norm === an) return 3;
+  }
+  for (const a of aliases) {
+    const an = normalizeHeader(a);
+    if (an.length >= 2 && (norm.includes(an) || an.includes(norm))) return 2;
+  }
+  return 0;
+}
+
+// Detect the best header row among the first `maxScan` rows of a 2D array,
+// and auto-map each required field to a column index.
+function mapRowToFields(row) {
+  const mapping = {};
+  let total = 0;
+  for (const fd of FIELD_DEFS) {
+    let bestCol = -1, bestS = 0;
+    for (let c = 0; c < row.length; c++) {
+      const s = headerScore(row[c], fd.aliases);
+      if (s > bestS) { bestS = s; bestCol = c; }
+    }
+    mapping[fd.key] = bestCol;
+    total += bestS;
+  }
+  return { mapping, total };
+}
+
+function detectHeaderAndMapping(rows2d, maxScan = 12) {
+  let best = { rowIndex: 0, score: -1, mapping: null };
+  const scanLimit = Math.min(maxScan, rows2d.length);
+  for (let r = 0; r < scanLimit; r++) {
+    const row = rows2d[r] || [];
+    const { mapping, total } = mapRowToFields(row);
+    if (total > best.score) best = { rowIndex: r, score: total, mapping };
+  }
+  return { headerRowIndex: best.rowIndex, mapping: best.mapping || {} };
+}
+
+function toStr(v) {
+  if (v === null || v === undefined) return '';
+  return String(v).trim();
+}
+
+function normDigits(v) {
+  // convert persian/arabic-indic digits to latin, strip spaces
+  let s = toStr(v);
+  const map = { '۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9',
+                '٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9' };
+  s = s.replace(/[۰-۹٠-٩]/g, ch => map[ch] || ch);
+  return s;
+}
+
+const NESBAT_MAP = { '': 'اصلی', '12': 'همسر', '8': 'دختر', '7': 'پسر', '5': 'پدر', '6': 'مادر' };
+const JENS_MAP = { '26': 'مرد', '27': 'زن' };
+
+function isEmpty(v) {
+  return toStr(v) === '';
+}
+
+// Interprets the raw Nesbat cell. Real-world files sometimes write the
+// relation as Persian text ("اصلی", "همسر", ...) instead of the numeric
+// code the spec requires. We still recognize the *intent* so downstream
+// family-consistency checks (BSKind/TakafolKind/age/surname) work
+// correctly, but we always flag the text usage itself as a format problem.
+function classifyNesbat(raw) {
+  const t = toStr(raw);
+  if (t === '') return { kind: 'primary', code: '', textIssue: false, valid: true };
+  const d = normDigits(t);
+  if (/^\d+$/.test(d) && Object.prototype.hasOwnProperty.call(NESBAT_MAP, d) && d !== '') {
+    return { kind: 'secondary', code: d, textIssue: false, valid: true };
+  }
+  const norm = t.replace(/\s|‌/g, '');
+  const textMap = {
+    'اصلی': { kind: 'primary', code: '' }, 'اصلي': { kind: 'primary', code: '' },
+    'بیمهشدهاصلی': { kind: 'primary', code: '' },
+    'همسر': { kind: 'secondary', code: '12' },
+    'دختر': { kind: 'secondary', code: '8' },
+    'پسر': { kind: 'secondary', code: '7' },
+    'پدر': { kind: 'secondary', code: '5' },
+    'مادر': { kind: 'secondary', code: '6' },
+  };
+  if (textMap[norm]) return { kind: textMap[norm].kind, code: textMap[norm].code, textIssue: true, valid: true };
+  return { kind: 'invalid', code: null, textIssue: false, valid: false };
+}
+
+// Same idea for Jens: recognize "مرد"/"زن" text so relation cross-checks
+// (father must be male, etc.) still work, but flag the text usage itself.
+function classifyJens(raw) {
+  const t = toStr(raw);
+  if (t === '') return { code: null, valid: false, textIssue: false };
+  const d = normDigits(t);
+  if (d === '27' || d === '26') return { code: d, valid: true, textIssue: false };
+  const norm = t.replace(/\s|‌/g, '');
+  if (norm === 'مرد') return { code: '26', valid: true, textIssue: true };
+  if (norm === 'زن') return { code: '27', valid: true, textIssue: true };
+  return { code: null, valid: false, textIssue: false };
+}
+
+// A row is a "leftover instruction/label" row (e.g. the Persian sub-header
+// or the long explanatory sentences some templates place under the header)
+// rather than real data, if its numeric-ish fields contain long sentences.
+function looksLikeInstructionRow(obj) {
+  const check = (v) => {
+    const t = toStr(v);
+    return t.length > 8 && /\s/.test(t);
+  };
+  return check(obj.BirthYear) || check(obj.CodeMelli) || check(obj.Mobile);
+}
+
+// Build row objects from raw 2D array + mapping + detected cell "isNumericType" info.
+function buildRows(rows2d, mapping, headerRowIndex, isNumericCell) {
+  const out = [];
+  let inLeadingSkipZone = true;
+  let skipped = 0;
+  for (let r = headerRowIndex + 1; r < rows2d.length; r++) {
+    const raw = rows2d[r] || [];
+    const get = (key) => {
+      const c = mapping[key];
+      if (c === undefined || c < 0) return undefined;
+      return raw[c];
+    };
+    const obj = { _excelRow: r + 1, _sheetRowIndex: r };
+    for (const fd of FIELD_DEFS) obj[fd.key] = get(fd.key);
+    // skip fully blank separator rows
+    // only treat a row as a blank separator if EVERY mapped field is empty — checking
+    // just Name/LName/CodeMelli/Mobile let a row through validation-free whenever only
+    // some other field (e.g. ShebaAcc) was filled in
+    const coreEmpty = FIELD_DEFS.every((fd) => isEmpty(obj[fd.key]));
+    if (coreEmpty) continue;
+    // skip leading instruction/label rows right under the header (template boilerplate)
+    if (inLeadingSkipZone) {
+      if (skipped < 5 && looksLikeInstructionRow(obj)) { skipped++; continue; }
+      inLeadingSkipZone = false;
+    }
+    obj._isNumericCodeMelli = isNumericCell ? isNumericCell(r, mapping.CodeMelli) : false;
+    obj._isNumericCodeKhanvar = isNumericCell ? isNumericCell(r, mapping.CodeKhanvar) : false;
+    obj._isNumericMobile = isNumericCell ? isNumericCell(r, mapping.Mobile) : false;
+    out.push(obj);
+  }
+  return out;
+}
+
+function addIssue(list, row, type, severity, gotValue, expected, field) {
+  list.push({
+    excelRow: row._excelRow,
+    fullName: `${toStr(row.Name)} ${toStr(row.LName)}`.trim(),
+    codeMelli: toStr(row.CodeMelli),
+    type,
+    severity, // 'error' | 'warning' | 'info'
+    got: gotValue === undefined || gotValue === '' ? '(خالی)' : String(gotValue),
+    expected,
+    field: field || null, // FIELD_DEFS key this issue is about, for cell-level highlighting
+  });
+}
+
+function validate(rows) {
+  const issues = [];
+
+  const isPrimary = (row) => {
+    const nc = classifyNesbat(row.Nesbat);
+    return nc.valid ? nc.kind === 'primary' : isEmpty(row.Nesbat);
+  };
+
+  // 1) sequential family grouping
+  const families = [];
+  let current = null;
+  for (const row of rows) {
+    if (isPrimary(row)) {
+      current = { primary: row, members: [row] };
+      families.push(current);
+      row._family = current;
+    } else {
+      if (current) { current.members.push(row); row._family = current; }
+      else { row._family = null; }
+    }
+  }
+
+  // lookup: primary rows by CodeMelli
+  const primaryByCode = new Map();
+  for (const row of rows) {
+    if (isPrimary(row) && !isEmpty(row.CodeMelli)) {
+      primaryByCode.set(normDigits(row.CodeMelli), row);
+    }
+  }
+
+  for (const row of rows) {
+    const rowLabel = row._excelRow;
+
+    // ---- Rule 1: Name / LName mandatory ----
+    if (isEmpty(row.Name)) addIssue(issues, row, 'نام خالی است', 'error', row.Name, 'نام باید تکمیل شود (اجباری)', 'Name');
+    if (isEmpty(row.LName)) addIssue(issues, row, 'نام خانوادگی خالی است', 'error', row.LName, 'نام خانوادگی باید تکمیل شود (اجباری)', 'LName');
+
+    // ---- Rule 3: Nesbat ----
+    const nc = classifyNesbat(row.Nesbat);
+    const nesbatKey = nc.code === null ? null : nc.code;
+    const nesbatValid = nc.valid;
+    if (!nesbatValid) {
+      addIssue(issues, row, 'مقدار نسبت (Nesbat) نامعتبر است', 'error', row.Nesbat,
+        'مقادیر مجاز: اصلی=خالی، همسر=12، دختر=8، پسر=7، پدر=5، مادر=6', 'Nesbat');
+    } else if (nc.textIssue) {
+      addIssue(issues, row, 'نسبت باید فقط به‌صورت کد عددی نوشته شود، نه متن', 'error', row.Nesbat,
+        `کد معادل مورد انتظار: ${nc.code === '' ? 'خالی (اصلی)' : nc.code}`, 'Nesbat');
+    }
+    const primaryFlag = nesbatValid ? nc.kind === 'primary' : isEmpty(row.Nesbat);
+
+    // ---- Rule 2: CodeKhanvar ----
+    if (isEmpty(row.CodeKhanvar)) {
+      addIssue(issues, row, 'کد خانوار (CodeKhanvar) خالی است', 'error', row.CodeKhanvar, 'اجباری است', 'CodeKhanvar');
+    } else {
+      const ckDigits = normDigits(row.CodeKhanvar);
+      const cmDigits = normDigits(row.CodeMelli);
+      if (row._isNumericCodeKhanvar && !/^\d{10}$/.test(ckDigits)) {
+        addIssue(issues, row, 'فرمت ستون کد خانوار باید Text باشد', 'warning', row.CodeKhanvar,
+          'ممکن است صفر ابتدایی حذف شده باشد؛ فرمت سلول را Text کنید', 'CodeKhanvar');
+      }
+      if (primaryFlag) {
+        if (!isEmpty(row.CodeMelli) && ckDigits !== cmDigits) {
+          addIssue(issues, row, 'کد خانوار بیمه‌شده اصلی با کدملی خودش یکسان نیست', 'warning', row.CodeKhanvar,
+            `برای بیمه‌شده اصلی معمولاً باید برابر کدملی خودش باشد: ${row.CodeMelli}`, 'CodeKhanvar');
+        }
+      } else if (nesbatValid) {
+        if (!isEmpty(row.CodeMelli) && ckDigits === cmDigits) {
+          addIssue(issues, row, 'کد خانوار فرد فرعی نباید با کدملی خودش یکسان باشد', 'error', row.CodeKhanvar,
+            'باید برابر کدملی بیمه‌شده اصلی خانواده باشد، نه کدملی خود فرد', 'CodeKhanvar');
+        } else {
+          const owner = primaryByCode.get(ckDigits);
+          if (!owner) {
+            const seqPrimary = row._family ? row._family.primary : null;
+            const suggestion = seqPrimary ? `${seqPrimary.CodeMelli} (بیمه‌شده اصلی ردیف ${seqPrimary._excelRow}: ${toStr(seqPrimary.Name)} ${toStr(seqPrimary.LName)})` : 'یافت نشد';
+            addIssue(issues, row, 'بیمه‌شده اصلی این کد خانوار در فایل پیدا نشد', 'error', row.CodeKhanvar,
+              `مقدار پیشنهادی بر اساس ترتیب ردیف‌ها: ${suggestion}`, 'CodeKhanvar');
+          }
+        }
+      }
+    }
+
+    // reference primary for cross-checks below: prefer real owner-by-code, fallback to sequential
+    let refPrimary = null;
+    if (!isEmpty(row.CodeKhanvar)) refPrimary = primaryByCode.get(normDigits(row.CodeKhanvar)) || null;
+    if (!refPrimary && row._family) refPrimary = row._family.primary;
+    if (refPrimary === row) refPrimary = null;
+
+    // ---- Rule 3 cont'd: relational sanity checks ----
+    if (nesbatValid && !primaryFlag && refPrimary) {
+      if (nesbatKey === '7' || nesbatKey === '8') { // پسر / دختر
+        if (!isEmpty(row.LName) && !isEmpty(refPrimary.LName) && toStr(row.LName) !== toStr(refPrimary.LName)) {
+          addIssue(issues, row, 'نام خانوادگی فرزند با بیمه‌شده اصلی مطابقت ندارد', 'warning', row.LName, refPrimary.LName, 'LName');
+        }
+        const by = parseInt(normDigits(row.BirthYear), 10), py = parseInt(normDigits(refPrimary.BirthYear), 10);
+        if (!isNaN(by) && !isNaN(py) && by <= py) {
+          addIssue(issues, row, 'سال تولد فرزند با نسبت اعلام‌شده همخوانی ندارد', 'warning', row.BirthYear,
+            `باید بزرگ‌تر از سال تولد بیمه‌شده اصلی (${refPrimary.BirthYear}) باشد`, 'BirthYear');
+        }
+        const expectedJens = nesbatKey === '8' ? '27' : '26';
+        const jc = classifyJens(row.Jens);
+        if (jc.valid && jc.code !== expectedJens) {
+          addIssue(issues, row, 'جنسیت با نسبت اعلام‌شده (دختر/پسر) همخوانی ندارد', 'warning', row.Jens,
+            `${nesbatKey === '8' ? 'دختر' : 'پسر'} → جنسیت باید ${expectedJens} (${JENS_MAP[expectedJens]}) باشد`, 'Jens');
+        }
+      } else if (nesbatKey === '5' || nesbatKey === '6') { // پدر / مادر
+        const by = parseInt(normDigits(row.BirthYear), 10), py = parseInt(normDigits(refPrimary.BirthYear), 10);
+        if (!isNaN(by) && !isNaN(py) && by >= py) {
+          addIssue(issues, row, 'سال تولد پدر/مادر با نسبت اعلام‌شده همخوانی ندارد', 'warning', row.BirthYear,
+            `باید کوچک‌تر از سال تولد بیمه‌شده اصلی (${refPrimary.BirthYear}) باشد`, 'BirthYear');
+        }
+        const expectedJens = nesbatKey === '5' ? '26' : '27';
+        const jc = classifyJens(row.Jens);
+        if (jc.valid && jc.code !== expectedJens) {
+          addIssue(issues, row, 'جنسیت با نسبت اعلام‌شده (پدر/مادر) همخوانی ندارد', 'warning', row.Jens,
+            `${nesbatKey === '5' ? 'پدر' : 'مادر'} → جنسیت باید ${expectedJens} (${JENS_MAP[expectedJens]}) باشد`, 'Jens');
+        }
+      } else if (nesbatKey === '12') { // همسر
+        const jc = classifyJens(row.Jens), jcp = classifyJens(refPrimary.Jens);
+        if (jc.valid && jcp.valid && jc.code === jcp.code) {
+          addIssue(issues, row, 'جنسیت همسر با جنسیت بیمه‌شده اصلی یکسان است', 'warning', row.Jens, 'بررسی شود؛ معمولاً باید متفاوت باشد', 'Jens');
+        }
+      }
+    }
+
+    // ---- Rule 4: IdentityNo ----
+    if (isEmpty(row.IdentityNo)) {
+      if (isEmpty(row.CodeMelli)) {
+        addIssue(issues, row, 'شماره شناسنامه و کدملی هر دو خالی هستند', 'error', row.IdentityNo, 'حداقل یکی باید مقدار داشته باشد', 'IdentityNo');
+      } else {
+        addIssue(issues, row, 'شماره شناسنامه خالی بود؛ با کدملی جایگزین شد', 'info', row.IdentityNo, `مقدار جایگزین: ${row.CodeMelli}`, 'IdentityNo');
+      }
+    }
+
+    // ---- Rule 5: BirthYear ----
+    const byRaw = normDigits(row.BirthYear);
+    if (isEmpty(row.BirthYear)) {
+      addIssue(issues, row, 'سال تولد خالی است', 'error', row.BirthYear, 'اجباری - دقیقاً ۴ رقم', 'BirthYear');
+    } else if (!/^\d{4}$/.test(byRaw)) {
+      addIssue(issues, row, 'سال تولد باید دقیقاً ۴ رقم باشد', 'error', row.BirthYear, 'مثال صحیح: 1370', 'BirthYear');
+    }
+
+    // ---- Rule 6: BirthMonth ----
+    const bmRaw = normDigits(row.BirthMonth);
+    if (isEmpty(row.BirthMonth)) {
+      addIssue(issues, row, 'ماه تولد خالی است', 'error', row.BirthMonth, 'اجباری - عدد بین 1 تا 12', 'BirthMonth');
+    } else if (!/^\d{1,2}$/.test(bmRaw)) {
+      addIssue(issues, row, 'ماه تولد باید فقط عددی (حداکثر ۲ رقم) باشد', 'error', row.BirthMonth, 'نام ماه مجاز نیست؛ مثلاً اسفند=12', 'BirthMonth');
+    } else {
+      const m = parseInt(bmRaw, 10);
+      if (m < 1 || m > 12) addIssue(issues, row, 'ماه تولد خارج از محدوده مجاز است', 'error', row.BirthMonth, 'باید بین 1 تا 12 باشد', 'BirthMonth');
+    }
+
+    // ---- Rule 7: BirthDay ----
+    const bdRaw = normDigits(row.BirthDay);
+    if (isEmpty(row.BirthDay)) {
+      addIssue(issues, row, 'روز تولد خالی است', 'error', row.BirthDay, 'اجباری - عدد بین 1 تا 31', 'BirthDay');
+    } else if (!/^\d{1,2}$/.test(bdRaw)) {
+      addIssue(issues, row, 'روز تولد باید فقط عددی (حداکثر ۲ رقم) باشد', 'error', row.BirthDay, 'فقط رقم مجاز است', 'BirthDay');
+    } else {
+      const d = parseInt(bdRaw, 10);
+      if (d < 1 || d > 31) addIssue(issues, row, 'روز تولد خارج از محدوده مجاز است', 'error', row.BirthDay, 'باید بین 1 تا 31 باشد', 'BirthDay');
+    }
+
+    // ---- Rule 8: CodeMelli ----
+    const cmRaw = normDigits(row.CodeMelli);
+    if (isEmpty(row.CodeMelli)) {
+      addIssue(issues, row, 'کد ملی خالی است', 'error', row.CodeMelli, 'اجباری - دقیقاً ۱۰ رقم', 'CodeMelli');
+    } else {
+      const cmDigitsOk = /^\d{10}$/.test(cmRaw);
+      if (row._isNumericCodeMelli && !cmDigitsOk) {
+        addIssue(issues, row, 'فرمت ستون کد ملی باید Text باشد', 'warning', row.CodeMelli, 'ممکن است صفر ابتدایی حذف شده باشد؛ فرمت سلول را Text کنید', 'CodeMelli');
+      }
+      if (!cmDigitsOk) {
+        addIssue(issues, row, 'کد ملی باید دقیقاً ۱۰ رقم باشد', 'error', row.CodeMelli, `تعداد ارقام فعلی: ${cmRaw.length}`, 'CodeMelli');
+      }
+    }
+
+    // ---- Rule 9: Mobile ----
+    const mbRaw = normDigits(row.Mobile);
+    if (isEmpty(row.Mobile)) {
+      addIssue(issues, row, 'شماره موبایل خالی است', 'error', row.Mobile, 'اجباری - ۱۱ رقم و شروع با 0', 'Mobile');
+    } else {
+      const mbDigitsOk = /^0\d{10}$/.test(mbRaw);
+      if (row._isNumericMobile && !mbDigitsOk) {
+        addIssue(issues, row, 'فرمت ستون موبایل باید Text باشد', 'warning', row.Mobile, 'ممکن است صفر ابتدایی حذف شده باشد؛ فرمت سلول را Text کنید', 'Mobile');
+      }
+      if (!mbDigitsOk) {
+        addIssue(issues, row, 'شماره موبایل نامعتبر است', 'error', row.Mobile, 'باید ۱۱ رقم باشد و با 0 شروع شود', 'Mobile');
+      }
+    }
+
+    // ---- Rule 10: Jens ----
+    const jsRaw = normDigits(row.Jens);
+    if (isEmpty(row.Jens)) {
+      addIssue(issues, row, 'جنسیت خالی است', 'error', row.Jens, 'اجباری - مرد=26، زن=27', 'Jens');
+    } else if (!Object.prototype.hasOwnProperty.call(JENS_MAP, jsRaw)) {
+      const hint = /مرد/.test(toStr(row.Jens)) ? ' (منظور مرد=26 است؟)' : /زن/.test(toStr(row.Jens)) ? ' (منظور زن=27 است؟)' : '';
+      addIssue(issues, row, 'مقدار جنسیت نامعتبر است', 'error', row.Jens, `فقط کد مجاز: مرد=26، زن=27${hint}`, 'Jens');
+    }
+
+    // ---- Rule 11: BSKind (+ consistency with Nesbat) ----
+    const bskRaw = normDigits(row.BSKind);
+    if (isEmpty(row.BSKind)) {
+      addIssue(issues, row, 'مقدار BSKind خالی است', 'error', row.BSKind, 'اجباری - اصلی=31، فرعی=32', 'BSKind');
+    } else if (bskRaw !== '31' && bskRaw !== '32') {
+      addIssue(issues, row, 'مقدار BSKind نامعتبر است', 'error', row.BSKind, 'فقط کد مجاز: اصلی=31، فرعی=32', 'BSKind');
+    } else {
+      const expected = primaryFlag ? '31' : '32';
+      if (bskRaw !== expected) {
+        addIssue(issues, row, 'BSKind با ستون نسبت (Nesbat) همخوانی ندارد', 'error', row.BSKind,
+          `با توجه به نسبت، مقدار باید ${expected} (${expected === '31' ? 'اصلی' : 'فرعی'}) باشد`, 'BSKind');
+      }
+    }
+
+    // ---- Rule 12: TakafolKind (+ consistency with Nesbat) ----
+    const tkRaw = normDigits(row.TakafolKind);
+    if (primaryFlag) {
+      if (!isEmpty(row.TakafolKind)) {
+        addIssue(issues, row, 'TakafolKind باید برای بیمه‌شده اصلی خالی باشد', 'error', row.TakafolKind, 'مقدار مورد انتظار: خالی', 'TakafolKind');
+      }
+    } else {
+      if (isEmpty(row.TakafolKind)) {
+        addIssue(issues, row, 'TakafolKind برای فرد فرعی باید 21 باشد', 'error', row.TakafolKind, 'مقدار مورد انتظار: 21', 'TakafolKind');
+      } else if (tkRaw !== '21') {
+        addIssue(issues, row, 'مقدار TakafolKind نامعتبر است', 'error', row.TakafolKind, 'برای فرد فرعی فقط مقدار مجاز: 21', 'TakafolKind');
+      }
+    }
+
+    // ---- Rule 13: ShebaAcc ----
+    const shRaw = toStr(row.ShebaAcc).replace(/\s|-/g, '').toUpperCase();
+    if (isEmpty(row.ShebaAcc)) {
+      addIssue(issues, row, 'شماره شبا خالی است', 'error', row.ShebaAcc, 'اجباری - با IR شروع و ۲۶ کاراکتر', 'ShebaAcc');
+    } else if (!/^IR\d{24}$/.test(shRaw)) {
+      addIssue(issues, row, 'شماره شبا نامعتبر است', 'error', row.ShebaAcc, 'باید با IR شروع شود، بدون فاصله/خط‌تیره و دقیقاً ۲۶ کاراکتر باشد', 'ShebaAcc');
+    } else if (!primaryFlag && refPrimary && !isEmpty(refPrimary.ShebaAcc)) {
+      const refSheba = toStr(refPrimary.ShebaAcc).replace(/\s|-/g, '').toUpperCase();
+      if (refSheba && shRaw !== refSheba) {
+        addIssue(issues, row, 'شماره شبای فرد فرعی با بیمه‌شده اصلی خانواده متفاوت است', 'warning', row.ShebaAcc, `مقدار مورد انتظار (برابر بیمه‌شده اصلی): ${refPrimary.ShebaAcc}`, 'ShebaAcc');
+      }
+    }
+  }
+
+  // orphan dependents (no primary before them at all in file)
+  for (const row of rows) {
+    if (!isEmpty(row.Nesbat) && !row._family) {
+      addIssue(issues, row, 'ردیف فرعی بدون بیمه‌شده اصلی مربوطه در ابتدای فایل/گروه', 'warning', '', 'ترتیب ردیف‌ها را بررسی کنید؛ بیمه‌شده اصلی باید قبل از افراد تحت تکفل باشد', 'Nesbat');
+    }
+  }
+
+  return issues;
+}
+
+// ============================================================================
+// Safe auto-correction engine
+// Deterministic, conservative fixes only — never invents data that isn't
+// recoverable from the row/family itself (never touches Name/LName, birth
+// dates, or a malformed-length CodeMelli/Mobile/ShebaAcc). Requires
+// validate(rows) to have already run on this same `rows` array so `_family`
+// is attached. Returns Map<excelRow, {fieldKey: {old, new, reason}}>
+// ============================================================================
+function proposeFixes(rows) {
+  const fixes = new Map();
+
+  const primaryByCode = new Map();
+  for (const row of rows) {
+    const nc0 = classifyNesbat(row.Nesbat);
+    const isPrim = nc0.valid ? nc0.kind === 'primary' : isEmpty(row.Nesbat);
+    if (isPrim && !isEmpty(row.CodeMelli)) primaryByCode.set(normDigits(row.CodeMelli), row);
+  }
+
+  for (const row of rows) {
+    const rowFixes = {};
+    const nc = classifyNesbat(row.Nesbat);
+    const primaryFlag = nc.valid ? nc.kind === 'primary' : isEmpty(row.Nesbat);
+
+    // Nesbat written as text ("اصلی"/"همسر"/...) -> standard numeric code
+    if (nc.valid && nc.textIssue) {
+      rowFixes.Nesbat = { old: row.Nesbat, new: nc.code, reason: 'تبدیل متن نسبت به کد استاندارد' };
+    }
+
+    // Jens written as text ("مرد"/"زن") -> standard numeric code
+    const jc = classifyJens(row.Jens);
+    if (jc.valid && jc.textIssue) {
+      rowFixes.Jens = { old: row.Jens, new: jc.code, reason: 'تبدیل متن جنسیت به کد استاندارد' };
+    } else if (!jc.valid && !isEmpty(row.Jens)) {
+      // a numeric-looking near-miss (e.g. "36" instead of "26") that is a single-digit
+      // typo away from exactly one valid code -> correct it; ambiguous cases are left alone
+      const jensDigits = normDigits(row.Jens);
+      if (/^\d{2}$/.test(jensDigits)) {
+        const hamming = (a, b) => [...a].reduce((n, ch, i) => n + (ch !== b[i] ? 1 : 0), 0);
+        const d26 = hamming(jensDigits, '26'), d27 = hamming(jensDigits, '27');
+        if (d26 === 1 && d27 !== 1) {
+          rowFixes.Jens = { old: row.Jens, new: '26', reason: 'شبیه به کد مرد (26) بود؛ به‌نظر می‌رسد اشتباه تایپی در یک رقم رخ داده' };
+        } else if (d27 === 1 && d26 !== 1) {
+          rowFixes.Jens = { old: row.Jens, new: '27', reason: 'شبیه به کد زن (27) بود؛ به‌نظر می‌رسد اشتباه تایپی در یک رقم رخ داده' };
+        }
+      }
+    }
+
+    // BirthYear written as a 2-digit shorthand ("94" or "-94" instead of "1394") -> complete it
+    const byDigits = toStr(row.BirthYear).replace(/\D/g, '');
+    if (!isEmpty(row.BirthYear) && /^\d{2}$/.test(byDigits)) {
+      rowFixes.BirthYear = { old: row.BirthYear, new: '13' + byDigits, reason: 'سال تولد به‌صورت دورقمی درج شده بود؛ با فرض دهه ۱۳۰۰ تکمیل شد' };
+    }
+
+    // IdentityNo empty -> substitute CodeMelli (per spec rule 4)
+    if (isEmpty(row.IdentityNo) && !isEmpty(row.CodeMelli)) {
+      rowFixes.IdentityNo = { old: row.IdentityNo, new: row.CodeMelli, reason: 'جایگزینی با کدملی طبق دستور کنترل اطلاعات' };
+    }
+
+    // CodeMelli stored as a number lost its leading zero (9 digits left) -> restore it
+    const cmDigits = normDigits(row.CodeMelli);
+    if (row._isNumericCodeMelli && /^\d{9}$/.test(cmDigits)) {
+      rowFixes.CodeMelli = { old: row.CodeMelli, new: '0' + cmDigits, reason: 'صفر ابتدایی به‌دلیل فرمت عددی حذف شده بود' };
+    }
+
+    // Mobile missing its leading 0 — whether the cell lost it to numeric formatting, was
+    // typed without it, or has a country-code prefix (98.../0098...) instead of it. Iranian
+    // mobile subscriber numbers always start with 9, so this is unambiguous.
+    const mbClean = toStr(row.Mobile).replace(/\D/g, '');
+    let mbCore = null, mbPrefixDesc = null;
+    if (/^9\d{9}$/.test(mbClean)) {
+      mbCore = mbClean;
+    } else if (/^989\d{9}$/.test(mbClean)) {
+      mbCore = mbClean.slice(2); mbPrefixDesc = '98';
+    } else if (/^00989\d{9}$/.test(mbClean)) {
+      mbCore = mbClean.slice(4); mbPrefixDesc = '0098';
+    }
+    if (mbCore) {
+      const reason = mbPrefixDesc ? `پیش‌شماره ${mbPrefixDesc} به‌جای صفر ابتدایی درج شده بود` : 'صفر ابتدایی موبایل حذف/درج نشده بود';
+      rowFixes.Mobile = { old: row.Mobile, new: '0' + mbCore, reason };
+    }
+
+    const family = row._family;
+    const seqPrimary = family ? family.primary : null;
+    const seqPrimaryCm = seqPrimary ? normDigits(seqPrimary.CodeMelli) : '';
+    const seqPrimaryValidCm = /^\d{10}$/.test(seqPrimaryCm);
+
+    if (primaryFlag) {
+      // primary's own CodeKhanvar should equal their own CodeMelli
+      const ckDigits = normDigits(row.CodeKhanvar);
+      if (!isEmpty(row.CodeMelli) && !isEmpty(row.CodeKhanvar) && ckDigits !== cmDigits) {
+        rowFixes.CodeKhanvar = { old: row.CodeKhanvar, new: row.CodeMelli, reason: 'برای بیمه‌شده اصلی باید برابر کدملی خودش باشد' };
+      }
+    } else if (nc.valid && seqPrimary && seqPrimary !== row && seqPrimaryValidCm) {
+      const ckDigits = normDigits(row.CodeKhanvar);
+      const cmDigits2 = normDigits(row.CodeMelli);
+      const owner = primaryByCode.get(ckDigits);
+      const sameAsOwn = !isEmpty(row.CodeMelli) && ckDigits === cmDigits2;
+      const notFound = !owner && !isEmpty(row.CodeKhanvar);
+      if ((isEmpty(row.CodeKhanvar) || sameAsOwn || notFound) && ckDigits !== seqPrimaryCm) {
+        rowFixes.CodeKhanvar = {
+          old: row.CodeKhanvar, new: seqPrimary.CodeMelli,
+          reason: `مطابقت با کدملی بیمه‌شده اصلی خانواده (ردیف ${seqPrimary._excelRow}: ${toStr(seqPrimary.Name)} ${toStr(seqPrimary.LName)})`,
+        };
+      }
+    }
+
+    const refPrimary = seqPrimary;
+
+    // BSKind / TakafolKind: Nesbat is the ground truth per the spec's own cross-check rule
+    if (nc.valid) {
+      const expectedBsk = primaryFlag ? '31' : '32';
+      const bskRaw = normDigits(row.BSKind);
+      if (bskRaw !== expectedBsk) {
+        rowFixes.BSKind = { old: row.BSKind, new: expectedBsk, reason: 'هماهنگ‌سازی با ستون نسبت (Nesbat)' };
+      }
+
+      const tkRaw = normDigits(row.TakafolKind);
+      if (primaryFlag) {
+        if (!isEmpty(row.TakafolKind)) {
+          rowFixes.TakafolKind = { old: row.TakafolKind, new: '', reason: 'برای بیمه‌شده اصلی باید خالی باشد' };
+        }
+      } else {
+        if (tkRaw !== '21') {
+          rowFixes.TakafolKind = { old: row.TakafolKind, new: '21', reason: 'برای فرد دارای نسبت باید 21 باشد' };
+        }
+      }
+    }
+
+    // ShebaAcc: (1) the "IR" prefix was left off entirely (bare 24-digit number) -> add it back;
+    // (2) a validly-formatted Sheba (own or just IR-completed) that mismatches the family's
+    // primary -> sync to the primary's Sheba (this takes priority over just adding "IR").
+    const shRaw = toStr(row.ShebaAcc).replace(/\s|-/g, '').toUpperCase();
+    let shEffective = null;
+    if (/^IR\d{24}$/.test(shRaw)) {
+      shEffective = shRaw;
+    } else if (/^\d{24}$/.test(shRaw)) {
+      shEffective = 'IR' + shRaw;
+      rowFixes.ShebaAcc = { old: row.ShebaAcc, new: shEffective, reason: 'پیشوند IR درج نشده بود' };
+    }
+    if (!primaryFlag && refPrimary && refPrimary !== row && shEffective) {
+      const refShRaw = toStr(refPrimary.ShebaAcc).replace(/\s|-/g, '').toUpperCase();
+      if (/^IR\d{24}$/.test(refShRaw) && shEffective !== refShRaw) {
+        rowFixes.ShebaAcc = { old: row.ShebaAcc, new: refPrimary.ShebaAcc, reason: 'هماهنگ‌سازی با شماره شبای بیمه‌شده اصلی خانواده' };
+      }
+    }
+
+    if (Object.keys(rowFixes).length) fixes.set(row._excelRow, rowFixes);
+  }
+
+  return fixes;
+}
+
+
+// ============================================================================
+// UI wiring
+// ============================================================================
+if (typeof XLSX === 'undefined' || typeof ExcelJS === 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('.wrap').insertAdjacentHTML('afterbegin',
+      '<div class="banner err">⚠️ کتابخانه(های) پردازش اکسل بارگذاری نشدند. این ابزار برای اولین اجرا به اینترنت نیاز دارد (برای دریافت یک‌بار کتابخانه‌های SheetJS و ExcelJS). لطفاً اتصال اینترنت را بررسی کرده و صفحه را رفرش کنید.</div>');
+  });
+}
+
+let workbook = null, currentRows2d = [], currentSheetName = '', currentMapping = {}, currentHeaderRowIndex = 0;
+let lastRows = [], lastIssues = [], lastIsNumericCell = null;
+
+const $ = (id) => document.getElementById(id);
+const dropZone = $('dropZone'), fileInput = $('fileInput'), fileInfo = $('fileInfo'), fileName = $('fileName');
+
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag'));
+dropZone.addEventListener('drop', (e) => {
+  e.preventDefault(); dropZone.classList.remove('drag');
+  if (e.dataTransfer.files && e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+$('clearFile').addEventListener('click', () => {
+  workbook = null; fileInput.value = '';
+  fileInfo.style.display = 'none';
+  $('mapCard').style.display = 'none';
+  $('resultsSection').style.display = 'none';
+});
+
+function handleFile(file) {
+  fileName.textContent = file.name;
+  fileInfo.style.display = 'flex';
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = new Uint8Array(e.target.result);
+      workbook = XLSX.read(data, { type: 'array', cellDates: false });
+      populateSheetSelect();
+      $('mapCard').style.display = 'block';
+      $('resultsSection').style.display = 'none';
+      $('mapCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (err) {
+      alert('خطا در خواندن فایل اکسل: ' + err.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function populateSheetSelect() {
+  const sel = $('sheetSelect');
+  sel.innerHTML = '';
+  workbook.SheetNames.forEach((name) => {
+    const opt = document.createElement('option');
+    opt.value = name; opt.textContent = name;
+    sel.appendChild(opt);
+  });
+  // pick the sheet with the most non-empty rows as default
+  let bestSheet = workbook.SheetNames[0], bestCount = -1;
+  workbook.SheetNames.forEach((name) => {
+    const ws = workbook.Sheets[name];
+    const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '', raw: false });
+    const nonEmpty = rows.filter(r => r.some(c => toStr(c) !== '')).length;
+    if (nonEmpty > bestCount) { bestCount = nonEmpty; bestSheet = name; }
+  });
+  sel.value = bestSheet;
+  loadSheet(bestSheet);
+  sel.onchange = () => loadSheet(sel.value);
+}
+
+function loadSheet(sheetName) {
+  currentSheetName = sheetName;
+  const ws = workbook.Sheets[sheetName];
+  currentRows2d = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '', raw: false });
+  const { headerRowIndex, mapping } = detectHeaderAndMapping(currentRows2d);
+  currentHeaderRowIndex = headerRowIndex;
+  currentMapping = mapping;
+  $('headerRowInput').value = headerRowIndex + 1;
+  $('headerRowInput').max = Math.max(1, currentRows2d.length);
+  renderMapGrid();
+}
+
+function isNumericCellFactory(sheetName) {
+  const ws = workbook.Sheets[sheetName];
+  return (r, c) => {
+    if (c === undefined || c < 0) return false;
+    const addr = XLSX.utils.encode_cell({ r, c });
+    const cell = ws[addr];
+    return !!cell && cell.t === 'n';
+  };
+}
+
+$('headerRowInput').addEventListener('change', () => {
+  let v = parseInt($('headerRowInput').value, 10);
+  if (isNaN(v) || v < 1) v = 1;
+  currentHeaderRowIndex = v - 1;
+  const headerRow = currentRows2d[currentHeaderRowIndex] || [];
+  const { mapping } = mapRowToFields(headerRow);
+  currentMapping = mapping;
+  renderMapGrid();
+});
+
+function renderMapGrid() {
+  const grid = $('mapGrid');
+  grid.innerHTML = '';
+  const headerRow = currentRows2d[currentHeaderRowIndex] || [];
+  const maxCols = currentRows2d.reduce((m, r) => Math.max(m, r.length), 0);
+
+  FIELD_DEFS.forEach((fd) => {
+    const field = document.createElement('div');
+    field.className = 'field';
+    const label = document.createElement('label');
+    label.innerHTML = fd.label + (fd.required ? '<span class="req">*</span>' : '');
+    const sel = document.createElement('select');
+    sel.dataset.key = fd.key;
+    const noneOpt = document.createElement('option');
+    noneOpt.value = '-1'; noneOpt.textContent = '— انتخاب نشده —';
+    sel.appendChild(noneOpt);
+    for (let c = 0; c < maxCols; c++) {
+      const opt = document.createElement('option');
+      opt.value = String(c);
+      const headerTxt = toStr(headerRow[c]) || '(بدون عنوان)';
+      opt.textContent = 'ستون ' + (c + 1) + ': ' + headerTxt;
+      sel.appendChild(opt);
+    }
+    sel.value = String(currentMapping[fd.key] !== undefined ? currentMapping[fd.key] : -1);
+    if (sel.value === '-1') sel.classList.add('unmapped');
+    sel.addEventListener('change', () => {
+      currentMapping[fd.key] = parseInt(sel.value, 10);
+      sel.classList.toggle('unmapped', sel.value === '-1');
+      updateBanner();
+    });
+    field.appendChild(label);
+    field.appendChild(sel);
+    grid.appendChild(field);
+  });
+  updateBanner();
+}
+
+function updateBanner() {
+  const area = $('bannerArea');
+  const unmapped = FIELD_DEFS.filter(fd => (currentMapping[fd.key] === undefined || currentMapping[fd.key] < 0));
+  if (unmapped.length) {
+    area.innerHTML = '<div class="banner warn">⚠️ ستون‌های زیر شناسایی نشدند و باید دستی انتخاب شوند: ' + unmapped.map(f => f.label).join('، ') + '</div>';
+    $('runBtn').disabled = true;
+  } else {
+    area.innerHTML = '';
+    $('runBtn').disabled = false;
+  }
+}
+
+$('runBtn').addEventListener('click', () => {
+  const isNumericCell = isNumericCellFactory(currentSheetName);
+  const rows = buildRows(currentRows2d, currentMapping, currentHeaderRowIndex, isNumericCell);
+  const issues = validate(rows);
+  lastRows = rows; lastIssues = issues; lastIsNumericCell = isNumericCell;
+  renderResults(rows, issues);
+  $('resultsSection').style.display = 'block';
+  $('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+function rowStatus(rowIssuesForRow) {
+  if (rowIssuesForRow.some(i => i.severity === 'error')) return 'error';
+  if (rowIssuesForRow.some(i => i.severity === 'warning')) return 'warning';
+  if (rowIssuesForRow.some(i => i.severity === 'info')) return 'info';
+  return 'ok';
+}
+
+function renderResults(rows, issues) {
+  const issuesByRow = new Map();
+  issues.forEach(i => {
+    if (!issuesByRow.has(i.excelRow)) issuesByRow.set(i.excelRow, []);
+    issuesByRow.get(i.excelRow).push(i);
+  });
+
+  let okCount = 0, errCount = 0, warnCount = 0, infoOnlyCount = 0;
+  rows.forEach(r => {
+    const st = rowStatus(issuesByRow.get(r._excelRow) || []);
+    if (st === 'ok') okCount++;
+    else if (st === 'error') errCount++;
+    else if (st === 'warning') warnCount++;
+    else infoOnlyCount++;
+  });
+
+  $('statsArea').innerHTML = [
+    statCard('کل ردیف‌های داده', rows.length, ''),
+    statCard('ردیف‌های سالم', okCount, 'ok'),
+    statCard('ردیف‌های دارای خطا', errCount, 'err'),
+    statCard('ردیف‌های دارای هشدار', warnCount, 'warn'),
+    statCard('تعداد کل موارد یافت‌شده', issues.length, 'info'),
+  ].join('');
+
+  renderIssuesTable(issues);
+  renderPreviewTable(rows, issuesByRow);
+
+  $('sevFilter').onchange = () => renderIssuesTable(issues);
+  $('searchBox').oninput = () => renderIssuesTable(issues);
+  $('previewSearch').oninput = () => renderPreviewTable(rows, issuesByRow);
+}
+
+function statCard(label, num, cls) {
+  return '<div class="stat ' + cls + '"><div class="n">' + num + '</div><div class="l">' + label + '</div></div>';
+}
+
+function sevLabel(sev) { return sev === 'error' ? 'خطا' : sev === 'warning' ? 'هشدار' : 'اصلاح خودکار'; }
+
+function renderIssuesTable(issues) {
+  const sevFilter = $('sevFilter').value;
+  const q = $('searchBox').value.trim().toLowerCase();
+  let filtered = issues.filter(i => {
+    if (sevFilter && i.severity !== sevFilter) return false;
+    if (q) {
+      const hay = (i.excelRow + ' ' + i.fullName + ' ' + i.codeMelli + ' ' + i.type + ' ' + i.got + ' ' + i.expected).toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  filtered.sort((a, b) => a.excelRow - b.excelRow);
+  $('issueCountLabel').textContent = filtered.length + ' از ' + issues.length + ' مورد';
+
+  const body = $('issuesBody');
+  if (!filtered.length) {
+    body.innerHTML = '<tr><td colspan="7" class="empty">موردی یافت نشد 🎉</td></tr>';
+    return;
+  }
+  body.innerHTML = filtered.map(i => (
+    '<tr>' +
+      '<td>' + i.excelRow + '</td>' +
+      '<td>' + escapeHtml(i.fullName || '-') + '</td>' +
+      '<td>' + escapeHtml(i.codeMelli || '-') + '</td>' +
+      '<td><span class="sev ' + i.severity + '">' + sevLabel(i.severity) + '</span></td>' +
+      '<td>' + escapeHtml(i.type) + '</td>' +
+      '<td>' + escapeHtml(i.got) + '</td>' +
+      '<td>' + escapeHtml(i.expected) + '</td>' +
+    '</tr>'
+  )).join('');
+}
+
+function renderPreviewTable(rows, issuesByRow) {
+  const q = $('previewSearch').value.trim().toLowerCase();
+  const headers = FIELD_DEFS.map(fd => fd.label);
+  const headRow = $('previewHeadRow');
+  headRow.innerHTML = '<th>ردیف اکسل</th>' + headers.map(h => '<th>' + h + '</th>').join('') + '<th>وضعیت</th>';
+
+  let filteredRows = rows;
+  if (q) {
+    filteredRows = rows.filter(r => {
+      const hay = FIELD_DEFS.map(fd => toStr(r[fd.key])).join(' ').toLowerCase() + ' ' + r._excelRow;
+      return hay.includes(q);
+    });
+  }
+  $('previewCountLabel').textContent = filteredRows.length + ' از ' + rows.length + ' ردیف';
+
+  const body = $('previewBody');
+  if (!filteredRows.length) {
+    body.innerHTML = '<tr><td colspan="' + (headers.length + 2) + '" class="empty">داده‌ای یافت نشد</td></tr>';
+    return;
+  }
+  body.innerHTML = filteredRows.map(r => {
+    const rIssues = issuesByRow.get(r._excelRow) || [];
+    const st = rowStatus(rIssues);
+    const stLabel = st === 'ok' ? 'سالم' : st === 'error' ? 'دارای خطا' : st === 'warning' ? 'دارای هشدار' : 'اصلاح خودکار';
+    const trClass = st === 'error' ? 'rowstatus-error' : st === 'warning' ? 'rowstatus-warning' : '';
+    const cells = FIELD_DEFS.map(fd => '<td>' + escapeHtml(toStr(r[fd.key]) || '-') + '</td>').join('');
+    return '<tr class="' + trClass + '"><td>' + r._excelRow + '</td>' + cells + '<td><span class="rowbadge ' + st + '">' + stLabel + '</span></td></tr>';
+  }).join('');
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+
+// tabs
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    $('tab-issues').style.display = tab.dataset.tab === 'issues' ? 'block' : 'none';
+    $('tab-preview').style.display = tab.dataset.tab === 'preview' ? 'block' : 'none';
+  });
+});
+
+// ============================================================================
+// Colored Excel export (ExcelJS) — report / full annotated file / sample
+// ============================================================================
+const SEV_COLORS = {
+  error:   { fill: 'FFFFC7CE', font: 'FF9C0006' }, // red
+  warning: { fill: 'FFFFEB9C', font: 'FF9C6500' }, // amber
+  info:    { fill: 'FFDDEBF7', font: 'FF1F4E78' }, // blue
+};
+const HEADER_FILL = 'FF203864', HEADER_FONT = 'FFFFFFFF';
+const OK_FILL = 'FFE2F0D9', OK_FONT = 'FF375623';
+const FIX_FILL = 'FFC6EFCE', FIX_FONT = 'FF006100'; // green — cell value actually corrected
+
+function excelJsAvailable() {
+  if (typeof ExcelJS === 'undefined') {
+    alert('کتابخانه رنگ‌آمیزی اکسل (ExcelJS) بارگذاری نشد. لطفاً اتصال اینترنت را بررسی کرده و صفحه را رفرش کنید.');
+    return false;
+  }
+  return true;
+}
+
+function styleHeaderRow(row) {
+  row.eachCell({ includeEmpty: true }, (cell) => {
+    cell.font = { bold: true, color: { argb: HEADER_FONT } };
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: HEADER_FILL } };
+    cell.alignment = { vertical: 'middle', horizontal: 'right', wrapText: true };
+    cell.border = { bottom: { style: 'thin', color: { argb: 'FF999999' } } };
+  });
+  row.height = 24;
+}
+
+function applyRowFill(row, severity) {
+  const c = SEV_COLORS[severity];
+  if (!c) return;
+  row.eachCell({ includeEmpty: true }, (cell) => {
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: c.fill } };
+  });
+}
+
+function flagCell(cell, severity, noteText) {
+  const c = SEV_COLORS[severity] || SEV_COLORS.warning;
+  cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: c.fill } };
+  cell.font = { color: { argb: c.font }, bold: severity === 'error' };
+  if (noteText) {
+    cell.note = noteText;
+  }
+}
+
+async function downloadWorkbook(wb, filename) {
+  const buffer = await wb.xlsx.writeBuffer();
+  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+// index issues by excel row, and by (excel row -> field key -> {severity, messages})
+function buildIssueIndex(issues) {
+  const byRow = new Map();
+  const byRowField = new Map();
+  const sevRank = { error: 3, warning: 2, info: 1 };
+  issues.forEach((i) => {
+    if (!byRow.has(i.excelRow)) byRow.set(i.excelRow, []);
+    byRow.get(i.excelRow).push(i);
+    if (i.field) {
+      if (!byRowField.has(i.excelRow)) byRowField.set(i.excelRow, new Map());
+      const fieldMap = byRowField.get(i.excelRow);
+      if (!fieldMap.has(i.field)) fieldMap.set(i.field, { severity: i.severity, messages: [] });
+      const entry = fieldMap.get(i.field);
+      if (sevRank[i.severity] > sevRank[entry.severity]) entry.severity = i.severity;
+      entry.messages.push(i.type + ' — ثبت‌شده: ' + i.got + ' | ' + i.expected);
+    }
+  });
+  return { byRow, byRowField };
+}
+
+// ---- Export 1: error report, colored rows + descriptions ----
+$('downloadReportBtn').addEventListener('click', async () => {
+  if (!lastIssues.length) { alert('موردی برای دانلود وجود ندارد. ابتدا فایل را بررسی کنید.'); return; }
+  if (!excelJsAvailable()) return;
+
+  const wb = new ExcelJS.Workbook();
+  wb.creator = 'ابزار بررسی اکسل بیمه';
+  const ws = wb.addWorksheet('گزارش خطاها', { views: [{ rightToLeft: true, state: 'frozen', ySplit: 1 }] });
+  ws.columns = [
+    { header: 'ردیف اکسل', key: 'row', width: 10 },
+    { header: 'نام و نام خانوادگی', key: 'name', width: 24 },
+    { header: 'کد ملی', key: 'melli', width: 14 },
+    { header: 'شدت', key: 'sev', width: 13 },
+    { header: 'نوع خطا / مغایرت', key: 'type', width: 42 },
+    { header: 'مقدار ثبت‌شده', key: 'got', width: 24 },
+    { header: 'مقدار مورد انتظار / توضیح', key: 'exp', width: 44 },
+  ];
+  styleHeaderRow(ws.getRow(1));
+
+  const sorted = lastIssues.slice().sort((a, b) => a.excelRow - b.excelRow);
+  sorted.forEach((i) => {
+    const row = ws.addRow({ row: i.excelRow, name: i.fullName, melli: i.codeMelli, sev: sevLabel(i.severity), type: i.type, got: i.got, exp: i.expected });
+    applyRowFill(row, i.severity);
+    row.eachCell({ includeEmpty: true }, (cell) => { cell.alignment = { vertical: 'middle', horizontal: 'right', wrapText: true }; });
+    row.getCell('sev').font = { bold: true, color: { argb: SEV_COLORS[i.severity].font } };
+  });
+  ws.autoFilter = { from: 'A1', to: 'G1' };
+  await downloadWorkbook(wb, 'گزارش-خطاهای-اکسل.xlsx');
+});
+
+// ---- Export 2: full original data, unchanged, with per-cell color-coded errors ----
+$('downloadAnnotatedBtn').addEventListener('click', async () => {
+  if (!currentRows2d.length) { alert('ابتدا یک فایل بارگذاری و بررسی کنید.'); return; }
+  if (!excelJsAvailable()) return;
+
+  const { byRow, byRowField } = buildIssueIndex(lastIssues);
+  const rowsByExcelRow = new Map(lastRows.map((r) => [r._excelRow, r]));
+  // invert mapping: sheet column index -> FIELD_DEFS key
+  const colToField = new Map();
+  Object.keys(currentMapping).forEach((key) => { if (currentMapping[key] >= 0) colToField.set(currentMapping[key], key); });
+
+  const wb = new ExcelJS.Workbook();
+  wb.creator = 'ابزار بررسی اکسل بیمه';
+  const ws = wb.addWorksheet(currentSheetName || 'داده‌ها', { views: [{ rightToLeft: true, state: 'frozen', ySplit: currentHeaderRowIndex + 1 }] });
+
+  const maxCols = currentRows2d.reduce((m, r) => Math.max(m, r.length), 0);
+
+  currentRows2d.forEach((r, idx) => {
+    const excelRowNum = idx + 1;
+    const rowValues = [];
+    for (let c = 0; c < maxCols; c++) rowValues.push(r[c] !== undefined ? r[c] : '');
+    if (idx === currentHeaderRowIndex) {
+      rowValues.push('وضعیت بررسی', 'توضیح خطاها / هشدارها');
+      const row = ws.addRow(rowValues);
+      styleHeaderRow(row);
+      return;
+    }
+    const dataRow = rowsByExcelRow.get(excelRowNum);
+    if (dataRow) {
+      const rIssues = byRow.get(excelRowNum) || [];
+      const st = rowStatus(rIssues);
+      const stLabel = st === 'ok' ? 'سالم' : st === 'error' ? 'دارای خطا' : st === 'warning' ? 'دارای هشدار' : 'اصلاح خودکار';
+      const desc = rIssues.map((i) => i.type + ' (ثبت‌شده: ' + i.got + ' | ' + i.expected + ')').join(' ؛ ');
+      rowValues.push(stLabel, desc);
+      const row = ws.addRow(rowValues);
+      row.eachCell({ includeEmpty: true }, (cell) => { cell.alignment = { vertical: 'middle', horizontal: 'right', wrapText: false }; });
+      for (let c = 1; c <= maxCols; c++) row.getCell(c).numFmt = '@'; // force Text so a leading zero is never stripped
+
+      // cell-level highlighting for the exact offending field
+      const fieldMap = byRowField.get(excelRowNum);
+      if (fieldMap) {
+        fieldMap.forEach((entry, fieldKey) => {
+          // find every original sheet column mapped to this field
+          colToField.forEach((fKey, colIdx) => {
+            if (fKey === fieldKey) {
+              const cell = row.getCell(colIdx + 1);
+              flagCell(cell, entry.severity, entry.messages.join(' ؛ '));
+            }
+          });
+        });
+      }
+      // status column: colored by overall row severity
+      const statusCell = row.getCell(maxCols + 1);
+      if (st === 'ok') { statusCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: OK_FILL } }; statusCell.font = { bold: true, color: { argb: OK_FONT } }; }
+      else { const c = SEV_COLORS[st]; statusCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: c.fill } }; statusCell.font = { bold: true, color: { argb: c.font } }; }
+    } else {
+      // header-adjacent / skipped rows (instructions, blank separators): keep as-is, unstyled
+      rowValues.push('', '');
+      ws.addRow(rowValues);
+    }
+  });
+
+  // reasonable column widths
+  for (let c = 1; c <= maxCols; c++) {
+    const headerText = String((currentRows2d[currentHeaderRowIndex] || [])[c - 1] || '');
+    ws.getColumn(c).width = Math.min(Math.max(headerText.length + 4, 10), 30);
+  }
+  ws.getColumn(maxCols + 1).width = 16;
+  ws.getColumn(maxCols + 2).width = 50;
+  ws.autoFilter = { from: { row: currentHeaderRowIndex + 1, column: 1 }, to: { row: currentHeaderRowIndex + 1, column: maxCols + 2 } };
+
+  await downloadWorkbook(wb, 'فایل-کامل-با-خطاهای-رنگی.xlsx');
+});
+
+// ---- Export 3: fully auto-corrected file (values actually rewritten, not just flagged) ----
+$('downloadAutofixBtn').addEventListener('click', async () => {
+  if (!currentRows2d.length || !lastRows.length) { alert('ابتدا یک فایل بارگذاری و بررسی کنید.'); return; }
+  if (!excelJsAvailable()) return;
+
+  // 1) propose fixes against the already-validated rows (has _family attached)
+  const fixes = proposeFixes(lastRows);
+
+  // 2) apply fixes onto a deep copy of the raw sheet data
+  const corrected = currentRows2d.map((r) => (r || []).slice());
+  const fixedCells = new Set(); // "r,c" of every cell we rewrote
+  fixes.forEach((fieldFixes, excelRow) => {
+    const idx = excelRow - 1;
+    Object.keys(fieldFixes).forEach((field) => {
+      const col = currentMapping[field];
+      if (col === undefined || col < 0) return;
+      if (!corrected[idx]) corrected[idx] = [];
+      while (corrected[idx].length <= col) corrected[idx].push('');
+      corrected[idx][col] = fieldFixes[field].new;
+      fixedCells.add(idx + ',' + col);
+    });
+  });
+
+  // 3) re-validate the corrected data to find genuinely-residual issues
+  //    (a rewritten cell is treated as text now, not as a numeric cell)
+  const isNumericCellAfter = (r, c) => {
+    if (c === undefined || c < 0) return false;
+    if (fixedCells.has(r + ',' + c)) return false;
+    return lastIsNumericCell ? lastIsNumericCell(r, c) : false;
+  };
+  const rowsAfter = buildRows(corrected, currentMapping, currentHeaderRowIndex, isNumericCellAfter);
+  const issuesAfter = validate(rowsAfter);
+  const { byRow: byRowAfter, byRowField: byRowFieldAfter } = buildIssueIndex(issuesAfter);
+
+  const colToField = new Map();
+  Object.keys(currentMapping).forEach((key) => { if (currentMapping[key] >= 0) colToField.set(currentMapping[key], key); });
+
+  const wb = new ExcelJS.Workbook();
+  wb.creator = 'ابزار بررسی اکسل بیمه';
+  const ws = wb.addWorksheet(currentSheetName || 'داده‌ها', { views: [{ rightToLeft: true, state: 'frozen', ySplit: currentHeaderRowIndex + 1 }] });
+
+  const maxCols = corrected.reduce((m, r) => Math.max(m, r.length), 0);
+  const rowsByExcelRow = new Map(lastRows.map((r) => [r._excelRow, r]));
+
+  corrected.forEach((r, idx) => {
+    const excelRowNum = idx + 1;
+    const rowValues = [];
+    for (let c = 0; c < maxCols; c++) rowValues.push(r[c] !== undefined ? r[c] : '');
+
+    if (idx === currentHeaderRowIndex) {
+      rowValues.push('وضعیت', 'خلاصه اصلاحات و خطاهای باقیمانده');
+      const row = ws.addRow(rowValues);
+      styleHeaderRow(row);
+      return;
+    }
+
+    const wasDataRow = rowsByExcelRow.has(excelRowNum);
+    if (!wasDataRow) {
+      rowValues.push('', '');
+      ws.addRow(rowValues);
+      return;
+    }
+
+    const rowFieldFixes = fixes.get(excelRowNum) || {};
+    const residualIssues = byRowAfter.get(excelRowNum) || [];
+    const residualFieldMap = byRowFieldAfter.get(excelRowNum);
+
+    const row = ws.addRow(rowValues);
+    row.eachCell({ includeEmpty: true }, (cell) => { cell.alignment = { vertical: 'middle', horizontal: 'right', wrapText: false }; });
+    for (let c = 1; c <= maxCols; c++) row.getCell(c).numFmt = '@'; // force Text so a leading zero is never stripped
+
+    // green: cells whose value was actually rewritten, with an old->new+reason comment
+    Object.keys(rowFieldFixes).forEach((fieldKey) => {
+      colToField.forEach((fKey, colIdx) => {
+        if (fKey === fieldKey) {
+          const cell = row.getCell(colIdx + 1);
+          const f = rowFieldFixes[fieldKey];
+          cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: FIX_FILL } };
+          cell.font = { bold: true, color: { argb: FIX_FONT } };
+          cell.note = `اصلاح شد ✓\nمقدار قبلی: ${f.old === undefined || f.old === '' ? '(خالی)' : f.old}\nمقدار جدید: ${f.new === '' ? '(خالی)' : f.new}\nدلیل: ${f.reason}`;
+        }
+      });
+    });
+
+    // red/orange/blue: fields that still need manual attention after fixing
+    if (residualFieldMap) {
+      residualFieldMap.forEach((entry, fieldKey) => {
+        colToField.forEach((fKey, colIdx) => {
+          if (fKey === fieldKey) {
+            const cell = row.getCell(colIdx + 1);
+            flagCell(cell, entry.severity, entry.messages.join(' ؛ '));
+          }
+        });
+      });
+    }
+
+    const fixSummaries = Object.keys(rowFieldFixes).map((k) => `${k}: ${rowFieldFixes[k].old} → ${rowFieldFixes[k].new} (${rowFieldFixes[k].reason})`);
+    const issueSummaries = residualIssues.map((i) => `${i.type} (ثبت‌شده: ${i.got} | ${i.expected})`);
+    const parts = [];
+    if (fixSummaries.length) parts.push('اصلاح‌شده: ' + fixSummaries.join(' ؛ '));
+    if (issueSummaries.length) parts.push('باقیمانده (نیاز به بررسی دستی): ' + issueSummaries.join(' ؛ '));
+    const desc = parts.join(' || ');
+
+    const st = rowStatus(residualIssues);
+    let stLabel;
+    if (st === 'error') stLabel = 'دارای خطای باقیمانده';
+    else if (st === 'warning') stLabel = 'دارای هشدار باقیمانده';
+    else if (Object.keys(rowFieldFixes).length) stLabel = 'اصلاح شد ✓';
+    else stLabel = 'سالم';
+
+    row.getCell(maxCols + 1).value = stLabel;
+    row.getCell(maxCols + 2).value = desc;
+    const statusCell = row.getCell(maxCols + 1);
+    if (st === 'error' || st === 'warning') {
+      const c = SEV_COLORS[st];
+      statusCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: c.fill } };
+      statusCell.font = { bold: true, color: { argb: c.font } };
+    } else {
+      const fillC = Object.keys(rowFieldFixes).length ? FIX_FILL : OK_FILL;
+      const fontC = Object.keys(rowFieldFixes).length ? FIX_FONT : OK_FONT;
+      statusCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: fillC } };
+      statusCell.font = { bold: true, color: { argb: fontC } };
+    }
+  });
+
+  for (let c = 1; c <= maxCols; c++) {
+    const headerText = String((corrected[currentHeaderRowIndex] || [])[c - 1] || '');
+    ws.getColumn(c).width = Math.min(Math.max(headerText.length + 4, 10), 30);
+  }
+  ws.getColumn(maxCols + 1).width = 18;
+  ws.getColumn(maxCols + 2).width = 55;
+  ws.autoFilter = { from: { row: currentHeaderRowIndex + 1, column: 1 }, to: { row: currentHeaderRowIndex + 1, column: maxCols + 2 } };
+
+  const totalFixedCells = Array.from(fixes.values()).reduce((s, v) => s + Object.keys(v).length, 0);
+  const residErr = issuesAfter.filter((i) => i.severity === 'error').length;
+  const residWarn = issuesAfter.filter((i) => i.severity === 'warning').length;
+  alert(`اصلاح خودکار انجام شد:\n- ${fixes.size} ردیف دارای اصلاح\n- ${totalFixedCells} مقدار به‌صورت خودکار تصحیح شد\n- ${issuesAfter.length} مورد باقی‌مانده نیاز به بررسی دستی دارد (${residErr} خطا، ${residWarn} هشدار)\n\nسلول‌های سبز = اصلاح‌شده (روی سلول نگه دارید تا توضیح را ببینید). سلول‌های قرمز/نارنجی = هنوز نیاز به بررسی.`);
+  await downloadWorkbook(wb, 'فایل-اصلاح‌شده-خودکار.xlsx');
+});
+
+// ---- Export: upload-ready file — EXACT same columns as the input template, nothing added/removed ----
+$('downloadUploadReadyBtn').addEventListener('click', async () => {
+  if (!currentRows2d.length || !lastRows.length) { alert('ابتدا یک فایل بارگذاری و بررسی کنید.'); return; }
+  if (!excelJsAvailable()) return;
+
+  const fixes = proposeFixes(lastRows);
+
+  const corrected = currentRows2d.map((r) => (r || []).slice());
+  const fixedCells = new Set();
+  fixes.forEach((fieldFixes, excelRow) => {
+    const idx = excelRow - 1;
+    Object.keys(fieldFixes).forEach((field) => {
+      const col = currentMapping[field];
+      if (col === undefined || col < 0) return;
+      if (!corrected[idx]) corrected[idx] = [];
+      while (corrected[idx].length <= col) corrected[idx].push('');
+      corrected[idx][col] = fieldFixes[field].new;
+      fixedCells.add(idx + ',' + col);
+    });
+  });
+
+  const isNumericCellAfter = (r, c) => {
+    if (c === undefined || c < 0) return false;
+    if (fixedCells.has(r + ',' + c)) return false;
+    return lastIsNumericCell ? lastIsNumericCell(r, c) : false;
+  };
+  const rowsAfter = buildRows(corrected, currentMapping, currentHeaderRowIndex, isNumericCellAfter);
+  const issuesAfter = validate(rowsAfter);
+  const { byRowField: byRowFieldAfter } = buildIssueIndex(issuesAfter);
+
+  const colToField = new Map();
+  Object.keys(currentMapping).forEach((key) => { if (currentMapping[key] >= 0) colToField.set(currentMapping[key], key); });
+
+  const wb = new ExcelJS.Workbook();
+  wb.creator = 'ابزار بررسی اکسل بیمه';
+  const ws = wb.addWorksheet(currentSheetName || 'داده‌ها', { views: [{ rightToLeft: true, state: 'frozen', ySplit: currentHeaderRowIndex + 1 }] });
+
+  const maxCols = corrected.reduce((m, r) => Math.max(m, r.length), 0);
+
+  corrected.forEach((r, idx) => {
+    const excelRowNum = idx + 1;
+    const rowValues = [];
+    for (let c = 0; c < maxCols; c++) rowValues.push(r[c] !== undefined ? r[c] : '');
+    const row = ws.addRow(rowValues);
+    for (let c = 1; c <= maxCols; c++) row.getCell(c).numFmt = '@'; // Text everywhere — never lose a leading zero
+
+    if (idx === currentHeaderRowIndex) { styleHeaderRow(row); return; }
+
+    const rowFieldFixes = fixes.get(excelRowNum) || {};
+    const residualFieldMap = byRowFieldAfter.get(excelRowNum);
+
+    Object.keys(rowFieldFixes).forEach((fieldKey) => {
+      colToField.forEach((fKey, colIdx) => {
+        if (fKey === fieldKey) {
+          const cell = row.getCell(colIdx + 1);
+          const f = rowFieldFixes[fieldKey];
+          cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: FIX_FILL } };
+          cell.font = { bold: true, color: { argb: FIX_FONT } };
+          cell.note = `اصلاح شد ✓\nمقدار قبلی: ${f.old === undefined || f.old === '' ? '(خالی)' : f.old}\nمقدار جدید: ${f.new === '' ? '(خالی)' : f.new}\nدلیل: ${f.reason}`;
+        }
+      });
+    });
+    if (residualFieldMap) {
+      residualFieldMap.forEach((entry, fieldKey) => {
+        colToField.forEach((fKey, colIdx) => {
+          if (fKey === fieldKey) flagCell(row.getCell(colIdx + 1), entry.severity, entry.messages.join(' ؛ '));
+        });
+      });
+    }
+  });
+
+  for (let c = 1; c <= maxCols; c++) {
+    const headerText = String((corrected[currentHeaderRowIndex] || [])[c - 1] || '');
+    ws.getColumn(c).width = Math.min(Math.max(headerText.length + 4, 10), 30);
+  }
+
+  const totalFixedCells = Array.from(fixes.values()).reduce((s, v) => s + Object.keys(v).length, 0);
+  alert(`فایل آماده آپلود ساخته شد — دقیقاً همان ${maxCols} ستون فایل ورودی، بدون هیچ ستون اضافه:\n- ${totalFixedCells} مقدار اصلاح شد (سبز، با توضیح روی هاور)\n- ${issuesAfter.length} مورد باقی‌مانده هنوز نیاز به بررسی دستی دارد (قرمز/نارنجی)\n\nاین فایل برای آپلود مستقیم در سامانه مقصد آماده است.`);
+  await downloadWorkbook(wb, 'فایل-آماده-آپلود-همان-قالب.xlsx');
+});
+
+// ---- Export 3: standalone correctly-formatted sample template ----
+$('downloadSampleBtn').addEventListener('click', async () => {
+  if (!excelJsAvailable()) return;
+
+  const wb = new ExcelJS.Workbook();
+  wb.creator = 'ابزار بررسی اکسل بیمه';
+  const ws = wb.addWorksheet('نمونه صحیح', { views: [{ rightToLeft: true, state: 'frozen', ySplit: 2 }] });
+
+  const cols = FIELD_DEFS.map((fd) => ({ key: fd.key, header: fd.key }));
+  ws.columns = cols;
+
+  const hintRow2 = {
+    Name: 'نام (اجباری)', LName: 'نام خانوادگی (اجباری)',
+    CodeKhanvar: 'کد خانوار = کدملی بیمه‌شده اصلی (Text)', IdentityNo: 'شماره شناسنامه (اجباری)',
+    BirthYear: 'سال تولد (۴ رقم)', BirthMonth: 'ماه تولد (۱ تا ۱۲)', BirthDay: 'روز تولد (۱ تا ۳۱)',
+    CodeMelli: 'کد ملی (۱۰ رقم - Text)', Mobile: 'موبایل (۱۱ رقم با صفر - Text)',
+    Jens: 'مرد=26 / زن=27', BSKind: 'اصلی=31 / فرعی=32',
+    Nesbat: 'اصلی=خالی / همسر=12 / دختر=8 / پسر=7 / پدر=5 / مادر=6',
+    TakafolKind: 'اصلی=خالی / فرعی=21', ShebaAcc: 'IR + 24 رقم بدون فاصله (Text)',
+  };
+  const headerRow1 = ws.getRow(1);
+  styleHeaderRow(headerRow1);
+  const headerRow2 = ws.addRow(FIELD_DEFS.map((fd) => hintRow2[fd.key] || ''));
+  headerRow2.eachCell({ includeEmpty: true }, (cell) => {
+    cell.font = { italic: true, size: 10, color: { argb: 'FF555555' } };
+    cell.alignment = { vertical: 'middle', horizontal: 'right', wrapText: true };
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF2F2F2' } };
+  });
+  headerRow2.height = 34;
+
+  const sheba = 'IR120170000000123456789012'; // shared by the whole family, 26 chars
+  const sampleRows = [
+    { Name: 'علی', LName: 'محمدی', CodeKhanvar: '0123456789', IdentityNo: '1234567890', BirthYear: '1360', BirthMonth: '5', BirthDay: '12', CodeMelli: '0123456789', Mobile: '09121234567', Jens: '26', BSKind: '31', Nesbat: '', TakafolKind: '', ShebaAcc: sheba },
+    { Name: 'زهرا', LName: 'کریمی', CodeKhanvar: '0123456789', IdentityNo: '2234567890', BirthYear: '1365', BirthMonth: '3', BirthDay: '20', CodeMelli: '2234567890', Mobile: '09121234568', Jens: '27', BSKind: '32', Nesbat: '12', TakafolKind: '21', ShebaAcc: sheba },
+    { Name: 'امیر', LName: 'محمدی', CodeKhanvar: '0123456789', IdentityNo: '3234567890', BirthYear: '1390', BirthMonth: '7', BirthDay: '9', CodeMelli: '3234567890', Mobile: '09121234569', Jens: '26', BSKind: '32', Nesbat: '7', TakafolKind: '21', ShebaAcc: sheba },
+    { Name: 'سارا', LName: 'محمدی', CodeKhanvar: '0123456789', IdentityNo: '4234567890', BirthYear: '1393', BirthMonth: '11', BirthDay: '2', CodeMelli: '4234567890', Mobile: '09121234570', Jens: '27', BSKind: '32', Nesbat: '8', TakafolKind: '21', ShebaAcc: sheba },
+  ];
+  // every column exported as Text so Excel never strips a leading zero on open/re-save
+  const textCols = FIELD_DEFS.map((fd) => fd.key);
+  sampleRows.forEach((r, idx) => {
+    const row = ws.addRow(r);
+    row.eachCell({ includeEmpty: true }, (cell) => { cell.alignment = { vertical: 'middle', horizontal: 'right' }; });
+    if (idx % 2 === 1) row.eachCell({ includeEmpty: true }, (cell) => { cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF7F9FC' } }; });
+  });
+  // force Text format on ID-like columns so Excel never strips leading zeros
+  FIELD_DEFS.forEach((fd, i) => {
+    if (textCols.includes(fd.key)) ws.getColumn(i + 1).numFmt = '@';
+  });
+
+  ws.getColumn('Name').width = 14; ws.getColumn('LName').width = 16;
+  ws.getColumn('CodeKhanvar').width = 16; ws.getColumn('IdentityNo').width = 14;
+  ws.getColumn('BirthYear').width = 11; ws.getColumn('BirthMonth').width = 11; ws.getColumn('BirthDay').width = 11;
+  ws.getColumn('CodeMelli').width = 14; ws.getColumn('Mobile').width = 15;
+  ws.getColumn('Jens').width = 9; ws.getColumn('BSKind').width = 10; ws.getColumn('Nesbat').width = 10;
+  ws.getColumn('TakafolKind').width = 12; ws.getColumn('ShebaAcc').width = 30;
+
+  await downloadWorkbook(wb, 'نمونه-اکسل-با-فرمت-صحیح.xlsx');
+});
+</script>
+</body>
+</html>

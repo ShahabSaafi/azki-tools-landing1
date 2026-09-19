@@ -1,0 +1,1259 @@
+<meta charset="UTF-8">
+<title>محاسبه‌گر حق‌بیمه طرح‌های درمان ۱۴۰۵</title>
+<style>
+  :root{
+    --bg:#0c1116; --card:#161b22; --border:#2a323d; --text:#f2f5f8; --muted:#8a94a3;
+    --primary:#00b4ff; --primary-dark:#33c6ff; --accent:rgba(0,180,255,.10);
+    --good:#3ddc84; --warn:#ffcc00; --danger:#ff5c5c;
+    --radius:12px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:24px; background:var(--bg); color:var(--text);
+    font-family: Tahoma, "Segoe UI", Arial, sans-serif; direction:rtl; font-size:14px;
+    line-height:1.7;
+  }
+  .wrap{max-width:1180px; margin:0 auto;}
+  header.top{margin-bottom:20px;}
+  header.top h1{font-size:22px; margin:0 0 4px;}
+  header.top p{margin:0; color:var(--muted); font-size:13px;}
+  .badge-offline{
+    display:inline-block; background:var(--accent); color:var(--primary-dark);
+    border:1px solid rgba(0,180,255,.30); padding:2px 10px; border-radius:20px; font-size:12px; margin-inline-start:8px;
+  }
+  .card{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:18px 20px; margin-bottom:18px; box-shadow:0 1px 2px rgba(20,30,50,.03);
+  }
+  .card h2{
+    font-size:15px; margin:0 0 14px; display:flex; align-items:center; gap:8px;
+  }
+  .step-num{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:22px; border-radius:50%; background:var(--primary); color:#fff;
+    font-size:12px; flex:none;
+  }
+  .row{display:flex; flex-wrap:wrap; gap:14px; align-items:flex-end;}
+  .field{display:flex; flex-direction:column; gap:6px; min-width:140px;}
+  .field label{font-size:12px; color:var(--muted);}
+  select, input[type=number], input[type=text]{
+    padding:8px 10px; border:1px solid var(--border); border-radius:8px; font-family:inherit;
+    font-size:13px; background:var(--card); color:var(--text);
+  }
+  input[type=checkbox]{width:16px; height:16px;}
+  .btn{
+    padding:9px 16px; border-radius:8px; border:1px solid var(--primary); background:var(--primary);
+    color:#fff; font-size:13px; cursor:pointer; font-family:inherit;
+  }
+  .btn:hover{background:var(--primary-dark); border-color:var(--primary-dark);}
+  .btn.secondary{background:var(--card); color:var(--primary); border-color:var(--primary);}
+  .btn.secondary:hover{background:var(--accent);}
+  .btn.ghost{background:transparent; color:var(--muted); border-color:var(--border);}
+  .btn:disabled{opacity:.5; cursor:not-allowed;}
+  .dropzone{
+    border:2px dashed #3a4553; border-radius:var(--radius); padding:26px; text-align:center;
+    color:var(--muted); cursor:pointer; transition:.15s; background:#1c222b;
+  }
+  .dropzone.drag{border-color:var(--primary); background:var(--accent); color:var(--primary-dark);}
+  .dropzone b{color:var(--text);}
+  .file-info{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px;
+    background:var(--accent); border:1px solid rgba(0,180,255,.30); border-radius:8px; padding:10px 14px; font-size:13px;
+  }
+  .file-info.error{background:rgba(255,92,92,.12); border-color:rgba(255,92,92,.35); color:var(--danger);}
+  .plan-price{font-size:12px; color:var(--muted); margin-inline-start:6px;}
+  #planPickerTable td{padding:8px;}
+  #planPickerTable th{white-space:normal; line-height:1.5;}
+  .plan-cell-btn{
+    display:block; width:100%; padding:10px 8px; border:1.5px solid var(--border); border-radius:8px;
+    background:var(--card); cursor:pointer; font-family:inherit; font-size:13px; color:var(--text);
+    transition:.12s;
+  }
+  .plan-cell-btn:hover{border-color:var(--primary); background:var(--accent);}
+  .plan-cell-btn.selected{border-color:var(--primary); background:var(--primary); color:#fff; font-weight:700;}
+  table{width:100%; border-collapse:collapse; font-size:12.5px;}
+  th, td{border:1px solid var(--border); padding:6px 8px; text-align:center; white-space:nowrap;}
+  th{background:#1c222b; font-weight:600; position:sticky; top:0;}
+  tbody tr:nth-child(even){background:#161b22;}
+  .table-scroll{max-height:520px; overflow:auto; border:1px solid var(--border); border-radius:8px;}
+  select.row-plan, input.row-edit{width:100%; border:1px solid transparent; background:transparent; text-align:center; font-size:12.5px; color:var(--text); color-scheme:dark;}
+  select.row-plan:hover, input.row-edit:hover{border-color:var(--border); background:var(--card);}
+  td.num{color:var(--primary-dark); font-weight:600;}
+  .tier-1{color:var(--muted);}
+  .tier-1_5{color:var(--warn); font-weight:600;}
+  .tier-2{color:#ffcc00; font-weight:700;}
+  .tier-4{color:var(--danger); font-weight:700;}
+  .summary-bar{
+    display:flex; flex-wrap:wrap; gap:22px; margin-top:14px; padding:14px 18px;
+    background:#1c222b; border:1px solid var(--border); border-radius:10px;
+  }
+  .summary-item .num{font-size:19px; font-weight:700; color:var(--primary-dark); display:block;}
+  .summary-item .lbl{font-size:12px; color:var(--muted);}
+  .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
+  .hint{font-size:12px; color:var(--muted); margin-top:8px; line-height:1.9;}
+  .hint b{color:var(--text);}
+  .empty-state{color:var(--muted); text-align:center; padding:26px; font-size:13px;}
+  .del-btn{color:var(--danger); cursor:pointer; font-size:15px;}
+  footer.note{color:var(--muted); font-size:11.5px; text-align:center; margin-top:24px;}
+  #printArea{display:none;}
+  @media print{
+    @page{ size: A4 landscape; margin: 12mm; }
+    #globalErrorBanner, .wrap{ display:none !important; }
+    #printArea{
+      display:block; padding:0; margin:0; background:#fff; color:#000;
+    }
+    #printArea h1{font-size:16px; margin:0 0 4px;}
+    #printArea .meta{font-size:11px; color:#333; margin-bottom:12px; line-height:1.8;}
+    #printArea table{width:100%; border-collapse:collapse; font-size:10.5px;}
+    #printArea th, #printArea td{border:1px solid #999; padding:4px 6px; text-align:center;}
+    #printArea th{background:#eee;}
+    #printArea tr{page-break-inside:avoid;}
+    #printArea tfoot td{font-weight:700; background:#f5f5f5;}
+  }
+
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:1180px;margin:0 auto;padding:14px 24px 0;}
+.topbar .back{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;background:var(--card);border:1px solid var(--border);padding:8px 14px;border-radius:10px;transition:.15s;}
+.topbar .back:hover{border-color:var(--primary);color:var(--primary);}
+.topbar .back:active{transform:scale(.97);}
+.topbar .tool-tag{font-size:11.5px;font-weight:700;color:var(--primary);background:rgba(0,180,255,.10);padding:4px 10px;border-radius:999px;}
+</style>
+
+<div class="topbar"><a class="back" href="../index.html">→ جعبه‌ابزار عملیات</a><span class="tool-tag">درمان گروهی</span></div>
+<div id="globalErrorBanner" style="display:none; direction:rtl; background:#ff5c5c; color:#fff; padding:12px 18px; font-size:13px; line-height:1.8; position:sticky; top:0; z-index:999;"></div>
+<div id="printArea" dir="rtl"></div>
+<div class="wrap">
+  <header class="top">
+    <h1>محاسبه‌گر حق‌بیمه طرح‌های درمان</h1>
+    <p>فایل بیمه‌شدگان را بارگذاری کن؛ حق‌بیمه هر نفر بر اساس طرح و سن خودکار محاسبه می‌شود — کاملاً آفلاین.</p>
+  </header>
+
+  <div class="card">
+    <h2><span class="step-num">۱</span> بارگذاری فایل بیمه‌شدگان</h2>
+    <div class="dropzone" id="dropzone">
+      <div>فایل اکسل (xlsx) را اینجا رها کنید یا <b>برای انتخاب فایل کلیک کنید</b></div>
+      <div style="font-size:11.5px; margin-top:6px;">فرمت ستون‌ها لازم نیست دقیقاً یکسان باشد؛ در مرحلهٔ بعد می‌توانید ستون‌ها را تطبیق دهید (نام، نام خانوادگی، سال/ماه/روز تولد، نسبت و ...)</div>
+      <input type="file" id="fileInput" accept=".xlsx" style="display:none">
+    </div>
+    <div id="fileInfo"></div>
+    <div class="actions">
+      <button class="btn ghost" id="downloadTemplateBtn" type="button">دریافت قالب نمونه خالی</button>
+      <button class="btn ghost" id="addRowBtn" type="button">+ افزودن یک نفر به‌صورت دستی</button>
+    </div>
+  </div>
+
+  <div class="card no-print" id="mappingCard" style="display:none;">
+    <h2><span class="step-num">۲</span> تطبیق ستون‌های فایل</h2>
+    <div class="hint">
+      چون فایل هر مشتری ممکن است نام‌گذاری یا ترتیب ستون‌های متفاوتی داشته باشد، ستون‌های فایل شما به‌صورت خودکار به فیلدهای مورد نیاز <b>حدس زده شدند</b>.
+      لطفاً نگاشت زیر را بررسی کنید و در صورت نیاز هر ردیف را با انتخاب ستون درست، دستی اصلاح نمایید؛ ستون نمونه‌داده کنار هر فیلد برای اطمینان نمایش داده می‌شود.
+    </div>
+    <div class="table-scroll" style="max-height:420px; margin-top:10px;">
+      <table id="mappingTable">
+        <thead><tr><th>فیلد</th><th>ستون منطبق در فایل شما</th><th>نمونه داده</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div id="mappingError" class="file-info error" style="display:none; margin-top:10px;"></div>
+    <div class="actions">
+      <button class="btn" id="confirmMappingBtn" type="button">تأیید نگاشت و نمایش جدول محاسبات</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="step-num">۳</span> مبنای محاسبه سن</h2>
+    <div class="row">
+      <div class="field">
+        <label>سال مبنا (شمسی)</label>
+        <input type="number" id="baseYear" value="1405" min="1300" max="1450">
+      </div>
+      <div class="field">
+        <label>ماه مبنا</label>
+        <select id="baseMonth"></select>
+      </div>
+      <div class="field" id="baseDayField" style="display:none;">
+        <label>روز مبنا</label>
+        <input type="number" id="baseDay" value="1" min="1" max="31">
+      </div>
+      <div class="field" style="flex-direction:row; align-items:center; gap:8px; min-width:auto;">
+        <input type="checkbox" id="dayPrecision">
+        <label for="dayPrecision" style="margin:0;">لحاظ دقیق روز تولد (علاوه بر ماه)</label>
+      </div>
+      <button class="btn ghost" id="todayBtn" type="button">بازگشت به تاریخ امروز</button>
+    </div>
+    <div class="hint" id="baseDateHint"></div>
+    <div class="hint">
+      طبق شرط تعیین‌شده: ضریب سنی زمانی اعمال می‌شود که <b>ماه تولد فرد تا تاریخ مبنا سپری شده باشد</b>.
+      مثال: فردی متولد ۱۳۴۵ در سال ۱۴۰۵ دقیقاً ۶۰ ساله می‌شود؛ او فقط زمانی مشمول ضریب «بالای ۶۰ سال» است که ماه تولدش نسبت به ماه مبنا سپری شده باشد.
+      <br>توجه: تاریخ مبنا باید معمولاً «تاریخ شروع بیمه‌نامه» باشد، نه لزوماً امروز — اگر شروع بیمه‌نامه گروه شما تاریخ دیگری است، فیلدهای بالا را بر همان اساس تغییر دهید. جدول محاسبات بلافاصله با هر تغییر به‌روزرسانی می‌شود.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="step-num">۴</span> انتخاب طرح</h2>
+    <div class="hint">
+      هر طرح دو نسخه دارد: ستون <b>«پایه»</b> فقط پوشش‌های اصلی درمانی را شامل می‌شود (بستری، جراحی، زایمان، آزمایشگاهی و فیزیوتراپی، رفع عیوب انکساری چشم، آمبولانس و ...)؛
+      ستون <b>«با پوشش‌های اضافی»</b> یعنی پایه به‌علاوهٔ چند پوشش دیگر (ویزیت و دارو، دندانپزشکی، غربالگری جنین، عینک طبی).
+      روی قیمتِ طرح مورد نظر کلیک کنید — بلافاصله برای همهٔ ردیف‌های جدول محاسبات اعمال می‌شود، بدون نیاز به کار دیگری.
+    </div>
+    <div style="overflow-x:auto; margin-top:10px;">
+      <table id="planPickerTable">
+        <thead><tr><th style="text-align:right;">نام طرح</th><th>نسخه پایه<br><span style="font-weight:400; font-size:11px; color:var(--muted);">فقط پوشش‌های اصلی</span></th><th>نسخه با پوشش‌های اضافی<br><span style="font-weight:400; font-size:11px; color:var(--muted);">پایه + دندانپزشکی، دارو و ...</span></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="actions" style="align-items:center;">
+      <span id="selectedPlanLabel" style="font-size:12.5px; color:var(--primary-dark); font-weight:600;"></span>
+      <button class="btn ghost" id="applyAllBtn" type="button">بازگرداندن همهٔ ردیف‌ها به این طرح</button>
+    </div>
+    <div class="hint">
+      کلیک روی قیمت، طرح <b>همهٔ</b> ردیف‌ها را عوض می‌کند — اول طرح گروه را انتخاب کن، موارد استثنا را جدا اصلاح کن.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="step-num">۵</span> جدول محاسبات <span id="rowCountLabel" style="font-weight:400; color:var(--muted); font-size:12px;"></span></h2>
+    <div class="table-scroll" id="tableScroll">
+      <div class="empty-state">هنوز فایلی بارگذاری نشده است.</div>
+    </div>
+    <div class="summary-bar" id="summaryBar" style="display:none;"></div>
+    <div class="actions">
+      <button class="btn" id="exportBtn" type="button" disabled>دریافت خروجی اکسل محاسبات</button>
+      <button class="btn secondary" id="printBtn" type="button" disabled>دریافت PDF تمیز از نتایج</button>
+    </div>
+    <div class="hint">دکمهٔ PDF گزارش تمیز را در پنجرهٔ چاپ باز می‌کند؛ گزینهٔ «Save as PDF» را انتخاب کن.</div>
+  </div>
+
+  <footer class="note">این ابزار به‌صورت کاملاً محلی در مرورگر شما اجرا می‌شود؛ هیچ فایل یا اطلاعاتی به هیچ سروری ارسال نمی‌گردد.</footer>
+</div>
+
+<script>
+/* ------------------------------------------------------------------
+   Global error banner: if anything unexpected fails (a bug, or a
+   browser missing a feature this app needs), show it visibly instead
+   of failing silently, so a problem can be reported/diagnosed easily
+   even without opening developer tools.
+------------------------------------------------------------------- */
+(function () {
+  var shown = false;
+  function showBanner(msg) {
+    var el = document.getElementById("globalErrorBanner");
+    if (!el) return;
+    if (shown) { el.textContent += "  |  " + msg; return; }
+    shown = true;
+    el.style.display = "block";
+    el.textContent = "⚠️ خطای غیرمنتظره در برنامه رخ داد (لطفاً این پیام را برای رفع مشکل ارسال کنید): " + msg;
+  }
+  window.addEventListener("error", function (e) {
+    showBanner((e.message || "خطای ناشناخته") + (e.filename ? " — خط " + e.lineno : ""));
+  });
+  window.addEventListener("unhandledrejection", function (e) {
+    showBanner("Promise error: " + (e.reason && e.reason.message ? e.reason.message : String(e.reason)));
+  });
+  if (typeof DecompressionStream === "undefined") {
+    showBanner("مرورگر شما از قابلیت DecompressionStream پشتیبانی نمی‌کند که برای خواندن فایل اکسل لازم است. لطفاً از یک نسخهٔ به‌روز Chrome، Edge یا Firefox استفاده کنید.");
+  }
+})();
+
+/* ==================================================================
+   xlsxlib — minimal dependency-free XLSX reader/writer (embedded)
+================================================================== */
+(function (global) {
+  "use strict";
+  const CRC_TABLE = (() => {
+    const table = new Uint32Array(256);
+    for (let n = 0; n < 256; n++) {
+      let c = n;
+      for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+      table[n] = c >>> 0;
+    }
+    return table;
+  })();
+  function crc32(bytes) {
+    let crc = 0xFFFFFFFF;
+    for (let i = 0; i < bytes.length; i++) crc = CRC_TABLE[(crc ^ bytes[i]) & 0xFF] ^ (crc >>> 8);
+    return (crc ^ 0xFFFFFFFF) >>> 0;
+  }
+  function u16(v) { return [v & 0xFF, (v >>> 8) & 0xFF]; }
+  function u32(v) { return [v & 0xFF, (v >>> 8) & 0xFF, (v >>> 16) & 0xFF, (v >>> 24) & 0xFF]; }
+
+  function createZip(files) {
+    const localParts = [], centralParts = [];
+    let offset = 0;
+    const enc = new TextEncoder();
+    for (const f of files) {
+      const nameBytes = enc.encode(f.name);
+      const data = f.data;
+      const crc = crc32(data);
+      const size = data.length;
+      const localHeader = new Uint8Array([
+        0x50,0x4B,0x03,0x04, ...u16(20), ...u16(0), ...u16(0), ...u16(0), ...u16(0x21),
+        ...u32(crc), ...u32(size), ...u32(size), ...u16(nameBytes.length), ...u16(0)
+      ]);
+      localParts.push(localHeader, nameBytes, data);
+      const centralHeader = new Uint8Array([
+        0x50,0x4B,0x01,0x02, ...u16(20), ...u16(20), ...u16(0), ...u16(0), ...u16(0), ...u16(0x21),
+        ...u32(crc), ...u32(size), ...u32(size), ...u16(nameBytes.length), ...u16(0), ...u16(0),
+        ...u16(0), ...u16(0), ...u32(0), ...u32(offset)
+      ]);
+      centralParts.push(centralHeader, nameBytes);
+      offset += localHeader.length + nameBytes.length + data.length;
+    }
+    const centralStart = offset;
+    let centralSize = 0;
+    for (const p of centralParts) centralSize += p.length;
+    const eocd = new Uint8Array([
+      0x50,0x4B,0x05,0x06, ...u16(0), ...u16(0), ...u16(files.length), ...u16(files.length),
+      ...u32(centralSize), ...u32(centralStart), ...u16(0)
+    ]);
+    const allParts = [...localParts, ...centralParts, eocd];
+    let total = 0;
+    for (const p of allParts) total += p.length;
+    const out = new Uint8Array(total);
+    let pos = 0;
+    for (const p of allParts) { out.set(p, pos); pos += p.length; }
+    return out;
+  }
+
+  async function inflateRawIfNeeded(bytes, method) {
+    if (method === 0) return bytes;
+    if (method === 8) {
+      const ds = new DecompressionStream("deflate-raw");
+      const stream = new Blob([bytes]).stream().pipeThrough(ds);
+      const buf = await new Response(stream).arrayBuffer();
+      return new Uint8Array(buf);
+    }
+    throw new Error("فرمت فشرده‌سازی فایل پشتیبانی نمی‌شود.");
+  }
+
+  async function readZip(arrayBuffer) {
+    const bytes = new Uint8Array(arrayBuffer);
+    const dv = new DataView(arrayBuffer);
+    let eocdOffset = -1;
+    for (let i = bytes.length - 22; i >= 0 && i >= bytes.length - 22 - 65557; i--) {
+      if (dv.getUint32(i, true) === 0x06054b50) { eocdOffset = i; break; }
+    }
+    if (eocdOffset === -1) throw new Error("فایل معتبر xlsx نیست.");
+    const totalEntries = dv.getUint16(eocdOffset + 10, true);
+    const centralDirOffset = dv.getUint32(eocdOffset + 16, true);
+    const entries = {};
+    let p = centralDirOffset;
+    const dec = new TextDecoder("utf-8");
+    for (let i = 0; i < totalEntries; i++) {
+      const sig = dv.getUint32(p, true);
+      if (sig !== 0x02014b50) throw new Error("ساختار فایل خراب است.");
+      const method = dv.getUint16(p + 10, true);
+      const compSize = dv.getUint32(p + 20, true);
+      const nameLen = dv.getUint16(p + 28, true);
+      const extraLen = dv.getUint16(p + 30, true);
+      const commentLen = dv.getUint16(p + 32, true);
+      const localHeaderOffset = dv.getUint32(p + 42, true);
+      const nameBytes = bytes.subarray(p + 46, p + 46 + nameLen);
+      const name = dec.decode(nameBytes);
+      entries[name] = { method, compSize, localHeaderOffset };
+      p += 46 + nameLen + extraLen + commentLen;
+    }
+    const result = {};
+    for (const name in entries) {
+      const e = entries[name];
+      const lp = e.localHeaderOffset;
+      const lNameLen = dv.getUint16(lp + 26, true);
+      const lExtraLen = dv.getUint16(lp + 28, true);
+      const dataStart = lp + 30 + lNameLen + lExtraLen;
+      const compData = bytes.subarray(dataStart, dataStart + e.compSize);
+      result[name] = await inflateRawIfNeeded(compData, e.method);
+    }
+    return result;
+  }
+
+  function colLettersToIndex(letters) {
+    let idx = 0;
+    for (let i = 0; i < letters.length; i++) idx = idx * 26 + (letters.charCodeAt(i) - 64);
+    return idx - 1;
+  }
+  function indexToColLetters(idx) {
+    let n = idx + 1, s = "";
+    while (n > 0) { const rem = (n - 1) % 26; s = String.fromCharCode(65 + rem) + s; n = Math.floor((n - 1) / 26); }
+    return s;
+  }
+  function xmlEscape(str) {
+    return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&apos;");
+  }
+
+  async function readXlsxFirstSheet(arrayBuffer) {
+    const zipFiles = await readZip(arrayBuffer);
+    const dec = new TextDecoder("utf-8");
+    const parser = new DOMParser();
+    let sharedStrings = [];
+    if (zipFiles["xl/sharedStrings.xml"]) {
+      const xml = dec.decode(zipFiles["xl/sharedStrings.xml"]);
+      const doc = parser.parseFromString(xml, "application/xml");
+      const siNodes = doc.getElementsByTagName("si");
+      for (const si of siNodes) {
+        const tNodes = si.getElementsByTagName("t");
+        let text = "";
+        for (const t of tNodes) text += t.textContent;
+        sharedStrings.push(text);
+      }
+    }
+    let sheetPath = "xl/worksheets/sheet1.xml";
+    if (zipFiles["xl/workbook.xml"] && zipFiles["xl/_rels/workbook.xml.rels"]) {
+      const wbXml = dec.decode(zipFiles["xl/workbook.xml"]);
+      const wbDoc = parser.parseFromString(wbXml, "application/xml");
+      const sheetEl = wbDoc.getElementsByTagName("sheet")[0];
+      if (sheetEl) {
+        const rId = sheetEl.getAttribute("r:id") || sheetEl.getAttribute("id");
+        const relsXml = dec.decode(zipFiles["xl/_rels/workbook.xml.rels"]);
+        const relsDoc = parser.parseFromString(relsXml, "application/xml");
+        const rels = relsDoc.getElementsByTagName("Relationship");
+        for (const r of rels) {
+          if (r.getAttribute("Id") === rId) {
+            let target = r.getAttribute("Target");
+            if (target.startsWith("/")) target = target.slice(1);
+            else target = "xl/" + target.replace(/^\.?\//, "");
+            sheetPath = target;
+            break;
+          }
+        }
+      }
+    }
+    if (!zipFiles[sheetPath]) {
+      const anyPath = Object.keys(zipFiles).find(k => /^xl\/worksheets\/sheet\d+\.xml$/.test(k));
+      if (anyPath) sheetPath = anyPath; else throw new Error("هیچ برگه‌ای در فایل یافت نشد.");
+    }
+    const sheetXml = dec.decode(zipFiles[sheetPath]);
+    const doc = parser.parseFromString(sheetXml, "application/xml");
+    const rowNodes = doc.getElementsByTagName("row");
+    const rows = [];
+    let maxCol = 0;
+    for (const rowNode of rowNodes) {
+      const rAttr = rowNode.getAttribute("r");
+      const rowIndex = rAttr ? (parseInt(rAttr, 10) - 1) : rows.length;
+      const cellNodes = rowNode.getElementsByTagName("c");
+      const rowArr = [];
+      for (const c of cellNodes) {
+        const ref = c.getAttribute("r") || "";
+        const m = ref.match(/^([A-Z]+)/);
+        const colIdx = m ? colLettersToIndex(m[1]) : rowArr.length;
+        const type = c.getAttribute("t");
+        let value = "";
+        if (type === "inlineStr") {
+          const isNode = c.getElementsByTagName("is")[0];
+          if (isNode) { const tNodes = isNode.getElementsByTagName("t"); for (const t of tNodes) value += t.textContent; }
+        } else {
+          const vNode = c.getElementsByTagName("v")[0];
+          const raw = vNode ? vNode.textContent : "";
+          if (type === "s") { const idx = parseInt(raw, 10); value = sharedStrings[idx] !== undefined ? sharedStrings[idx] : ""; }
+          else if (type === "b") value = raw === "1";
+          else if (type === "str") value = raw;
+          else value = raw === "" ? "" : raw;
+        }
+        rowArr[colIdx] = value;
+        if (colIdx > maxCol) maxCol = colIdx;
+      }
+      while (rows.length < rowIndex) rows.push([]);
+      rows[rowIndex] = rowArr;
+    }
+    for (const r of rows) for (let i = 0; i <= maxCol; i++) if (r[i] === undefined) r[i] = "";
+    return rows;
+  }
+
+  function buildXlsx(sheetName, headers, rows) {
+    const enc = new TextEncoder();
+    const allRows = [headers, ...rows];
+    let sheetRowsXml = "";
+    allRows.forEach((rowArr, rIdx) => {
+      const rNum = rIdx + 1;
+      let cellsXml = "";
+      rowArr.forEach((val, cIdx) => {
+        const ref = indexToColLetters(cIdx) + rNum;
+        if (val === null || val === undefined || val === "") return;
+        const isNumber = (typeof val === "number") ||
+          (typeof val === "string" && val.trim() !== "" && /^-?\d+(\.\d+)?$/.test(val.trim()));
+        if (isNumber) cellsXml += `<c r="${ref}"><v>${Number(val)}</v></c>`;
+        else cellsXml += `<c r="${ref}" t="inlineStr"><is><t xml:space="preserve">${xmlEscape(val)}</t></is></c>`;
+      });
+      sheetRowsXml += `<row r="${rNum}">${cellsXml}</row>`;
+    });
+    const contentTypes = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+<Default Extension="xml" ContentType="application/xml"/>
+<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
+<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>
+</Types>`;
+    const rootRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>
+</Relationships>`;
+    const workbook = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+<sheets><sheet name="${xmlEscape(sheetName)}" sheetId="1" r:id="rId1"/></sheets>
+</workbook>`;
+    const workbookRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>
+<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+</Relationships>`;
+    const styles = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<numFmts count="0"/>
+<fonts count="1"><font><sz val="11"/><color theme="1"/><name val="Calibri"/><family val="2"/><scheme val="minor"/></font></fonts>
+<fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills>
+<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>
+<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
+<cellXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/></cellXfs>
+<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>
+</styleSheet>`;
+    const sheet1 = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<sheetData>${sheetRowsXml}</sheetData>
+</worksheet>`;
+    const files = [
+      { name: "[Content_Types].xml", data: enc.encode(contentTypes) },
+      { name: "_rels/.rels", data: enc.encode(rootRels) },
+      { name: "xl/workbook.xml", data: enc.encode(workbook) },
+      { name: "xl/_rels/workbook.xml.rels", data: enc.encode(workbookRels) },
+      { name: "xl/styles.xml", data: enc.encode(styles) },
+      { name: "xl/worksheets/sheet1.xml", data: enc.encode(sheet1) }
+    ];
+    return createZip(files);
+  }
+
+  global.MiniXlsx = { readXlsxFirstSheet, buildXlsx, createZip, readZip };
+})(window);
+
+/* ==================================================================
+   Application logic
+================================================================== */
+(function () {
+  "use strict";
+
+  const PLANS = [
+    { key: "gold_base",          label: "طرح طلایی — پایه",            price: 156000000 },
+    { key: "gold_full",          label: "طرح طلایی — با مازاد",         price: 216000000 },
+    { key: "platinum_base",      label: "طرح پلاتینی — پایه",           price: 186000000 },
+    { key: "platinum_full",      label: "طرح پلاتینی — با مازاد",       price: 252000000 },
+    { key: "platinum_plus_base", label: "طرح پلاتینی پلاس — پایه",      price: 204000000 },
+    { key: "platinum_plus_full", label: "طرح پلاتینی پلاس — با مازاد",  price: 288000000 },
+    { key: "vip_base",           label: "طرح VIP — پایه",               price: 216000000 },
+    { key: "vip_full",           label: "طرح VIP — با مازاد",           price: 312000000 },
+    { key: "diamond_base",       label: "طرح الماس — پایه",             price: 228000000 },
+    { key: "diamond_full",       label: "طرح الماس — با مازاد",         price: 336000000 },
+    { key: "diamond_plus_base",  label: "طرح الماس پلاس — پایه",        price: 240000000 },
+    { key: "diamond_plus_full",  label: "طرح الماس پلاس — با مازاد",    price: 360000000 }
+  ];
+  const PLAN_MAP = Object.fromEntries(PLANS.map(p => [p.key, p]));
+  const MONTHS = ["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"];
+
+  const OUTPUT_ORDER = ["rowNo","firstName","lastName","gender","fatherName","birthCertNo","birthYear",
+    "birthMonth","birthDay","nationalId","address","primaryNationalId","relation","sheba","prevPolicy",
+    "computerCode","mobile"];
+  const OUTPUT_LABELS = {
+    rowNo:"ردیف", firstName:"نام", lastName:"نام خانوادگی", gender:"جنسیت", fatherName:"نام پدر",
+    birthCertNo:"شماره شناسنامه", birthYear:"سال تولد", birthMonth:"ماه تولد", birthDay:"روز تولد",
+    nationalId:"کدملی", address:"آدرس", primaryNationalId:"کدملی بیمه شده اصلی", relation:"نسبت",
+    sheba:"شماره شبا", prevPolicy:"بیمه نامه سال قبل", computerCode:"کد رایانه", mobile:"شماره موبایل"
+  };
+  // Fields the calculation actually needs, at minimum, to be usable.
+  const REQUIRED_FIELDS = ["firstName", "lastName", "birthYear"];
+  // Known header spellings/synonyms per field, used for automatic column detection.
+  // Matching is done on normalized text (spaces/punctuation/Arabic-vs-Persian letters stripped),
+  // so ordering/spacing/formatting differences between customer files don't matter.
+  const FIELD_SYNONYMS = {
+    rowNo: ["ردیف", "رديف", "row", "شمارهردیف", "#"],
+    firstName: ["نام", "نامکوچک", "firstname", "name"],
+    lastName: ["ناموخانوادگی", "نامخانوادگی", "خانوادگی", "فامیل", "فامیلی", "lastname", "familyname", "surname"],
+    gender: ["جنسیت", "جنس", "gender", "sex"],
+    fatherName: ["ناموپدر", "نامپدر", "پدر", "fathername", "father"],
+    birthCertNo: ["شمارهشناسنامه", "شناسنامه", "ششناسنامه", "شش", "birthcertificateno", "certificateno"],
+    birthYear: ["سالتولد", "سالتولدشمسی", "birthyear", "yearofbirth"],
+    birthMonth: ["ماهتولد", "birthmonth", "monthofbirth"],
+    birthDay: ["روزتولد", "birthday", "dayofbirth"],
+    nationalId: ["کدملی", "شمارهملی", "کدملى", "nationalid", "nationalcode"],
+    address: ["آدرس", "نشانی", "address"],
+    primaryNationalId: ["کدملیبیمهشدهاصلی", "کدملیبیمهگذاراصلی", "کدبیمهگذاراصلی", "کدملیاصلی", "primarynationalid"],
+    relation: ["نسبت", "رابطه", "relation", "relationship"],
+    sheba: ["شمارهشبا", "شبا", "iban", "sheba"],
+    prevPolicy: ["بیمهنامهسالقبل", "بیمهگذارقبلی", "prevpolicy"],
+    computerCode: ["کدرایانه", "computercode"],
+    mobile: ["شمارهموبایل", "موبایل", "تلفنهمراه", "شمارهتلفن", "تلفن", "mobile", "phone", "cellphone"]
+  };
+  // Field processing priority for auto-matching: longer/more specific synonyms first,
+  // so e.g. "نام خانوادگی" claims its column before the generic "نام" (firstName) does.
+  const FIELD_MATCH_ORDER = Object.keys(FIELD_SYNONYMS).sort((a, b) => {
+    const maxLen = (arr) => Math.max(...arr.map(s => s.length));
+    return maxLen(FIELD_SYNONYMS[b]) - maxLen(FIELD_SYNONYMS[a]);
+  });
+
+  function normalizeHeader(s) {
+    return String(s)
+      .replace(/[‌‏‎ ]/g, "")
+      .replace(/\s+/g, "")
+      .replace(/[.\-_/\\():؛,،#]/g, "")
+      .replace(/ي/g, "ی").replace(/ك/g, "ک")
+      .toLowerCase()
+      .trim();
+  }
+
+  function colIndexToLetters(idx) {
+    let n = idx + 1, s = "";
+    while (n > 0) { const rem = (n - 1) % 26; s = String.fromCharCode(65 + rem) + s; n = Math.floor((n - 1) / 26); }
+    return s;
+  }
+
+  let people = []; // {..fields, plan}
+  let nextTempId = 1;
+
+  // column-mapping state
+  let parsedDataRows = [];   // rows after the header row
+  let fileColumns = [];      // [{ index, letter, headerText, samples: [] }]
+  let fieldMapping = {};     // field -> column index (or null)
+
+  const $ = (id) => document.getElementById(id);
+
+  function fillMonthSelect(sel, withEmpty) {
+    sel.innerHTML = "";
+    if (withEmpty) sel.appendChild(new Option("—", ""));
+    MONTHS.forEach((m, i) => sel.appendChild(new Option(m, String(i + 1))));
+  }
+  fillMonthSelect($("baseMonth"), false);
+
+  // ---------------- Gregorian -> Jalali (Persian) date conversion ----------------
+  // Standard public-domain algorithm (used by jalaali-js, moment-jalaali, etc.)
+  // Runs entirely offline using the device's own clock — no internet/time.ir call needed.
+  function gregorianToJalali(gy, gm, gd) {
+    const g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+    let jy;
+    if (gy > 1600) { jy = 979; gy -= 1600; } else { jy = 0; gy -= 621; }
+    const gy2 = (gm > 2) ? (gy + 1) : gy;
+    let days = (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) +
+      Math.floor((gy2 + 399) / 400) - 80 + gd + g_d_m[gm - 1];
+    jy += 33 * Math.floor(days / 12053);
+    days %= 12053;
+    jy += 4 * Math.floor(days / 1461);
+    days %= 1461;
+    if (days > 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
+    let jm, jd;
+    if (days < 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); }
+    else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); }
+    return [jy, jm, jd];
+  }
+
+  function todayJalali() {
+    const now = new Date();
+    return gregorianToJalali(now.getFullYear(), now.getMonth() + 1, now.getDate());
+  }
+
+  function setBaseDateToToday() {
+    const [jy, jm, jd] = todayJalali();
+    $("baseYear").value = jy;
+    $("baseMonth").value = String(jm);
+    $("baseDay").value = jd;
+    updateBaseDateHint();
+  }
+
+  function updateBaseDateHint() {
+    const [jy, jm, jd] = todayJalali();
+    $("baseDateHint").innerHTML =
+      `تاریخ امروز به شمسی (بر اساس ساعت همین دستگاه، مشابه time.ir): <b>${jd} ${MONTHS[jm - 1]} ${jy}</b>. ` +
+      `فیلدهای بالا به‌صورت پیش‌فرض روی همین تاریخ تنظیم شده‌اند و کاملاً قابل تغییرند؛ برای هر بار محاسبه لازم نیست دستی وارد کنید مگر بخواهید تاریخ دیگری (مثلاً تاریخ شروع بیمه‌نامه) را مبنا قرار دهید.`;
+  }
+
+  setBaseDateToToday();
+  $("todayBtn").addEventListener("click", () => { setBaseDateToToday(); recalcAll(); });
+
+  function fillPlanSelect(sel) {
+    sel.innerHTML = "";
+    PLANS.forEach(p => {
+      const opt = new Option(`${p.label} — ${p.price.toLocaleString("en-US")} ریال`, p.key);
+      sel.appendChild(opt);
+    });
+  }
+
+  // ---------------- global plan picker (clickable price table) ----------------
+  const PLAN_TIERS = [
+    { name: "طلایی", base: "gold_base", full: "gold_full" },
+    { name: "پلاتینی", base: "platinum_base", full: "platinum_full" },
+    { name: "پلاتینی پلاس", base: "platinum_plus_base", full: "platinum_plus_full" },
+    { name: "VIP", base: "vip_base", full: "vip_full" },
+    { name: "الماس", base: "diamond_base", full: "diamond_full" },
+    { name: "الماس پلاس", base: "diamond_plus_base", full: "diamond_plus_full" }
+  ];
+  let selectedGlobalPlanKey = PLANS[0].key;
+
+  function renderPlanPicker() {
+    const tbody = document.querySelector("#planPickerTable tbody");
+    tbody.innerHTML = "";
+    PLAN_TIERS.forEach(tier => {
+      const tr = document.createElement("tr");
+      const nameTd = document.createElement("td");
+      nameTd.style.textAlign = "right";
+      nameTd.style.fontWeight = "600";
+      nameTd.style.whiteSpace = "nowrap";
+      nameTd.textContent = "طرح " + tier.name;
+      tr.appendChild(nameTd);
+      [tier.base, tier.full].forEach(key => {
+        const plan = PLAN_MAP[key];
+        const td = document.createElement("td");
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "plan-cell-btn" + (selectedGlobalPlanKey === key ? " selected" : "");
+        btn.textContent = fmt(plan.price) + " ریال";
+        btn.addEventListener("click", () => {
+          selectedGlobalPlanKey = key;
+          renderPlanPicker();
+          updateSelectedPlanLabel();
+          // selecting a plan applies it to everyone immediately; per-row overrides made
+          // afterwards in the table below are not touched again unless you pick a plan here once more.
+          people.forEach(p => { p.plan = key; });
+          renderTable();
+        });
+        td.appendChild(btn);
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+  }
+
+  function updateSelectedPlanLabel() {
+    const plan = PLAN_MAP[selectedGlobalPlanKey];
+    $("selectedPlanLabel").textContent = "✅ طرح انتخاب‌شده: " + plan.label + " — " + fmt(plan.price) + " ریال در سال";
+  }
+
+  renderPlanPicker();
+  updateSelectedPlanLabel();
+
+  $("dayPrecision").addEventListener("change", () => {
+    $("baseDayField").style.display = $("dayPrecision").checked ? "" : "none";
+    recalcAll();
+  });
+  // live update: age/premium recalculates immediately as the age-basis date changes — no click needed
+  $("baseYear").addEventListener("input", recalcAll);
+  $("baseMonth").addEventListener("change", recalcAll);
+  $("baseDay").addEventListener("input", recalcAll);
+
+  function toInt(v) {
+    if (v === null || v === undefined) return NaN;
+    const s = String(v).trim();
+    if (s === "") return NaN;
+    const n = parseInt(s, 10);
+    return isNaN(n) ? NaN : n;
+  }
+
+  function computeAge(birthYear, birthMonth, birthDay) {
+    const baseYear = toInt($("baseYear").value);
+    const baseMonth = toInt($("baseMonth").value);
+    const baseDay = toInt($("baseDay").value);
+    const useDayPrecision = $("dayPrecision").checked;
+    if (isNaN(birthYear) || isNaN(baseYear)) return null;
+    let age = baseYear - birthYear;
+    if (!isNaN(birthMonth) && !isNaN(baseMonth)) {
+      if (baseMonth < birthMonth) {
+        age -= 1;
+      } else if (useDayPrecision && baseMonth === birthMonth && !isNaN(birthDay) && !isNaN(baseDay)) {
+        if (baseDay < birthDay) age -= 1;
+      }
+    }
+    return age;
+  }
+
+  function ageMultiplier(age) {
+    if (age === null || isNaN(age)) return { factor: 1, tier: "نامشخص" };
+    if (age >= 80) return { factor: 4, tier: "بالای ۸۰ سال" };
+    if (age >= 70) return { factor: 2, tier: "بالای ۷۰ سال" };
+    if (age >= 60) return { factor: 1.5, tier: "بالای ۶۰ سال" };
+    return { factor: 1, tier: "بدون اضافه‌نرخ" };
+  }
+
+  function tierClass(factor) {
+    if (factor === 4) return "tier-4";
+    if (factor === 2) return "tier-2";
+    if (factor === 1.5) return "tier-1_5";
+    return "tier-1";
+  }
+
+  function fmt(n) {
+    if (n === null || n === undefined || isNaN(n)) return "—";
+    return Math.round(n).toLocaleString("en-US");
+  }
+
+  // ---------------- file parsing & column detection ----------------
+  function detectHeaderRow(rows) {
+    let bestIdx = 0, bestScore = -1;
+    for (let i = 0; i < Math.min(rows.length, 5); i++) {
+      const row = rows[i].map(c => normalizeHeader(c));
+      let score = 0;
+      row.forEach(cellNorm => {
+        if (!cellNorm) return;
+        for (const field in FIELD_SYNONYMS) {
+          if (FIELD_SYNONYMS[field].includes(cellNorm)) { score++; break; }
+        }
+      });
+      if (score > bestScore) { bestScore = score; bestIdx = i; }
+    }
+    return bestIdx;
+  }
+
+  // Auto-suggest a column index for every field based on header text similarity.
+  function autoDetectMapping(columns) {
+    const mapping = {};
+    const claimed = new Set();
+
+    // pass 1: exact normalized match
+    for (const field of FIELD_MATCH_ORDER) {
+      const syns = FIELD_SYNONYMS[field];
+      const col = columns.find(c => !claimed.has(c.index) && syns.includes(c.norm));
+      if (col) { mapping[field] = col.index; claimed.add(col.index); }
+    }
+    // pass 2: substring match (only for still-unresolved fields), longer synonyms first
+    for (const field of FIELD_MATCH_ORDER) {
+      if (mapping[field] !== undefined) continue;
+      const syns = [...FIELD_SYNONYMS[field]].sort((a, b) => b.length - a.length);
+      let best = null;
+      for (const c of columns) {
+        if (claimed.has(c.index) || !c.norm) continue;
+        for (const syn of syns) {
+          if (syn.length < 2) continue;
+          if (c.norm.includes(syn) || syn.includes(c.norm)) { best = c; break; }
+        }
+        if (best) break;
+      }
+      if (best) { mapping[field] = best.index; claimed.add(best.index); }
+    }
+    return mapping;
+  }
+
+  async function handleFile(file) {
+    const infoEl = $("fileInfo");
+    infoEl.innerHTML = "";
+    try {
+      const buf = await file.arrayBuffer();
+      const rows = await MiniXlsx.readXlsxFirstSheet(buf);
+      if (!rows.length) throw new Error("فایل خالی است.");
+      const headerRowIdx = detectHeaderRow(rows);
+      const headerRow = rows[headerRowIdx];
+      parsedDataRows = rows.slice(headerRowIdx + 1).filter(r => r && !r.every(c => c === "" || c === undefined));
+      if (!parsedDataRows.length) throw new Error("هیچ ردیف داده‌ای بعد از سطر عنوان یافت نشد.");
+
+      const colCount = Math.max(headerRow.length, ...parsedDataRows.map(r => r.length));
+      fileColumns = [];
+      for (let idx = 0; idx < colCount; idx++) {
+        const headerText = headerRow[idx] !== undefined ? String(headerRow[idx]).trim() : "";
+        const samples = [];
+        for (const r of parsedDataRows) {
+          const v = r[idx];
+          if (v !== undefined && v !== "" && samples.length < 3) samples.push(String(v).trim());
+          if (samples.length >= 3) break;
+        }
+        fileColumns.push({ index: idx, letter: colIndexToLetters(idx), headerText, norm: normalizeHeader(headerText), samples });
+      }
+
+      fieldMapping = autoDetectMapping(fileColumns);
+
+      infoEl.innerHTML = `<div class="file-info"><span>✅ فایل «${escapeHtml(file.name)}» خوانده شد — ${parsedDataRows.length.toLocaleString("fa-IR")} ردیف داده یافت شد. ستون‌های زیر را بررسی کنید.</span></div>`;
+      renderMappingTable();
+      $("mappingCard").style.display = "";
+      $("mappingCard").scrollIntoView({ behavior: "smooth", block: "start" });
+    } catch (err) {
+      console.error(err);
+      infoEl.innerHTML = `<div class="file-info error"><span>❌ خطا در خواندن فایل: ${escapeHtml(err.message || String(err))}</span></div>`;
+    }
+  }
+
+  function renderMappingTable() {
+    const tbody = $("mappingTable").querySelector("tbody");
+    tbody.innerHTML = "";
+    Object.keys(OUTPUT_LABELS).forEach(field => {
+      const isRequired = REQUIRED_FIELDS.includes(field);
+      const tr = document.createElement("tr");
+      const selectedIdx = fieldMapping[field];
+
+      const labelCell = document.createElement("td");
+      labelCell.style.textAlign = "right";
+      labelCell.style.whiteSpace = "nowrap";
+      labelCell.innerHTML = `${escapeHtml(OUTPUT_LABELS[field])}${isRequired ? ' <span style="color:var(--danger)">*</span>' : ""}`;
+
+      const selectCell = document.createElement("td");
+      const sel = document.createElement("select");
+      sel.dataset.field = field;
+      sel.style.minWidth = "220px";
+      sel.appendChild(new Option("— انتخاب نشده —", ""));
+      fileColumns.forEach(c => {
+        const label = `ستون ${c.letter}${c.headerText ? " — «" + c.headerText + "»" : " (بدون عنوان)"}`;
+        sel.appendChild(new Option(label, String(c.index)));
+      });
+      sel.value = selectedIdx !== undefined ? String(selectedIdx) : "";
+      selectCell.appendChild(sel);
+
+      const sampleCell = document.createElement("td");
+      sampleCell.style.color = "var(--muted)";
+      sampleCell.style.fontSize = "11.5px";
+      sampleCell.textContent = "—";
+
+      function refreshSample() {
+        const idx = sel.value === "" ? null : parseInt(sel.value, 10);
+        if (idx === null) { sampleCell.textContent = "—"; return; }
+        const col = fileColumns[idx];
+        sampleCell.textContent = col && col.samples.length ? col.samples.join("، ") : "(خالی)";
+      }
+      sel.addEventListener("change", () => {
+        fieldMapping[field] = sel.value === "" ? undefined : parseInt(sel.value, 10);
+        refreshSample();
+      });
+      refreshSample();
+
+      tr.appendChild(labelCell);
+      tr.appendChild(selectCell);
+      tr.appendChild(sampleCell);
+      tbody.appendChild(tr);
+    });
+  }
+
+  function confirmMapping() {
+    const errEl = $("mappingError");
+    if (fieldMapping.firstName === undefined && fieldMapping.lastName === undefined) {
+      errEl.style.display = "";
+      errEl.innerHTML = "<span>❌ حداقل یکی از ستون‌های «نام» یا «نام خانوادگی» را باید انتخاب کنید.</span>";
+      return;
+    }
+    errEl.style.display = "none";
+
+    const defaultPlan = selectedGlobalPlanKey;
+    const newPeople = [];
+    const get = (row, field) => {
+      const idx = fieldMapping[field];
+      if (idx === undefined) return "";
+      const v = row[idx];
+      return v === undefined ? "" : String(v).trim();
+    };
+
+    for (const row of parsedDataRows) {
+      const firstName = get(row, "firstName");
+      const lastName = get(row, "lastName");
+      if (!firstName && !lastName) continue;
+      newPeople.push({
+        _id: nextTempId++,
+        rowNo: get(row, "rowNo") || (newPeople.length + 1),
+        firstName, lastName,
+        gender: get(row, "gender"),
+        fatherName: get(row, "fatherName"),
+        birthCertNo: get(row, "birthCertNo"),
+        birthYear: get(row, "birthYear"),
+        birthMonth: get(row, "birthMonth"),
+        birthDay: get(row, "birthDay"),
+        nationalId: get(row, "nationalId"),
+        address: get(row, "address"),
+        primaryNationalId: get(row, "primaryNationalId"),
+        relation: get(row, "relation"),
+        sheba: get(row, "sheba"),
+        prevPolicy: get(row, "prevPolicy"),
+        computerCode: get(row, "computerCode"),
+        mobile: get(row, "mobile"),
+        plan: defaultPlan
+      });
+    }
+
+    if (!newPeople.length) {
+      errEl.style.display = "";
+      errEl.innerHTML = "<span>❌ با این نگاشت، هیچ ردیف معتبری (دارای نام یا نام خانوادگی) پیدا نشد.</span>";
+      return;
+    }
+
+    people = newPeople;
+    $("addRowBtn").disabled = false;
+    renderTable();
+    $("tableScroll").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+
+  // ---------------- table rendering ----------------
+  function renderTable() {
+    const scroll = $("tableScroll");
+    if (!people.length) {
+      scroll.innerHTML = `<div class="empty-state">هنوز فایلی بارگذاری نشده است.</div>`;
+      $("summaryBar").style.display = "none";
+      $("exportBtn").disabled = true;
+      $("printBtn").disabled = true;
+      $("rowCountLabel").textContent = "";
+      return;
+    }
+
+    const table = document.createElement("table");
+    table.innerHTML = `<thead><tr>
+      <th>ردیف</th><th>نام</th><th>نام خانوادگی</th><th>نسبت</th>
+      <th>سال تولد</th><th>ماه تولد</th><th>روز تولد</th>
+      <th>سن محاسبه‌شده</th><th>طرح</th><th>نرخ پایه سالانه (ریال)</th>
+      <th>ضریب سنی</th><th>حق بیمه نهایی سالانه (ریال)</th><th></th>
+    </tr></thead>`;
+    const tbody = document.createElement("tbody");
+
+    people.forEach(p => {
+      const tr = document.createElement("tr");
+      tr.dataset.id = p._id;
+
+      const age = computeAge(toInt(p.birthYear), toInt(p.birthMonth), toInt(p.birthDay));
+      const { factor, tier } = ageMultiplier(age);
+      const plan = PLAN_MAP[p.plan] || PLANS[0];
+      const finalPremium = plan.price * factor;
+
+      tr.innerHTML = `
+        <td>${escapeHtml(p.rowNo)}</td>
+        <td><input class="row-edit" data-field="firstName" value="${escapeHtml(p.firstName)}"></td>
+        <td><input class="row-edit" data-field="lastName" value="${escapeHtml(p.lastName)}"></td>
+        <td><input class="row-edit" data-field="relation" value="${escapeHtml(p.relation)}"></td>
+        <td><input class="row-edit" data-field="birthYear" style="width:56px" value="${escapeHtml(p.birthYear)}"></td>
+        <td><input class="row-edit" data-field="birthMonth" style="width:42px" value="${escapeHtml(p.birthMonth)}"></td>
+        <td><input class="row-edit" data-field="birthDay" style="width:42px" value="${escapeHtml(p.birthDay)}"></td>
+        <td class="num">${age === null || isNaN(age) ? "—" : age.toLocaleString("fa-IR")}</td>
+        <td><select class="row-plan"></select></td>
+        <td class="num">${fmt(plan.price)}</td>
+        <td class="${tierClass(factor)}">${factor}× <span style="font-size:10.5px; display:block; color:var(--muted);">${tier}</span></td>
+        <td class="num">${fmt(finalPremium)}</td>
+        <td><span class="del-btn" title="حذف ردیف">✕</span></td>
+      `;
+      const planSel = tr.querySelector(".row-plan");
+      fillPlanSelect(planSel);
+      planSel.value = p.plan;
+      // live update: change plan for this row instantly, without rebuilding the whole table
+      planSel.addEventListener("change", () => { p.plan = planSel.value; updateRowComputedCells(tr, p); renderSummary(); });
+
+      // live update: recalculate this row as the user types (no click needed — reacts immediately)
+      tr.querySelectorAll(".row-edit").forEach(inp => {
+        inp.addEventListener("input", () => {
+          p[inp.dataset.field] = inp.value;
+          updateRowComputedCells(tr, p);
+          renderSummary();
+        });
+      });
+      tr.querySelector(".del-btn").addEventListener("click", () => {
+        people = people.filter(x => x._id !== p._id);
+        renderTable();
+      });
+
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    scroll.innerHTML = "";
+    scroll.appendChild(table);
+    $("rowCountLabel").textContent = `(${people.length.toLocaleString("fa-IR")} نفر)`;
+
+    renderSummary();
+    $("exportBtn").disabled = false;
+    $("printBtn").disabled = false;
+  }
+
+  // Recalculates and repaints only the read-only computed cells of one row (age, base price,
+  // age factor, final premium) — used for live updates while typing/selecting so the input the
+  // user is actively editing never gets destroyed/rebuilt (which would lose focus and cursor position).
+  function updateRowComputedCells(tr, p) {
+    const age = computeAge(toInt(p.birthYear), toInt(p.birthMonth), toInt(p.birthDay));
+    const { factor, tier } = ageMultiplier(age);
+    const plan = PLAN_MAP[p.plan] || PLANS[0];
+    const finalPremium = plan.price * factor;
+    const cells = tr.querySelectorAll("td");
+    cells[7].textContent = age === null || isNaN(age) ? "—" : age.toLocaleString("fa-IR");
+    cells[9].textContent = fmt(plan.price);
+    cells[10].className = tierClass(factor);
+    cells[10].innerHTML = `${factor}× <span style="font-size:10.5px; display:block; color:var(--muted);">${tier}</span>`;
+    cells[11].textContent = fmt(finalPremium);
+    const planSel = tr.querySelector(".row-plan");
+    if (planSel && planSel.value !== p.plan) planSel.value = p.plan;
+  }
+
+  // Recalculates every already-rendered row live (e.g. after changing the age-basis date) —
+  // without rebuilding the table, so scroll position and any in-progress edits are preserved.
+  function recalcAll() {
+    const tbody = document.querySelector("#tableScroll tbody");
+    if (!tbody) return;
+    people.forEach(p => {
+      const tr = tbody.querySelector(`tr[data-id="${p._id}"]`);
+      if (tr) updateRowComputedCells(tr, p);
+    });
+    renderSummary();
+  }
+
+  function renderSummary() {
+    let total = 0, ageSum = 0, ageCount = 0, surchargeCount = 0;
+    people.forEach(p => {
+      const age = computeAge(toInt(p.birthYear), toInt(p.birthMonth), toInt(p.birthDay));
+      const { factor } = ageMultiplier(age);
+      const plan = PLAN_MAP[p.plan] || PLANS[0];
+      total += plan.price * factor;
+      if (age !== null && !isNaN(age)) { ageSum += age; ageCount++; }
+      if (factor > 1) surchargeCount++;
+    });
+    const avgAge = ageCount ? (ageSum / ageCount) : 0;
+    const bar = $("summaryBar");
+    bar.style.display = "flex";
+    bar.innerHTML = `
+      <div class="summary-item"><span class="num">${people.length.toLocaleString("fa-IR")}</span><span class="lbl">تعداد نفرات</span></div>
+      <div class="summary-item"><span class="num">${fmt(total)}</span><span class="lbl">جمع حق‌بیمه سالانه (ریال)</span></div>
+      <div class="summary-item"><span class="num">${fmt(total / 12)}</span><span class="lbl">معادل ماهانه تقریبی (ریال)</span></div>
+      <div class="summary-item"><span class="num">${avgAge.toFixed(1)}</span><span class="lbl">میانگین سن</span></div>
+      <div class="summary-item"><span class="num">${surchargeCount.toLocaleString("fa-IR")}</span><span class="lbl">نفرات مشمول اضافه‌نرخ سنی</span></div>
+    `;
+  }
+
+  // ---------------- export ----------------
+  function exportResults() {
+    const headers = OUTPUT_ORDER.map(k => OUTPUT_LABELS[k]);
+    headers.push("سن محاسبه‌شده", "طرح انتخابی", "نرخ پایه سالانه (ریال)", "ضریب سنی", "حق بیمه نهایی سالانه (ریال)", "حق بیمه نهایی ماهانه تقریبی (ریال)");
+
+    const rows = [];
+    let total = 0, ageSum = 0, ageCount = 0;
+    people.forEach(p => {
+      const age = computeAge(toInt(p.birthYear), toInt(p.birthMonth), toInt(p.birthDay));
+      const { factor, tier } = ageMultiplier(age);
+      const plan = PLAN_MAP[p.plan] || PLANS[0];
+      const finalPremium = plan.price * factor;
+      total += finalPremium;
+      if (age !== null && !isNaN(age)) { ageSum += age; ageCount++; }
+
+      const row = OUTPUT_ORDER.map(k => p[k] !== undefined ? p[k] : "");
+      row.push(age === null || isNaN(age) ? "" : age, plan.label + " (" + tier + ")", plan.price, factor, Math.round(finalPremium), Math.round(finalPremium / 12));
+      rows.push(row);
+    });
+
+    // totals row
+    const totalsRow = new Array(headers.length).fill("");
+    totalsRow[0] = "جمع";
+    totalsRow[headers.length - 2] = Math.round(total);
+    totalsRow[headers.length - 1] = Math.round(total / 12);
+    rows.push(totalsRow);
+
+    const avgAgeRow = new Array(headers.length).fill("");
+    avgAgeRow[0] = "میانگین سن";
+    avgAgeRow[OUTPUT_ORDER.length] = ageCount ? Math.round((ageSum / ageCount) * 100) / 100 : "";
+    rows.push(avgAgeRow);
+
+    const zipBytes = MiniXlsx.buildXlsx("محاسبات", headers, rows);
+    const blob = new Blob([zipBytes], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const now = new Date();
+    a.href = url;
+    a.download = `محاسبات-حق-بیمه-${$("baseYear").value}.xlsx`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }
+
+  // Builds a clean, print-only report (title + summary + results table) from the exact same
+  // computed data as the Excel export — none of the app's editable inputs/buttons/dropzone
+  // appear in it. #printArea is invisible on screen; @media print hides everything else and
+  // shows only this, so "چاپ / خروجی PDF" (choosing "Save as PDF" in the print dialog) produces
+  // a clean document instead of a screenshot of the working page.
+  function buildPrintView() {
+    const rows = people.map(p => {
+      const age = computeAge(toInt(p.birthYear), toInt(p.birthMonth), toInt(p.birthDay));
+      const { factor, tier } = ageMultiplier(age);
+      const plan = PLAN_MAP[p.plan] || PLANS[0];
+      const finalPremium = plan.price * factor;
+      return { p, age, factor, tier, plan, finalPremium };
+    });
+
+    const total = rows.reduce((s, r) => s + r.finalPremium, 0);
+    const ages = rows.map(r => r.age).filter(a => a !== null && !isNaN(a));
+    const avgAge = ages.length ? (ages.reduce((s, a) => s + a, 0) / ages.length) : 0;
+    const baseY = $("baseYear").value, baseM = MONTHS[toInt($("baseMonth").value) - 1] || "";
+
+    const bodyRows = rows.map(r => `
+      <tr>
+        <td>${escapeHtml(r.p.rowNo)}</td>
+        <td>${escapeHtml(r.p.firstName)}</td>
+        <td>${escapeHtml(r.p.lastName)}</td>
+        <td>${escapeHtml(r.p.relation)}</td>
+        <td>${escapeHtml(r.p.birthYear)}/${escapeHtml(r.p.birthMonth)}/${escapeHtml(r.p.birthDay)}</td>
+        <td>${r.age === null || isNaN(r.age) ? "—" : r.age.toLocaleString("fa-IR")}</td>
+        <td>${escapeHtml(r.plan.label)}</td>
+        <td>${fmt(r.plan.price)}</td>
+        <td>${r.factor}× (${escapeHtml(r.tier)})</td>
+        <td>${fmt(r.finalPremium)}</td>
+      </tr>`).join("");
+
+    $("printArea").innerHTML = `
+      <h1>گزارش محاسبهٔ حق‌بیمه طرح‌های درمان</h1>
+      <div class="meta">
+        مبنای محاسبهٔ سن: ${escapeHtml(baseM)} ${escapeHtml(baseY)}&nbsp;&nbsp;|&nbsp;&nbsp;
+        تعداد نفرات: ${rows.length.toLocaleString("fa-IR")}&nbsp;&nbsp;|&nbsp;&nbsp;
+        میانگین سن: ${avgAge.toFixed(1)}&nbsp;&nbsp;|&nbsp;&nbsp;
+        جمع حق‌بیمه سالانه: ${fmt(total)} ریال&nbsp;&nbsp;|&nbsp;&nbsp;
+        معادل ماهانه: ${fmt(total / 12)} ریال
+      </div>
+      <table>
+        <thead><tr>
+          <th>ردیف</th><th>نام</th><th>نام خانوادگی</th><th>نسبت</th><th>تاریخ تولد</th>
+          <th>سن</th><th>طرح</th><th>نرخ پایه سالانه</th><th>ضریب سنی</th><th>حق‌بیمه نهایی سالانه</th>
+        </tr></thead>
+        <tbody>${bodyRows}</tbody>
+        <tfoot><tr>
+          <td colspan="9">جمع کل</td><td>${fmt(total)} ریال</td>
+        </tr></tfoot>
+      </table>`;
+  }
+
+  function downloadTemplate() {
+    const headers = OUTPUT_ORDER.map(k => OUTPUT_LABELS[k]);
+    const zipBytes = MiniXlsx.buildXlsx("Sheet1", headers, []);
+    const blob = new Blob([zipBytes], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "قالب-نمونه-بیمه-شدگان.xlsx";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }
+
+  function addManualRow() {
+    const newId = nextTempId++;
+    people.push({
+      _id: newId, rowNo: people.length + 1, firstName: "", lastName: "", gender: "",
+      fatherName: "", birthCertNo: "", birthYear: "", birthMonth: "", birthDay: "",
+      nationalId: "", address: "", primaryNationalId: "", relation: "", sheba: "",
+      prevPolicy: "", computerCode: "", mobile: "", plan: selectedGlobalPlanKey
+    });
+    renderTable();
+    // make it unmistakable that a row was added: scroll to it and flash-highlight it briefly
+    const newTr = document.querySelector(`tr[data-id="${newId}"]`);
+    if (newTr) {
+      newTr.scrollIntoView({ behavior: "smooth", block: "center" });
+      newTr.style.transition = "background-color 0.3s";
+      newTr.style.backgroundColor = "rgba(255,204,0,.28)";
+      setTimeout(() => { newTr.style.backgroundColor = ""; }, 1500);
+      const firstInput = newTr.querySelector("input.row-edit");
+      if (firstInput) firstInput.focus();
+    }
+  }
+
+  // ---------------- wire up events ----------------
+  const dropzone = $("dropzone");
+  const fileInput = $("fileInput");
+  dropzone.addEventListener("click", () => fileInput.click());
+  dropzone.addEventListener("dragover", (e) => { e.preventDefault(); dropzone.classList.add("drag"); });
+  dropzone.addEventListener("dragleave", () => dropzone.classList.remove("drag"));
+  dropzone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropzone.classList.remove("drag");
+    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener("change", () => {
+    if (fileInput.files.length) handleFile(fileInput.files[0]);
+  });
+
+  $("applyAllBtn").addEventListener("click", () => {
+    const val = selectedGlobalPlanKey;
+    people.forEach(p => p.plan = val);
+    renderTable();
+  });
+  $("exportBtn").addEventListener("click", exportResults);
+  $("downloadTemplateBtn").addEventListener("click", downloadTemplate);
+  $("addRowBtn").addEventListener("click", addManualRow);
+  $("printBtn").addEventListener("click", () => { buildPrintView(); window.print(); });
+  $("confirmMappingBtn").addEventListener("click", confirmMapping);
+})();
+</script>

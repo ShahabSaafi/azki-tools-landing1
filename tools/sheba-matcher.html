@@ -1,0 +1,1027 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>کمک به صدور | تطبیق شماره شبا</title>
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwMGI0ZmYiLz48dGV4dCB4PSIzMiIgeT0iNDUiIGZvbnQtZmFtaWx5PSJUYWhvbWEsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjM2IiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjZmZmZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7YtDwvdGV4dD48L3N2Zz4=">
+
+<style>
+  :root{
+    --blue:#00b4ff;
+    --blue-dark:#33c6ff;
+    --yellow:#ffcc00;
+    --gray:#8a94a3;
+    --dark:#f2f5f8;
+    --green:#3ddc84;
+    --red:#ff5c5c;
+    --bg:#0c1116;
+    --card:#161b22;
+    --border:#2a323d;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--dark);
+    font-family: 'IRANSansX','Vazirmatn',Tahoma,'Segoe UI',sans-serif;
+    line-height:1.9;
+  }
+  .wrap{max-width:980px;margin:0 auto;padding:28px 20px 60px;}
+  header.top{display:flex;align-items:center;gap:14px;margin-bottom:6px;}
+  .logo-dot{width:14px;height:14px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 5px rgba(0,180,255,.15);}
+  h1{font-size:22px;margin:0;font-weight:800;}
+  .subtitle{color:var(--gray);margin:2px 0 28px;font-size:14.5px;}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:20px;}
+  .card h2{font-size:16px;margin:0 0 14px;font-weight:800;}
+
+  .drop-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media (max-width:680px){.drop-grid{grid-template-columns:1fr;}}
+
+  .dropzone{
+    border:2px dashed #3a4553; border-radius:14px; padding:22px 16px; text-align:center;
+    cursor:pointer; transition:.15s; background:#1c222b; position:relative;
+  }
+  .dropzone:hover{border-color:var(--blue);background:rgba(0,180,255,.10);}
+  .dropzone.dragover{border-color:var(--blue);background:rgba(0,180,255,.16);}
+  .dropzone.filled{border-style:solid;border-color:var(--green);background:rgba(61,220,132,.12);}
+  .dropzone .icon{font-size:26px;margin-bottom:6px;}
+  .dropzone .label{font-weight:700;font-size:14.5px;margin-bottom:4px;}
+  .dropzone .hint{color:var(--gray);font-size:12.5px;}
+  .dropzone .filename{margin-top:10px;font-size:12.5px;color:var(--green);font-weight:700;word-break:break-all;}
+  .dropzone input{display:none;}
+
+  button.primary{
+    background:var(--blue); color:#fff; border:none; border-radius:10px;
+    padding:13px 26px; font-size:15px; font-weight:800; cursor:pointer; width:100%;
+    font-family:inherit; margin-top:18px; transition:.15s;
+  }
+  button.primary:disabled{background:#3a4553;cursor:not-allowed;}
+  button.primary:not(:disabled):hover{background:var(--blue-dark);}
+
+  button.download{
+    background:#1aa361; color:#fff; border:none; border-radius:10px;
+    padding:13px 22px; font-size:14.5px; font-weight:800; cursor:pointer;
+    font-family:inherit;
+  }
+  button.download:hover{opacity:.9;}
+
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:6px;}
+  @media (max-width:680px){.stats-grid{grid-template-columns:repeat(2,1fr);}}
+  .stat{background:#1c222b;border:1px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;}
+  .stat .n{font-size:22px;font-weight:900;color:var(--blue-dark);}
+  .stat .n.warn{color:var(--red);}
+  .stat .l{font-size:12px;color:var(--gray);margin-top:2px;}
+
+  .banner{border-radius:10px;padding:12px 14px;font-size:13.5px;margin:14px 0;}
+  .banner.ok{background:rgba(61,220,132,.12);color:#3ddc84;border:1px solid rgba(61,220,132,.35);}
+  .banner.warn{background:rgba(255,204,0,.10);color:#ffcc00;border:1px solid rgba(255,204,0,.35);}
+  .banner.err{background:rgba(255,92,92,.12);color:#ff5c5c;border:1px solid rgba(255,92,92,.35);}
+
+  table.mismatch{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px;}
+  table.mismatch th,table.mismatch td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--border);}
+  table.mismatch th{color:var(--gray);font-weight:700;font-size:12.5px;}
+  table.mismatch tr:last-child td{border-bottom:none;}
+  .tag{display:inline-block;padding:2px 8px;border-radius:100px;font-size:11.5px;font-weight:700;}
+  .tag.out{background:rgba(255,92,92,.12);color:#ff5c5c;}
+  .tag.init{background:rgba(255,204,0,.10);color:#ffcc00;}
+  .tag.fix{background:rgba(61,220,132,.12);color:#3ddc84;}
+
+  details{margin-top:14px;}
+  summary{cursor:pointer;font-weight:700;font-size:13.5px;color:var(--blue-dark);}
+
+  .map-file-block{border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-top:14px;}
+  .map-file-block h3{font-size:13.5px;margin:0 0 10px;font-weight:800;}
+  .map-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+  .map-row label{font-size:13px;font-weight:700;min-width:170px;}
+  .map-row select{
+    flex:1; min-width:200px; padding:8px 10px; border:1px solid var(--border); border-radius:8px;
+    font-family:inherit; font-size:13px; background:var(--card); color:var(--dark); color-scheme:dark;
+  }
+  .map-row select:invalid, .map-row select.empty{border-color:rgba(255,92,92,.5);}
+  .sheet-row{margin-bottom:14px;padding-bottom:12px;border-bottom:1px dashed var(--border);}
+
+  .how{font-size:13.5px;color:var(--gray);}
+  .how ol{padding-inline-start:20px;margin:8px 0;}
+  .how li{margin-bottom:6px;}
+  .foot{color:var(--gray);font-size:12px;text-align:center;margin-top:24px;}
+  .foot b{color:var(--dark);}
+
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:980px;margin:0 auto;padding:14px 20px 0;}
+  .topbar .back{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--gray);text-decoration:none;background:var(--card);border:1px solid var(--border);padding:8px 14px;border-radius:10px;transition:.15s;}
+  .topbar .back:hover{border-color:var(--blue);color:var(--blue);}
+  .topbar .back:active{transform:scale(.97);}
+  .topbar .tool-tag{font-size:11.5px;font-weight:700;color:var(--blue);background:rgba(0,180,255,.10);padding:4px 10px;border-radius:999px;}
+  .card h2{display:flex;align-items:center;gap:8px;}
+  .step-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;font-size:12px;flex:none;}
+</style>
+</head>
+<body>
+<div class="topbar"><a class="back" href="../index.html">→ جعبه‌ابزار عملیات</a><span class="tool-tag">کمک به صدور</span></div>
+<div class="wrap">
+
+  <h1>تطبیق شماره شبا</h1>
+  <p class="subtitle">دو فایل اکسل بده، فایل اصلاح‌شده و گزارش مغایرت را بگیر — کاملاً آفلاین.</p>
+
+  <div class="card">
+    <h2><span class="step-num">۱</span> فایل‌ها را رها کنید</h2>
+    <div class="drop-grid">
+      <label class="dropzone" id="dz-out">
+        <input type="file" id="file-out" accept=".xlsx">
+        <div class="icon">📤</div>
+        <div class="label">فایل «خروجی»</div>
+        <div class="hint">فایل خروجیِ صدور بیمه (ستون‌های کد بیمه‌شده، کد ملی، نسبت)</div>
+        <div class="filename" id="fn-out"></div>
+      </label>
+      <label class="dropzone" id="dz-init">
+        <input type="file" id="file-init" accept=".xlsx">
+        <div class="icon">📥</div>
+        <div class="label">فایل «درخواست اولیه»</div>
+        <div class="hint">فایل اولیه بیمه‌گزار (ستون‌های کدملی، نسبت، شماره شبا)</div>
+        <div class="filename" id="fn-init"></div>
+      </label>
+    </div>
+    <button class="primary" id="btn-run" disabled>شروع تطبیق</button>
+    <div id="run-error"></div>
+  </div>
+
+  <div class="card" id="mapping-card" style="display:none;">
+    <h2>چند ستون را پیدا نکردم — لطفاً خودتان مشخص کنید</h2>
+    <p style="color:var(--gray);font-size:13.5px;margin-top:-6px;">فرمت این فایل‌ها با چیزی که قبلاً دیده بودم کمی فرق دارد (ستون کم/زیاد شده یا اسم ستون عوض شده). مشکلی نیست — فقط برای موارد زیر بگویید کدام ستون واقعی همان است، بقیه‌ی ستون‌ها را خودم به‌درستی پیدا کردم.</p>
+    <div id="mapping-body"></div>
+    <button class="primary" id="btn-continue-mapping" style="margin-top:10px;">ادامه با این نگاشت</button>
+  </div>
+
+  <div class="card" id="results-card" style="display:none;">
+    <h2><span class="step-num">۲</span> نتیجه</h2>
+    <div class="stats-grid">
+      <div class="stat"><div class="n" id="s-out">-</div><div class="l">سرپرست در فایل خروجی</div></div>
+      <div class="stat"><div class="n" id="s-init">-</div><div class="l">سرپرست در فایل اولیه</div></div>
+      <div class="stat"><div class="n" id="s-matched">-</div><div class="l">تطبیق موفق</div></div>
+      <div class="stat"><div class="n warn" id="s-mismatch">-</div><div class="l">مغایرت</div></div>
+    </div>
+
+    <div id="banners"></div>
+
+    <div id="mismatch-section" style="display:none;">
+      <details open>
+        <summary id="mismatch-summary">مشاهده موارد مغایرت</summary>
+        <table class="mismatch" id="mismatch-table">
+          <thead><tr><th>وضعیت</th><th>نام</th><th>کد ملی</th><th>توضیح</th></tr></thead>
+          <tbody id="mismatch-body"></tbody>
+        </table>
+      </details>
+    </div>
+
+    <button class="download" id="btn-download" style="margin-top:18px;">⬇ دانلود فایل اصلاح شبا (Excel)</button>
+  </div>
+
+  <div class="foot">پروژه <b>کمک به صدور</b> — ابزار داخلی تطبیق شماره شبا</div>
+</div>
+
+<script>
+/* ============================================================
+   کمک به صدور — تطبیق شماره شبا
+   منطق کامل به‌صورت جاوااسکریپت خالص (بدون هیچ وابستگی بیرونی)
+   اجرای کامل داخل مرورگر خود کاربر — هیچ داده‌ای به هیچ سروری ارسال نمی‌شود.
+   ============================================================ */
+
+/* ---------- بخش ۱: خواندن فایل ZIP (ساختار پایه xlsx) ---------- */
+
+const CRC_TABLE = (() => {
+  const table = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+    table[n] = c >>> 0;
+  }
+  return table;
+})();
+function crc32(buf) {
+  let c = 0xFFFFFFFF;
+  for (let i = 0; i < buf.length; i++) c = CRC_TABLE[(c ^ buf[i]) & 0xFF] ^ (c >>> 8);
+  return (c ^ 0xFFFFFFFF) >>> 0;
+}
+
+async function inflateRaw(bytes) {
+  const ds = new DecompressionStream('deflate-raw');
+  const stream = new Blob([bytes]).stream().pipeThrough(ds);
+  const buf = await new Response(stream).arrayBuffer();
+  return new Uint8Array(buf);
+}
+
+async function readZipEntries(buf) {
+  const dv = new DataView(buf.buffer, buf.byteOffset, buf.byteLength);
+  let eocd = -1;
+  for (let i = buf.length - 22; i >= Math.max(0, buf.length - 22 - 65536); i--) {
+    if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+  }
+  if (eocd === -1) throw new Error('این فایل یک فایل اکسل (xlsx) معتبر نیست.');
+  const cdOffset = dv.getUint32(eocd + 16, true);
+  const cdCount = dv.getUint16(eocd + 10, true);
+
+  const meta = {};
+  let ptr = cdOffset;
+  for (let i = 0; i < cdCount; i++) {
+    const sig = dv.getUint32(ptr, true);
+    if (sig !== 0x02014b50) throw new Error('ساختار فایل اکسل قابل خواندن نیست (بخش مرکزی خراب است).');
+    const method = dv.getUint16(ptr + 10, true);
+    const compSize = dv.getUint32(ptr + 20, true);
+    const nameLen = dv.getUint16(ptr + 28, true);
+    const extraLen = dv.getUint16(ptr + 30, true);
+    const commentLen = dv.getUint16(ptr + 32, true);
+    const localHeaderOffset = dv.getUint32(ptr + 42, true);
+    const nameBytes = buf.slice(ptr + 46, ptr + 46 + nameLen);
+    const name = new TextDecoder('utf-8').decode(nameBytes);
+    meta[name] = { method, compSize, localHeaderOffset };
+    ptr += 46 + nameLen + extraLen + commentLen;
+  }
+
+  const out = {};
+  for (const [name, m] of Object.entries(meta)) {
+    const lp = m.localHeaderOffset;
+    const lsig = dv.getUint32(lp, true);
+    if (lsig !== 0x04034b50) continue;
+    const lNameLen = dv.getUint16(lp + 26, true);
+    const lExtraLen = dv.getUint16(lp + 28, true);
+    const dataStart = lp + 30 + lNameLen + lExtraLen;
+    const compData = buf.slice(dataStart, dataStart + m.compSize);
+    let raw;
+    if (m.method === 0) raw = compData;
+    else if (m.method === 8) raw = await inflateRaw(compData);
+    else continue;
+    out[name] = raw;
+  }
+  return out;
+}
+
+/* ---------- بخش ۲: تبدیل XML به داده (بدون DOMParser، با regex ساده) ---------- */
+
+function decodeXmlEntities(s) {
+  if (s == null) return s;
+  return s
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(parseInt(d, 10)))
+    .replace(/&amp;/g, '&');
+}
+
+function normalizeHeader(s) {
+  return String(s)
+    .replace(/ي/g, 'ی')
+    .replace(/ى/g, 'ی')
+    .replace(/ك/g, 'ک')
+    .replace(/‌/g, ' ')
+    .trim()
+    .replace(/\s+/g, ' ');
+}
+
+function parseSharedStrings(xml) {
+  if (!xml) return [];
+  const strings = [];
+  const siRe = /<si>([\s\S]*?)<\/si>/g;
+  let m;
+  while ((m = siRe.exec(xml)) !== null) {
+    const inner = m[1];
+    let text = '';
+    const tRe = /<t(?:\s[^>]*)?>([\s\S]*?)<\/t>/g;
+    let tm;
+    while ((tm = tRe.exec(inner)) !== null) text += decodeXmlEntities(tm[1]);
+    strings.push(text);
+  }
+  return strings;
+}
+
+function colLettersFromRef(ref) {
+  const m = /^([A-Z]+)(\d+)$/.exec(ref);
+  return m ? m[1] : null;
+}
+function colLettersToIndex(letters) {
+  let idx = 0;
+  for (let i = 0; i < letters.length; i++) idx = idx * 26 + (letters.charCodeAt(i) - 64);
+  return idx;
+}
+function colIndexToLetters(idx) {
+  let s = '';
+  while (idx > 0) {
+    const rem = (idx - 1) % 26;
+    s = String.fromCharCode(65 + rem) + s;
+    idx = Math.floor((idx - 1) / 26);
+  }
+  return s;
+}
+
+function parseWorksheetCells(xml, sharedStrings) {
+  const rows = [];
+  const rowRe = /<row\b([^>]*?)(?:\/>|>([\s\S]*?)<\/row>)/g;
+  let rm;
+  while ((rm = rowRe.exec(xml)) !== null) {
+    const attrs = rm[1];
+    const body = rm[2] || '';
+    const rNumMatch = /\br="(\d+)"/.exec(attrs);
+    if (!rNumMatch) continue;
+    const rowNum = parseInt(rNumMatch[1], 10);
+    const rowArr = [];
+    const cellRe = /<c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g;
+    let cm;
+    while ((cm = cellRe.exec(body)) !== null) {
+      const cAttrs = cm[1];
+      const cBody = cm[2];
+      const refMatch = /\br="([A-Z]+\d+)"/.exec(cAttrs);
+      if (!refMatch) continue;
+      const colLetters = colLettersFromRef(refMatch[1]);
+      const colIdx = colLettersToIndex(colLetters);
+      const typeMatch = /\bt="([a-zA-Z]+)"/.exec(cAttrs);
+      const type = typeMatch ? typeMatch[1] : 'n';
+      let value = '';
+      if (cBody) {
+        if (type === 'inlineStr') {
+          const isMatch = /<is>([\s\S]*?)<\/is>/.exec(cBody);
+          if (isMatch) {
+            const tRe = /<t(?:\s[^>]*)?>([\s\S]*?)<\/t>/g;
+            let tm, text = '';
+            while ((tm = tRe.exec(isMatch[1])) !== null) text += decodeXmlEntities(tm[1]);
+            value = text;
+          }
+        } else {
+          const vMatch = /<v>([\s\S]*?)<\/v>/.exec(cBody);
+          const raw = vMatch ? vMatch[1] : '';
+          if (type === 's') {
+            const idx = parseInt(raw, 10);
+            value = (sharedStrings && sharedStrings[idx] !== undefined) ? sharedStrings[idx] : '';
+          } else if (type === 'str' || type === 'b') {
+            value = decodeXmlEntities(raw);
+          } else {
+            value = raw;
+          }
+        }
+      }
+      rowArr[colIdx] = value;
+    }
+    rows[rowNum] = rowArr;
+  }
+  return rows;
+}
+
+function rowsToObjects(rows, headerRowNum) {
+  headerRowNum = headerRowNum || 1;
+  const headerRow = rows[headerRowNum] || [];
+  const headers = {};
+  for (let c = 1; c < headerRow.length; c++) {
+    if (headerRow[c] !== undefined && headerRow[c] !== '') headers[c] = normalizeHeader(headerRow[c]);
+  }
+  const objects = [];
+  for (let r = headerRowNum + 1; r < rows.length; r++) {
+    if (rows[r] === undefined) continue;
+    const rowArr = rows[r];
+    let hasAny = false;
+    const obj = {};
+    for (const c of Object.keys(headers)) {
+      const h = headers[c];
+      const v = rowArr[c];
+      if (v !== undefined && v !== '') hasAny = true;
+      obj[h] = v === undefined ? '' : v;
+    }
+    if (hasAny) objects.push(obj);
+  }
+  return objects;
+}
+
+/* ---------- بخش ۳: بارگذاری کل فایل اکسل ---------- */
+
+async function loadWorkbook(buf) {
+  const entries = await readZipEntries(buf);
+  const dec = new TextDecoder('utf-8');
+  const bufToStr = (u8) => dec.decode(u8);
+
+  if (!entries['xl/workbook.xml']) throw new Error('این فایل ساختار اکسل استاندارد ندارد (xl/workbook.xml پیدا نشد).');
+  const workbookXml = bufToStr(entries['xl/workbook.xml']);
+  const relsXml = entries['xl/_rels/workbook.xml.rels'] ? bufToStr(entries['xl/_rels/workbook.xml.rels']) : '';
+  const sharedStringsXml = entries['xl/sharedStrings.xml'] ? bufToStr(entries['xl/sharedStrings.xml']) : '';
+  const sharedStrings = parseSharedStrings(sharedStringsXml);
+
+  const sheets = [];
+  const sheetRe = /<sheet\b([^>]*)\/>/g;
+  let sm;
+  while ((sm = sheetRe.exec(workbookXml)) !== null) {
+    const attrs = sm[1];
+    const nameM = /name="([^"]*)"/.exec(attrs);
+    const ridM = /r:id="([^"]*)"/.exec(attrs);
+    if (nameM && ridM) sheets.push({ name: nameM[1], rId: ridM[1] });
+  }
+
+  // Attribute order is not guaranteed across exporters (openpyxl writes Type/Target/Id,
+  // others write Id/Target) so each attribute is extracted independently.
+  const relMap = {};
+  const relRe = /<Relationship\b([^>]*)\/>/g;
+  let rmatch;
+  while ((rmatch = relRe.exec(relsXml)) !== null) {
+    const attrs = rmatch[1];
+    const idM = /\bId="([^"]*)"/.exec(attrs);
+    const targetM = /\bTarget="([^"]*)"/.exec(attrs);
+    if (idM && targetM) relMap[idM[1]] = targetM[1];
+  }
+
+  const sheetNames = sheets.map(s => s.name);
+
+  function getSheetXml(nameOrIndex) {
+    let sheet = typeof nameOrIndex === 'number' ? sheets[nameOrIndex] : sheets.find(s => s.name === nameOrIndex);
+    if (!sheet) throw new Error('برگه‌ای با این نام پیدا نشد: ' + nameOrIndex);
+    let target = relMap[sheet.rId];
+    if (!target) throw new Error('اطلاعات مسیر برگه پیدا نشد.');
+    target = target.startsWith('/') ? target.slice(1) : 'xl/' + target;
+    const xml = entries[target];
+    if (!xml) throw new Error('محتوای برگه پیدا نشد: ' + target);
+    return bufToStr(xml);
+  }
+
+  function getSheetObjects(nameOrIndex, headerRowNum) {
+    const xml = getSheetXml(nameOrIndex);
+    const rows = parseWorksheetCells(xml, sharedStrings);
+    return rowsToObjects(rows, headerRowNum || 1);
+  }
+
+  return { sheetNames, getSheetObjects };
+}
+
+// Picks which sheet holds the real data. Two failure modes have to be avoided at once:
+//  1. A near-empty template/summary sheet (e.g. NewDataSet2/3, 1-2 rows) must not win just
+//     because it still happens to have the exact original headers when the real sheet's
+//     matching column got renamed.
+//  2. A genuine reference/lookup sheet with MANY rows (e.g. a "کد -> عنوان" code table) must
+//     not win over the real, smaller data sheet just because it has more rows.
+// So: first drop sheets that are too small to plausibly be real data (<3 rows - decoys seen so
+// far have 1-2), then among the rest prefer whichever sheet actually contains the required
+// field headers, and only fall back to row count as the final tiebreaker.
+const MIN_PLAUSIBLE_ROWS = 3;
+
+// requiredFields: array of schema field objects ({ candidates: [...] }, ...) - a field counts as
+// matched if ANY of its accepted spellings is present, so alternate valid header wording (e.g.
+// "کد ملی" vs "کدملی") counts toward sheet relevance just like the primary spelling does.
+function pickBestSheet(wb, requiredFields) {
+  const all = [];
+  for (const name of wb.sheetNames) {
+    let objs;
+    try { objs = wb.getSheetObjects(name); } catch (e) { objs = []; }
+    const headers = objs.length ? Object.keys(objs[0]) : [];
+    const matchCount = (requiredFields || []).filter(f => f.candidates.some(c => headers.includes(c))).length;
+    all.push({ name, objs, rowCount: objs.length, matchCount });
+  }
+  if (!all.length) return null;
+  const substantial = all.filter(c => c.rowCount >= MIN_PLAUSIBLE_ROWS);
+  const pool = substantial.length ? substantial : all;
+  pool.sort((a, b) => (b.matchCount - a.matchCount) || (b.rowCount - a.rowCount));
+  const best = pool[0];
+  best.candidates = all.map(c => ({ name: c.name, rowCount: c.rowCount }));
+  best.fullMatch = requiredFields ? best.matchCount === requiredFields.length : undefined;
+  return best;
+}
+
+function loadSheetByName(wb, name) {
+  const objs = wb.getSheetObjects(name);
+  return { name, objs, candidates: null };
+}
+
+/* ---------- بخش ۴: منطق تطبیق ---------- */
+
+function normId(v) {
+  if (v === undefined || v === null) return '';
+  let s = String(v).trim();
+  if (s === '') return '';
+  if (/^\d+$/.test(s) && s.length < 10) s = s.padStart(10, '0');
+  return s;
+}
+
+// Column schemas: each logical field is looked up by NAME (never by position), with a list of
+// accepted header spellings. required:true fields block auto-run and trigger the manual mapping
+// panel if not found; required:false fields degrade gracefully when missing.
+const OUT_SCHEMA = [
+  { key: 'nationalId', label: 'کد ملی', required: true, candidates: ['کد ملی'] },
+  { key: 'insuredCode', label: 'کد بیمه شده', required: true, candidates: ['کد بیمه شده'] },
+  { key: 'primaryInsuredCode', label: 'کد بیمه شده اصلی', required: true, candidates: ['کد بیمه شده اصلی'] },
+  { key: 'name', label: 'نام بیمه شده', required: false, candidates: ['نام بیمه شده'] },
+  { key: 'relation', label: 'نسبت', required: false, candidates: ['نسبت'] },
+];
+const INIT_SCHEMA = [
+  { key: 'nationalId', label: 'کدملی', required: true, candidates: ['کدملی', 'کد ملی'] },
+  { key: 'primaryNationalId', label: 'کدملی بیمه شونده اصلی', required: true, candidates: ['کدملی بیمه شونده اصلی', 'کد ملی بیمه شده اصلی', 'کدملی بیمه شده اصلی', 'کد ملی بیمه شونده اصلی'] },
+  { key: 'sheba', label: 'شماره شبا', required: true, candidates: ['شماره شبا'] },
+  { key: 'firstName', label: 'نام', required: false, candidates: ['نام'] },
+  { key: 'lastName', label: 'نام خانوادگی', required: false, candidates: ['نام خانوادگی'] },
+  { key: 'relation', label: 'نسبت', required: false, candidates: ['نسبت', 'کد نسبت با بیمه شده اصلی', 'نسبت با بیمه شده اصلی'] },
+];
+
+function resolveSchema(objs, schema, overrides) {
+  const headers = objs.length ? Object.keys(objs[0]) : [];
+  const resolved = {};
+  const missing = [];
+  for (const field of schema) {
+    let header = (overrides && overrides[field.key]) ? overrides[field.key] : null;
+    if (!header) header = field.candidates.find(c => headers.includes(c)) || null;
+    resolved[field.key] = header;
+    if (field.required && !header) missing.push(field);
+  }
+  return { resolved, missing, headers };
+}
+
+function normalizeRecords(objs, resolved) {
+  return objs.map(r => {
+    const rec = {};
+    for (const key of Object.keys(resolved)) {
+      const h = resolved[key];
+      rec[key] = h ? (r[h] === undefined ? '' : r[h]) : '';
+    }
+    return rec;
+  });
+}
+
+// Learns which value of the "نسبت"-style column marks a "primary" row, purely from the data:
+// a primary row is one where a person's own code equals the "parent/primary" code column
+// (self-reference). This avoids hardcoding magic strings like "سرپرست" or "31", which could
+// differ across export versions. Falls back to pure self-reference if no relation column exists.
+function detectPrimaryValue(records, ownKey, refKey, relationKey) {
+  if (!relationKey) return null;
+  const counts = new Map();
+  records.forEach(r => {
+    const val = String(r[relationKey] ?? '').trim();
+    if (val === '') return;
+    const own = normId(r[ownKey]);
+    const ref = normId(r[refKey]);
+    const isSelfRef = own !== '' && own === ref;
+    if (!counts.has(val)) counts.set(val, { selfRefTrue: 0, total: 0 });
+    const c = counts.get(val);
+    c.total++;
+    if (isSelfRef) c.selfRefTrue++;
+  });
+  let best = null;
+  for (const [val, c] of counts.entries()) {
+    const ratio = c.selfRefTrue / c.total;
+    if (ratio >= 0.5 && c.selfRefTrue >= 1 && (!best || c.selfRefTrue > best.selfRefTrue)) best = { val, ...c, ratio };
+  }
+  return best ? best.val : null;
+}
+
+function determinePrimary(records, ownKey, refKey, relationKey) {
+  const marker = detectPrimaryValue(records, ownKey, refKey, relationKey);
+  let rows;
+  if (marker !== null) {
+    rows = records.filter(r => String(r[relationKey] ?? '').trim() === marker);
+  } else {
+    rows = records.filter(r => { const own = normId(r[ownKey]); const ref = normId(r[refKey]); return own !== '' && own === ref; });
+  }
+  return { rows, marker, usedRelation: marker !== null };
+}
+
+function runMatching(outRecords, initRecords) {
+  const outPrimaryInfo = determinePrimary(outRecords, 'insuredCode', 'primaryInsuredCode', 'relation');
+  const initPrimaryInfo = determinePrimary(initRecords, 'nationalId', 'primaryNationalId', 'relation');
+  const outPrimary = outPrimaryInfo.rows;
+  const initPrimary = initPrimaryInfo.rows;
+
+  const outDupCheck = new Map();
+  const outDuplicates = [];
+  outPrimary.forEach(r => {
+    const id = normId(r.nationalId);
+    if (outDupCheck.has(id)) outDuplicates.push(id);
+    outDupCheck.set(id, (outDupCheck.get(id) || 0) + 1);
+  });
+
+  const initDupCheck = new Map();
+  const initDuplicates = [];
+  initPrimary.forEach(r => {
+    const id = normId(r.nationalId);
+    if (initDupCheck.has(id)) initDuplicates.push(id);
+    initDupCheck.set(id, (initDupCheck.get(id) || 0) + 1);
+  });
+
+  const initByNationalId = new Map();
+  const initByPrimaryIdFallback = new Map();
+  initPrimary.forEach(r => {
+    const id = normId(r.nationalId);
+    if (id) initByNationalId.set(id, r);
+    const altId = normId(r.primaryNationalId);
+    if (altId && altId !== id) initByPrimaryIdFallback.set(altId, r);
+  });
+
+  const matched = [];
+  const unmatchedOut = [];
+  const recoveredViaFallback = [];
+
+  outPrimary.forEach(r => {
+    const id = normId(r.nationalId);
+    let initRow = initByNationalId.get(id);
+    let viaFallback = false;
+    if (!initRow && initByPrimaryIdFallback.has(id)) {
+      initRow = initByPrimaryIdFallback.get(id);
+      viaFallback = true;
+    }
+    if (initRow) {
+      matched.push({
+        insuredCode: r.primaryInsuredCode,
+        sheba: initRow.sheba,
+        name: r.name,
+        nationalId: id,
+        viaFallback,
+      });
+      if (viaFallback) recoveredViaFallback.push({ nationalId: id, name: r.name, initNationalIdOnFile: normId(initRow.nationalId) });
+    } else {
+      unmatchedOut.push({ nationalId: id, name: r.name, insuredCode: r.primaryInsuredCode });
+    }
+  });
+
+  const consumedInitKeys = new Set();
+  outPrimary.forEach(r => {
+    const id = normId(r.nationalId);
+    if (initByNationalId.has(id)) consumedInitKeys.add(id);
+    else if (initByPrimaryIdFallback.has(id)) consumedInitKeys.add(normId(initByPrimaryIdFallback.get(id).nationalId));
+  });
+
+  const unmatchedInit = [];
+  initPrimary.forEach(r => {
+    const id = normId(r.nationalId);
+    if (!consumedInitKeys.has(id)) {
+      unmatchedInit.push({ nationalId: id, name: ((r.firstName || '') + ' ' + (r.lastName || '')).trim(), sheba: r.sheba });
+    }
+  });
+
+  return {
+    outPrimaryCount: outPrimary.length, initPrimaryCount: initPrimary.length,
+    matched, unmatchedOut, unmatchedInit, outDuplicates, initDuplicates, recoveredViaFallback,
+    outPrimaryMarker: outPrimaryInfo.marker, outUsedRelation: outPrimaryInfo.usedRelation,
+    initPrimaryMarker: initPrimaryInfo.marker, initUsedRelation: initPrimaryInfo.usedRelation,
+  };
+}
+
+/* ---------- بخش ۵: نوشتن فایل خروجی xlsx ---------- */
+
+function escapeXml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+}
+
+function buildSheetXml(headers, dataRows) {
+  let rowsXml = '';
+  {
+    let cells = '';
+    headers.forEach((h, i) => {
+      const ref = colIndexToLetters(i + 1) + '1';
+      cells += `<c r="${ref}" t="inlineStr"><is><t xml:space="preserve">${escapeXml(h)}</t></is></c>`;
+    });
+    rowsXml += `<row r="1">${cells}</row>`;
+  }
+  dataRows.forEach((row, rIdx) => {
+    const rowNum = rIdx + 2;
+    let cells = '';
+    row.forEach((val, cIdx) => {
+      const ref = colIndexToLetters(cIdx + 1) + rowNum;
+      const text = (val === null || val === undefined) ? '' : String(val);
+      cells += `<c r="${ref}" t="inlineStr"><is><t xml:space="preserve">${escapeXml(text)}</t></is></c>`;
+    });
+    rowsXml += `<row r="${rowNum}">${cells}</row>`;
+  });
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>${rowsXml}</sheetData></worksheet>`;
+}
+
+function buildXlsx(sheetsData) {
+  const files = {};
+  files['[Content_Types].xml'] = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>` +
+    sheetsData.map((_, i) => `<Override PartName="/xl/worksheets/sheet${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join('') + `</Types>`;
+  files['_rels/.rels'] = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`;
+  files['xl/workbook.xml'] = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>` +
+    sheetsData.map((s, i) => `<sheet name="${escapeXml(s.name)}" sheetId="${i + 1}" r:id="rId${i + 1}"/>`).join('') + `</sheets></workbook>`;
+  files['xl/_rels/workbook.xml.rels'] = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">` +
+    sheetsData.map((_, i) => `<Relationship Id="rId${i + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i + 1}.xml"/>`).join('') + `</Relationships>`;
+  sheetsData.forEach((s, i) => { files[`xl/worksheets/sheet${i + 1}.xml`] = buildSheetXml(s.headers, s.rows); });
+  return zipStore(files);
+}
+
+function zipStore(files) {
+  const encoder = new TextEncoder();
+  const localParts = [];
+  const centralParts = [];
+  let offset = 0;
+  for (const [name, content] of Object.entries(files)) {
+    const data = typeof content === 'string' ? encoder.encode(content) : content;
+    const nameBytes = encoder.encode(name);
+    const crc = crc32(data);
+    const size = data.length;
+
+    const localHeader = new Uint8Array(30 + nameBytes.length);
+    const lv = new DataView(localHeader.buffer);
+    lv.setUint32(0, 0x04034b50, true);
+    lv.setUint16(4, 20, true);
+    lv.setUint16(6, 0, true);
+    lv.setUint16(8, 0, true);
+    lv.setUint16(10, 0, true);
+    lv.setUint16(12, 0, true);
+    lv.setUint32(14, crc, true);
+    lv.setUint32(18, size, true);
+    lv.setUint32(22, size, true);
+    lv.setUint16(26, nameBytes.length, true);
+    lv.setUint16(28, 0, true);
+    localHeader.set(nameBytes, 30);
+    localParts.push(localHeader, data);
+
+    const centralHeader = new Uint8Array(46 + nameBytes.length);
+    const cv = new DataView(centralHeader.buffer);
+    cv.setUint32(0, 0x02014b50, true);
+    cv.setUint16(4, 20, true);
+    cv.setUint16(6, 20, true);
+    cv.setUint16(8, 0, true);
+    cv.setUint16(10, 0, true);
+    cv.setUint16(12, 0, true);
+    cv.setUint16(14, 0, true);
+    cv.setUint32(16, crc, true);
+    cv.setUint32(20, size, true);
+    cv.setUint32(24, size, true);
+    cv.setUint16(28, nameBytes.length, true);
+    cv.setUint16(30, 0, true);
+    cv.setUint16(32, 0, true);
+    cv.setUint16(34, 0, true);
+    cv.setUint16(36, 0, true);
+    cv.setUint32(38, 0, true);
+    cv.setUint32(42, offset, true);
+    centralHeader.set(nameBytes, 46);
+    centralParts.push(centralHeader);
+
+    offset += localHeader.length + data.length;
+  }
+  const centralStart = offset;
+  let centralSize = 0;
+  for (const p of centralParts) centralSize += p.length;
+
+  const eocd = new Uint8Array(22);
+  const ev = new DataView(eocd.buffer);
+  ev.setUint32(0, 0x06054b50, true);
+  ev.setUint16(8, Object.keys(files).length, true);
+  ev.setUint16(10, Object.keys(files).length, true);
+  ev.setUint32(12, centralSize, true);
+  ev.setUint32(16, centralStart, true);
+
+  const totalSize = offset + centralSize + eocd.length;
+  const out = new Uint8Array(totalSize);
+  let p = 0;
+  for (const part of localParts) { out.set(part, p); p += part.length; }
+  for (const part of centralParts) { out.set(part, p); p += part.length; }
+  out.set(eocd, p);
+  return out;
+}
+
+</script>
+
+<script>
+(function(){
+  const dzOut = document.getElementById('dz-out');
+  const dzInit = document.getElementById('dz-init');
+  const fileOut = document.getElementById('file-out');
+  const fileInit = document.getElementById('file-init');
+  const fnOut = document.getElementById('fn-out');
+  const fnInit = document.getElementById('fn-init');
+  const btnRun = document.getElementById('btn-run');
+  const runError = document.getElementById('run-error');
+  const mappingCard = document.getElementById('mapping-card');
+  const mappingBody = document.getElementById('mapping-body');
+  const btnContinueMapping = document.getElementById('btn-continue-mapping');
+  const resultsCard = document.getElementById('results-card');
+  const banners = document.getElementById('banners');
+  const mismatchSection = document.getElementById('mismatch-section');
+  const mismatchBody = document.getElementById('mismatch-body');
+  const mismatchSummary = document.getElementById('mismatch-summary');
+  const btnDownload = document.getElementById('btn-download');
+
+  let outBytes = null, initBytes = null;
+  let lastXlsxBytes = null;
+
+  function setupDropzone(dz, input, fnLabel, onFile){
+    dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+    dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+    dz.addEventListener('drop', e => {
+      e.preventDefault(); dz.classList.remove('dragover');
+      const f = e.dataTransfer.files[0];
+      if (f) { input.files = e.dataTransfer.files; handleFile(f); }
+    });
+    input.addEventListener('change', () => {
+      const f = input.files[0];
+      if (f) handleFile(f);
+    });
+    async function handleFile(f){
+      fnLabel.textContent = f.name;
+      dz.classList.add('filled');
+      const buf = new Uint8Array(await f.arrayBuffer());
+      onFile(buf);
+      updateRunButton();
+    }
+  }
+
+  setupDropzone(dzOut, fileOut, fnOut, (buf) => { outBytes = buf; });
+  setupDropzone(dzInit, fileInit, fnInit, (buf) => { initBytes = buf; });
+
+  function updateRunButton(){
+    btnRun.disabled = !(outBytes && initBytes);
+  }
+
+  function showError(msg){
+    runError.innerHTML = '<div class="banner err">' + msg + '</div>';
+  }
+  function clearError(){ runError.innerHTML = ''; }
+
+  // Holds everything needed to re-resolve after the user fills in a manual mapping.
+  let pending = null; // { outWb, initWb, outPicked, initPicked }
+
+  btnRun.addEventListener('click', async () => {
+    clearError();
+    mappingCard.style.display = 'none';
+    btnRun.disabled = true;
+    btnRun.textContent = 'در حال پردازش...';
+    try {
+      const outWb = await loadWorkbook(outBytes);
+      const initWb = await loadWorkbook(initBytes);
+      const outRequiredFields = OUT_SCHEMA.filter(f => f.required);
+      const initRequiredFields = INIT_SCHEMA.filter(f => f.required);
+      const outPicked = pickBestSheet(outWb, outRequiredFields);
+      const initPicked = pickBestSheet(initWb, initRequiredFields);
+      if (!outPicked || !outPicked.objs.length) throw new Error('در فایل «خروجی» هیچ برگه‌ای با داده پیدا نشد.');
+      if (!initPicked || !initPicked.objs.length) throw new Error('در فایل «درخواست اولیه» هیچ برگه‌ای با داده پیدا نشد.');
+
+      pending = { outWb, initWb, outPicked, initPicked };
+      tryResolveAndRun({});
+    } catch (e) {
+      showError('خطا در پردازش: ' + e.message);
+      console.error(e);
+      btnRun.disabled = false;
+      btnRun.textContent = 'شروع تطبیق';
+    }
+  });
+
+  // overrides: { out: {fieldKey: headerName, ...}, init: {...} }
+  function tryResolveAndRun(overrides){
+    const { outPicked, initPicked } = pending;
+    const outRes = resolveSchema(outPicked.objs, OUT_SCHEMA, overrides.out);
+    const initRes = resolveSchema(initPicked.objs, INIT_SCHEMA, overrides.init);
+
+    if (outRes.missing.length || initRes.missing.length) {
+      showMappingPanel(outRes, initRes, overrides);
+      btnRun.disabled = false;
+      btnRun.textContent = 'شروع تطبیق';
+      mappingCard.style.display = 'block';
+      mappingCard.scrollIntoView({behavior:'smooth', block:'start'});
+      return;
+    }
+
+    try {
+      const outRecords = normalizeRecords(outPicked.objs, outRes.resolved);
+      const initRecords = normalizeRecords(initPicked.objs, initRes.resolved);
+      const result = runMatching(outRecords, initRecords);
+      finishRun(result);
+    } catch (e) {
+      showError('خطا در پردازش: ' + e.message);
+      console.error(e);
+    } finally {
+      btnRun.disabled = false;
+      btnRun.textContent = 'شروع تطبیق';
+    }
+  }
+
+  function fieldRow(fileKey, field, headers, currentHeader){
+    const selectId = 'map-' + fileKey + '-' + field.key;
+    let options = '<option value="">— انتخاب کنید —</option>';
+    headers.forEach(h => {
+      const sel = h === currentHeader ? ' selected' : '';
+      options += '<option value="' + escapeHtmlAttr(h) + '"' + sel + '>' + escapeHtml(h) + '</option>';
+    });
+    return '<div class="map-row"><label for="' + selectId + '">«' + field.label + '» کدام ستونه؟</label>' +
+      '<select id="' + selectId + '" data-file="' + fileKey + '" data-field="' + field.key + '"' + (currentHeader ? '' : ' class="empty"') + '>' + options + '</select></div>';
+  }
+
+  function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function escapeHtmlAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
+
+  function showMappingPanel(outRes, initRes, overrides){
+    let html = '';
+    if (outRes.missing.length) {
+      html += '<div class="map-file-block"><h3>فایل «خروجی» — برگه‌ی «' + escapeHtml(pending.outPicked.name) + '»</h3>';
+      outRes.missing.forEach(f => { html += fieldRow('out', f, outRes.headers, (overrides.out && overrides.out[f.key]) || null); });
+      html += '</div>';
+    }
+    if (initRes.missing.length) {
+      html += '<div class="map-file-block"><h3>فایل «درخواست اولیه» — برگه‌ی «' + escapeHtml(pending.initPicked.name) + '»</h3>';
+      initRes.missing.forEach(f => { html += fieldRow('init', f, initRes.headers, (overrides.init && overrides.init[f.key]) || null); });
+      html += '</div>';
+    }
+    mappingBody.innerHTML = html;
+  }
+
+  btnContinueMapping.addEventListener('click', () => {
+    const selects = mappingBody.querySelectorAll('select');
+    const overrides = { out: {}, init: {} };
+    let allFilled = true;
+    selects.forEach(sel => {
+      const fileKey = sel.getAttribute('data-file');
+      const fieldKey = sel.getAttribute('data-field');
+      const val = sel.value;
+      if (!val) { sel.classList.add('empty'); allFilled = false; }
+      else { sel.classList.remove('empty'); overrides[fileKey][fieldKey] = val; }
+    });
+    if (!allFilled) {
+      showError('لطفاً برای همه‌ی ستون‌های خواسته‌شده یک گزینه انتخاب کنید.');
+      return;
+    }
+    clearError();
+    btnContinueMapping.disabled = true;
+    btnContinueMapping.textContent = 'در حال پردازش...';
+    try {
+      tryResolveAndRun(overrides);
+    } finally {
+      btnContinueMapping.disabled = false;
+      btnContinueMapping.textContent = 'ادامه با این نگاشت';
+    }
+  });
+
+  function finishRun(result){
+    renderResults(result);
+
+    const shebaSheet = {
+      name: 'اصلاح شبا',
+      headers: ['کد بیمه‌شده اصلی', 'شماره شبا'],
+      rows: result.matched.map(m => [m.insuredCode, m.sheba]),
+    };
+    const reportRows = [];
+    result.unmatchedOut.forEach(u => reportRows.push(['فقط در فایل خروجی', u.name, u.nationalId, 'در فایل درخواست اولیه به‌عنوان نفر اصلی یافت نشد']));
+    result.unmatchedInit.forEach(u => reportRows.push(['فقط در فایل درخواست اولیه', u.name, u.nationalId, 'در فایل خروجی به‌عنوان نفر اصلی یافت نشد']));
+    result.recoveredViaFallback.forEach(u => reportRows.push(['اصلاح خودکار', u.name, u.nationalId, 'کدملی با کدملی بیمه شونده اصلی در فایل اولیه یکی نبود؛ با فیلد دوم اصلاح شد']));
+    if (result.outDuplicates.length) result.outDuplicates.forEach(id => reportRows.push(['کد ملی تکراری در فایل خروجی', '', id, 'این کد ملی بیش از یک بار به‌عنوان نفر اصلی در فایل خروجی دیده شد']));
+    if (result.initDuplicates.length) result.initDuplicates.forEach(id => reportRows.push(['کد ملی تکراری در فایل اولیه', '', id, 'این کد ملی بیش از یک بار به‌عنوان نفر اصلی در فایل اولیه دیده شد']));
+
+    const reportSheet = {
+      name: 'گزارش مغایرت‌ها',
+      headers: ['نوع مغایرت', 'نام', 'کد ملی', 'توضیح'],
+      rows: reportRows,
+    };
+
+    lastXlsxBytes = buildXlsx([shebaSheet, reportSheet]);
+    resultsCard.style.display = 'block';
+    resultsCard.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  function renderResults(result){
+    document.getElementById('s-out').textContent = result.outPrimaryCount.toLocaleString('fa-IR');
+    document.getElementById('s-init').textContent = result.initPrimaryCount.toLocaleString('fa-IR');
+    document.getElementById('s-matched').textContent = result.matched.length.toLocaleString('fa-IR');
+    const mismatchCount = result.unmatchedOut.length + result.unmatchedInit.length;
+    document.getElementById('s-mismatch').textContent = mismatchCount.toLocaleString('fa-IR');
+
+    let bannerHtml = '';
+    if (mismatchCount === 0 && result.outDuplicates.length === 0 && result.initDuplicates.length === 0) {
+      bannerHtml += '<div class="banner ok">همه نفرات اصلی بین دو فایل به‌طور کامل تطبیق پیدا کردند.</div>';
+    } else {
+      bannerHtml += '<div class="banner warn">' + mismatchCount.toLocaleString('fa-IR') + ' مورد مغایرت پیدا شد (جزئیات پایین‌تر و در فایل دانلودی، برگه «گزارش مغایرت‌ها»).</div>';
+    }
+    if (result.recoveredViaFallback.length) {
+      bannerHtml += '<div class="banner ok">' + result.recoveredViaFallback.length.toLocaleString('fa-IR') + ' مورد که کد ملی داخل فایل اولیه با کدملی بیمه‌شونده اصلی همان ردیف تفاوت داشت، به‌صورت خودکار اصلاح و تطبیق داده شد.</div>';
+    }
+    if (result.outDuplicates.length || result.initDuplicates.length) {
+      bannerHtml += '<div class="banner err">هشدار: کد ملی تکراری در بین نفرات اصلی پیدا شد (' + (result.outDuplicates.length + result.initDuplicates.length).toLocaleString('fa-IR') + ' مورد) — این‌ها می‌توانند نتیجه تطبیق را نامطمئن کنند و باید دستی بررسی شوند. جزئیات در فایل دانلودی.</div>';
+    }
+    if (!result.outUsedRelation || !result.initUsedRelation) {
+      const which = [];
+      if (!result.outUsedRelation) which.push('«خروجی»');
+      if (!result.initUsedRelation) which.push('«درخواست اولیه»');
+      bannerHtml += '<div class="banner warn">در فایل ' + which.join(' و ') + ' ستون «نسبت» پیدا نشد، پس تشخیص نفر اصلی فقط بر اساس تطابق کد خودش با کد نفر اصلی انجام شد. این روش قابل‌اعتماد است، فقط مواردی که در همان فایل، خود این دو کد اشتباهی با هم فرق داشته باشند قابل بازیابی خودکار نیستند.</div>';
+    }
+    banners.innerHTML = bannerHtml;
+
+    mismatchBody.innerHTML = '';
+    const rows = [];
+    result.unmatchedOut.forEach(u => rows.push(['out', 'فقط در فایل خروجی', u.name, u.nationalId]));
+    result.unmatchedInit.forEach(u => rows.push(['init', 'فقط در فایل اولیه', u.name, u.nationalId]));
+    if (rows.length) {
+      mismatchSection.style.display = 'block';
+      mismatchSummary.textContent = 'مشاهده ' + rows.length.toLocaleString('fa-IR') + ' مورد مغایرت';
+      rows.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td><span class="tag ' + r[0] + '">' + r[1] + '</span></td><td>' + (r[2]||'') + '</td><td>' + r[3] + '</td><td></td>';
+        mismatchBody.appendChild(tr);
+      });
+    } else {
+      mismatchSection.style.display = 'none';
+    }
+  }
+
+  btnDownload.addEventListener('click', () => {
+    if (!lastXlsxBytes) return;
+    const blob = new Blob([lastXlsxBytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'اصلاح شبا.xlsx';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  });
+})();
+</script>
+
+</body>
+</html>
